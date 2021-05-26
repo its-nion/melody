@@ -10,7 +10,7 @@ Melody is a visually pleasing and easy to use discord music bot written in Java.
 ## Table of Contents
 
 1.  [Introduction](#creating-the-jda-object)
-2.  [Sharding](#sharding-a-bot)
+2.  [Commands](#command-list)
 3.  [Entity Lifetimes](#entity-lifetimes)
 4.  [Download](#download)
 5.  [Documentation](#documentation)
@@ -19,6 +19,13 @@ Melody is a visually pleasing and easy to use discord music bot written in Java.
 8.  [Contributing](#contributing-to-jda)
 9.  [Dependencies](#dependencies)
 10. [Other Libraries](#related-projects)
+
+## Commands
+# General
+
+Command | Description | Example
+----------------|--------------|-------
+`/info`, `:epvp` | Sucht nach einem Benutzernamen auf Elitepvpers | `:epvpis Der-Eddy`
 
 ## Dependencies
 
