@@ -27,9 +27,12 @@ Melody is a visually pleasing and easy to use discord music bot. Using slash com
 
 Keep in mind that Melody is nowhere near finished. There may still be buggs and missing features. Im currently working to implement the following:
 
-* [ ] unchecked # [checkbox:unchecked]
-* [ ] unchecked # [checkbox:unchecked]
-* [ ] unchecked # [checkbox:unchecked]
+* [ ] Implementing buttons
+* [ ] Adding loopqueue command
+* [ ] Adding repeat command
+* [ ] Adding showqueue feature
+* [ ] Adding shuffle command
+* [ ] Fixing volume command
 
 ## Command List
 
