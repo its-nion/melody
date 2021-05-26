@@ -52,7 +52,7 @@ Command | Description
 ----------------|----------------
 `/join` | Joins/Moves into members voice channel
 `/disconnect` | Disconnects from the voice channel and resets player
-`/play [Song name/URL/Playlist]` | Adds/Searches for a song/playlist and adds it to the queue
+`/play [song name/song url/song playlist]` | Adds/Searches for a song/playlist and adds it to the queue
 `/stop` | Stops the player and clears queue
 `/pause` | Pauses the player
 `/resume` | Resumes the player
