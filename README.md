@@ -23,7 +23,7 @@ Melody is a visually pleasing and easy to use discord music bot. Using slash com
 * Easy to run
 * Thanks to Lavaplayer, Melody supports YouTube, SoundCloud, Bandcamp, Vimeo, Twitch streams
 
-## Features
+## To do list
 
 Keep in mind that Melody is nowhere near finished. There may still be buggs and missing features. Im currently working to implement the following:
 
