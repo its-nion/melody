@@ -7,5 +7,18 @@
 
 Melody is a visually pleasing and easy to use discord music bot written in Java. Using slash commands, melody offers playing and searching for songs in youtube and soundcloud, playlists, queues and much more. Command permissions can also be handled and are saved with SQLite.
 
-# melody
-Open source java discord music bot
+## Table of Contents
+
+* [DiscordBot](#discordbot-----)
+  * [Additional Applications](#additional-applications)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Additional Requirements](#additional-requirements)
+  * [Setting Up & Running](#setting-up--running)
+    * [MySQL Setup](#mysql-setup)
+    * [DiscordBot API Token](#discordbot-api-token)
+    * [DiscordBot Setup](#discordbot-setup)
+  * [Additional Information](#additional-information)
+    * [What I learned from this project](#what-i-learned-from-this-project)
+    * [Final Notes](#final-notes)
+
