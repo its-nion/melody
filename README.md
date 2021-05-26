@@ -9,16 +9,14 @@ Melody is a visually pleasing and easy to use discord music bot written in Java.
 
 ## Table of Contents
 
-* [DiscordBot](#discordbot-----)
-  * [Additional Applications](#additional-applications)
-  * [Getting Started](#getting-started)
-    * [Prerequisites](#prerequisites)
-    * [Additional Requirements](#additional-requirements)
-  * [Setting Up & Running](#setting-up--running)
-    * [MySQL Setup](#mysql-setup)
-    * [DiscordBot API Token](#discordbot-api-token)
-    * [DiscordBot Setup](#discordbot-setup)
-  * [Additional Information](#additional-information)
-    * [What I learned from this project](#what-i-learned-from-this-project)
-    * [Final Notes](#final-notes)
+1.  [Introduction](#creating-the-jda-object)
+2.  [Sharding](#sharding-a-bot)
+3.  [Entity Lifetimes](#entity-lifetimes)
+4.  [Download](#download)
+5.  [Documentation](#documentation)
+6.  [Support](#getting-help)
+7.  [Extensions And Plugins](#third-party-recommendations)
+8.  [Contributing](#contributing-to-jda)
+9.  [Dependencies](#dependencies)
+10. [Other Libraries](#related-projects)
 
