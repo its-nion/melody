@@ -11,17 +11,16 @@ Melody was made with ***Java and SQLite***
 
 ## Table of Contents
 
-* [Features](#features)
+* [Core features](#core-features)
 * [To do list](#to-do-list)
 * [Command List](#command-list)
   * [General commands](#general)
   * [Music commands](#music)
 * [Dependencies](#dependencies)
 
-## Features
+## Core features
 * Visually pleasing and clean interface
 * Simple yet functional commands
-* No prefixes, just slash commands
 * Easy to run
 * Thanks to Lavaplayer, Melody supports YouTube, SoundCloud, Bandcamp, Vimeo, Twitch streams
 
