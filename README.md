@@ -56,8 +56,8 @@ Command | Description
 `/stop` | Stops the player and clears queue
 `/pause` | Pauses the player
 `/resume` | Resumes the player
-`/skip [amount]` | Skips either one or [amount] songs
-`/volume [amount]` | Displays or changes the player volume
+`/skip`, `/skip [amount]` | Skips either one or [amount] songs
+`/volume`, `/volume [amount]` | Displays or changes the player volume
 
 ## Dependencies
 
