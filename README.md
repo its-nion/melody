@@ -47,3 +47,9 @@ Melody would't work without the following API's
 * Lavaplayer
    * Version: *1.3.75*
    * [Github](https://github.com/sedmelluq/lavaplayer)
+* HikariCP
+   * Version: *4.0.3*
+   * [Github](https://github.com/brettwooldridge/HikariCP)
+* SQLite JDBC
+   * Version: *3.14.2*
+   * [Github](https://github.com/xerial/sqlite-jdbc)
