@@ -5,18 +5,22 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/necsii/melody.svg)
 ![Downloads](https://img.shields.io/github/downloads/necsii/melody/total.svg)
 
-Melody is a visually pleasing and easy to use discord music bot. Using slash commands, melody offers playing and searching for songs in youtube and soundcloud, playlists, queues and much more. Command permissions can managed and saved in a database.
-
-Written with ***Java*** and a tad ***SQLite***
+Melody is a visually pleasing and easy to use discord music bot. Using slash commands, Melody offers playing and searching for song's and playlist's in youtube, soundcloud and much more. Managing command permissions and saving them in a database is also possible.
 
 ## Table of Contents
 
-* [Introduction](#discordbot-----)
+* [Features](#features)
 * [Command List](#command-list)
   * [General commands](#general)
   * [Music commands](#music)
 * [Dependencies](#dependencies)
 
+## Features
+* Visually pleasing and clean interface
+* Simple yet functional commands
+* No prefixes, just slash commands
+* Easy to run
+* Thanks to Lavaplayer, Melody supports YouTube, SoundCloud, Bandcamp, Vimeo, Twitch streams
 
 ## Command List
 
