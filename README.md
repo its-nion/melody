@@ -7,7 +7,7 @@
 
 Melody is a visually pleasing and easy to use discord music bot. Using slash commands, melody offers playing and searching for songs in youtube and soundcloud, playlists, queues and much more. Command permissions can managed and saved in a database.
 
-Written with **Java** and a tad **SQLite**
+Written with ***Java*** and a tad ***SQLite***
 
 ## Table of Contents
 
