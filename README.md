@@ -29,7 +29,7 @@ Command | Description | Example
 
 Command | Description | Example
 ----------------|--------------|-------
-`/play [Song name/URL/Playlist]` | Joins the vc if not already inside, adds songs to queue | `/play Wonderful world`, `/play [asd](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`
+`/play [Song name/URL/Playlist]` | Joins the vc if not already inside, adds songs to queue | `/play Wonderful world`, `/play https://www.youtube.com/watch?v=dQw4w9WgXcQ`
 `/ping` | Displays the latency, in fitting color | `/ping`
 
 ## Dependencies
