@@ -10,9 +10,10 @@ Melody is a visually pleasing and easy to use discord music bot written in Java.
 ## Table of Contents
 
 * [Introduction](#discordbot-----)
-* [Command List](#commands)
-  * [General](#general)
-  * [Music](#music)
+* [Command List](#command-list)
+  * [General commands](#general)
+  * [Music commands](#music)
+* [Dependencies](#dependencies)
 
 
 ## Command List
