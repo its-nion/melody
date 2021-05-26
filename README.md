@@ -5,7 +5,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/necsii/melody.svg)
 ![Downloads](https://img.shields.io/github/downloads/necsii/melody/total.svg)
 
--
+--
 
 # melody
 Open source java discord music bot
