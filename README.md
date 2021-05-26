@@ -21,14 +21,14 @@ Melody is a visually pleasing and easy to use discord music bot written in Java.
 ### General
 
 Command | Description
-----------------|--------------|-------
+----------------|--------------
 `/info` | Displays infos, including invite link and much more
 `/ping` | Displays the latency, in fitting color
 
 ### Music
 
 Command | Description
-----------------|--------------|-------
+----------------|--------------
 `/play [Song name/URL/Playlist]` | Joins the vc if not already inside, adds songs to queue | `/play Wonderful world`, `/play https://www.youtube.com/watch?v=dQw4w9WgXcQ`
 `/ping` | Displays the latency, in fitting color | `/ping`
 
