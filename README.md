@@ -20,3 +20,11 @@ Melody is a visually pleasing and easy to use discord music bot written in Java.
 9.  [Dependencies](#dependencies)
 10. [Other Libraries](#related-projects)
 
+##Dependencies
+These are used in the project
+* JDA
+   * Version: **#1501**
+   * [Github](https://github.com/DV8FromTheWorld/JDA)
+* Lavaplayer
+   * Version: *1.3.75*
+   * [Github](https://github.com/sedmelluq/lavaplayer)
