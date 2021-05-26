@@ -35,6 +35,7 @@ Keep in mind that Melody is nowhere near finished. There may still be buggs and 
 * [ ] Adding showqueue feature
 * [ ] Adding shuffle command
 * [ ] Fixing volume command
+* [ ] Fixing the database
 
 ## Command List
 
