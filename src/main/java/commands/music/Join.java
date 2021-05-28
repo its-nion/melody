@@ -24,7 +24,7 @@ public class Join implements Command
     {
         if(AudioStateChecks.isMemberInVC(event) == false)
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248,78,106,255))
                     .setDescription("This command requires you to be **connected to a voice channel**")
                     .build())
@@ -46,7 +46,7 @@ public class Join implements Command
         {
             audioManager.openAudioConnection(memberChannel);
 
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(88,199,235,255))
                     .setDescription("**Moved** to <#" + memberChannel.getId() + ">")
                     .build())
@@ -57,7 +57,7 @@ public class Join implements Command
         {
             audioManager.openAudioConnection(memberChannel);
 
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(116,196,118,255))
                     .setDescription("**Joined** in <#" + memberChannel.getId() + ">")
                     .build())

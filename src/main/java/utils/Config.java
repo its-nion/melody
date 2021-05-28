@@ -6,7 +6,7 @@ public class Config
 {
     // ##### GENERAL BOT SETTINGS ##### //
 
-    public static String TOKEN = "INSERT_TOKEN";
+    public static String TOKEN = "TOKEN";
 
     public static OnlineStatus STATUS = OnlineStatus.ONLINE;
 

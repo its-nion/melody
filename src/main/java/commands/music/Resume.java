@@ -21,7 +21,7 @@ public class Resume implements Command
     public void called(SlashCommandEvent event) {
         if (!AudioStateChecks.isMemberInVC(event))
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248, 78, 106, 255))
                     .setDescription("This Command requires **you** to be **connected to a voice channel**")
                     .build())
@@ -32,7 +32,7 @@ public class Resume implements Command
 
         if(AudioStateChecks.isMelodyInVC(event) == false)
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248,78,106,255))
                     .setDescription("This Command requires Melody to be **connected to a voice channel**")
                     .build())
@@ -43,7 +43,7 @@ public class Resume implements Command
 
         if (AudioStateChecks.isMelodyInVC(event)) {
             if (AudioStateChecks.isMemberAndMelodyInSameVC(event) == false) {
-                event.reply(new EmbedBuilder()
+                event.replyEmbeds(new EmbedBuilder()
                         .setColor(new Color(248, 78, 106, 255))
                         .setDescription("This Command requires **you** to be **in the same voice channel as Melody**")
                         .build())
@@ -55,7 +55,7 @@ public class Resume implements Command
 
         if (!PlayerManager.getInstance().getMusicManager(event.getGuild()).audioPlayer.isPaused())
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248, 78, 106, 255))
                     .setDescription("The player is **not paused**")
                     .build())
@@ -71,7 +71,7 @@ public class Resume implements Command
     public void action(SlashCommandEvent event) {
         PlayerManager.getInstance().getMusicManager(event.getGuild()).audioPlayer.setPaused(false);
 
-        event.reply(new EmbedBuilder()
+        event.replyEmbeds(new EmbedBuilder()
                 .setDescription("**Resumed** the player")
                 .build())
                 .queue();

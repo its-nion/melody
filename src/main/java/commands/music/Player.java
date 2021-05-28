@@ -1,41 +1,27 @@
 package commands.music;
 
 import audioCore.AudioStateChecks;
-import audioCore.GuildMusicManager;
-import audioCore.PlayerManager;
 import commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.button.Button;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import java.awt.*;
 
-public class Pause implements Command
-{
+public class Player implements Command {
 
     @Override
     public CommandData commandInfo() {
-        return new CommandData("pause", "Pauses the player");
+        return new CommandData("player", "Opens the player");
     }
 
     @Override
     public void called(SlashCommandEvent event) {
-        if (!AudioStateChecks.isMemberInVC(event))
-        {
+        if (!AudioStateChecks.isMemberInVC(event)) {
             event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248, 78, 106, 255))
                     .setDescription("This Command requires **you** to be **connected to a voice channel**")
-                    .build())
-                    .queue();
-
-            return;
-        }
-
-        if(AudioStateChecks.isMelodyInVC(event) == false)
-        {
-            event.replyEmbeds(new EmbedBuilder()
-                    .setColor(new Color(248,78,106,255))
-                    .setDescription("This Command requires Melody to be **connected to a voice channel**")
                     .build())
                     .queue();
 
@@ -54,29 +40,17 @@ public class Pause implements Command
             }
         }
 
-        if (PlayerManager.getInstance().getMusicManager(event.getGuild()).audioPlayer.isPaused())
-        {
-                event.replyEmbeds(new EmbedBuilder()
-                        .setColor(new Color(248, 78, 106, 255))
-                        .setDescription("The player is **already paused**")
-                        .build())
-                        .queue();
-
-                return;
-        }
-
         this.action(event);
     }
 
     @Override
     public void action(SlashCommandEvent event) {
-        PlayerManager.getInstance().getMusicManager(event.getGuild()).audioPlayer.setPaused(true);
-
         event.replyEmbeds(new EmbedBuilder()
-                .setDescription("**Paused** the player")
+                .setDescription("[Song Name](https://www.youtube.com/watch?v=dQw4w9WgXcQ)" + "   4:12")
                 .build())
-                .queue();
-
-        return;
+        .addActionRow(Button.secondary("0", "⏮"), Button.secondary("0", "▶️"), Button.secondary("0", "⏹"), Button.secondary("0", "⏭"), Button.secondary("0", "\uD83D\uDD00"))//▶⏹
+                .addActionRow(Button.secondary("0", "back"), Button.secondary("0", "pause"), Button.secondary("0", "stop"), Button.secondary("0", "skip"), Button.secondary("0", "shuffle"))
+                .addActionRow(Button.secondary("0", "ᐅ"), Button.secondary("0", "□"), Button.secondary("0", "»"), Button.secondary("0", "↝"))
+        .queue();
     }
 }

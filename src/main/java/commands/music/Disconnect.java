@@ -24,7 +24,7 @@ public class Disconnect implements Command
     {
         if(AudioStateChecks.isMelodyInVC(event) == false)
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248,78,106,255))
                     .setDescription("This Command requires Melody to be **connected to a voice channel**")
                     .build())
@@ -47,7 +47,7 @@ public class Disconnect implements Command
 
         audioManager.closeAudioConnection();
 
-        event.reply(new EmbedBuilder()
+        event.replyEmbeds(new EmbedBuilder()
                 .setColor(new Color(248,78,106,255))
                 .setDescription("**Disconnected** from <#" + event.getGuild().getSelfMember().getVoiceState().getChannel().getId() + ">")
                 .build())

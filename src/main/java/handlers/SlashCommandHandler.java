@@ -20,6 +20,8 @@ public class SlashCommandHandler
         commandMap.put("ping", new Ping());
         commandMap.put("info", new Info());
 
+        commandMap.put("player", new Player());
+
         commandMap.put("join", new Join());
         commandMap.put("disconnect", new Disconnect());
         commandMap.put("play", new Play());

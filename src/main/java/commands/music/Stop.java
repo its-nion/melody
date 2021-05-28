@@ -5,8 +5,6 @@ import audioCore.GuildMusicManager;
 import audioCore.PlayerManager;
 import commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
@@ -24,7 +22,7 @@ public class Stop implements Command
     public void called(SlashCommandEvent event) {
         if(!AudioStateChecks.isMemberInVC(event))
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248,78,106,255))
                     .setDescription("This Command requires **you** to be **connected to a voice channel**")
                     .build())
@@ -35,7 +33,7 @@ public class Stop implements Command
 
         if(!AudioStateChecks.isMelodyInVC(event))
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248,78,106,255))
                     .setDescription("This Command requires Melody to be **connected to your voice channel**")
                     .build())
@@ -46,7 +44,7 @@ public class Stop implements Command
 
         if(!AudioStateChecks.isMemberAndMelodyInSameVC(event))
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248,78,106,255))
                     .setDescription("This Command requires Melody to be **connected to your voice channel**")
                     .build())
@@ -66,7 +64,7 @@ public class Stop implements Command
         musicManager.scheduler.player.stopTrack();
         musicManager.scheduler.queue.clear();
 
-        event.reply(new EmbedBuilder()
+        event.replyEmbeds(new EmbedBuilder()
                 .setDescription("Player stopped and queue cleared")
                 .build())
                 .queue();

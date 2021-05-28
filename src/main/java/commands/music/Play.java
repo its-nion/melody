@@ -4,15 +4,12 @@ import audioCore.AudioStateChecks;
 import audioCore.PlayerManager;
 import commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.CommandHook;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.managers.AudioManager;
-import net.dv8tion.jda.api.requests.RestAction;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.awt.*;
@@ -21,7 +18,7 @@ import java.net.URISyntaxException;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 public class Play implements Command {
-    private CommandHook commandHook;
+    private InteractionHook interactionHook;
 
     private boolean isUrl(String url) {
         try {
@@ -43,7 +40,7 @@ public class Play implements Command {
     public void called(SlashCommandEvent event) {
 
         if (AudioStateChecks.isMemberInVC(event) == false) {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248, 78, 106, 255))
                     .setDescription("This Command requires **you** to be **connected to a voice channel**")
                     .build())
@@ -54,7 +51,7 @@ public class Play implements Command {
 
         if (AudioStateChecks.isMelodyInVC(event)) {
             if (AudioStateChecks.isMemberAndMelodyInSameVC(event) == false) {
-                event.reply(new EmbedBuilder()
+                event.replyEmbeds(new EmbedBuilder()
                         .setColor(new Color(248, 78, 106, 255))
                         .setDescription("This Command requires **you** to be **in the same voice channel as Melody**")
                         .build())
@@ -76,9 +73,9 @@ public class Play implements Command {
             link = "ytsearch:" + link;
         }
 
-        event.acknowledge().queue();
+        //event.isAcknowledged() = true;
 
-        commandHook = event.getHook();
+        interactionHook = event.getHook();
 
         if(AudioStateChecks.isMelodyInVC(event) == false)
         {
@@ -87,7 +84,7 @@ public class Play implements Command {
 
             audioManager.openAudioConnection(memberChannel);
 
-            commandHook.sendMessage(new EmbedBuilder()
+            interactionHook.sendMessageEmbeds(new EmbedBuilder()
                     .setColor(new Color(116, 196, 118, 255))
                     .setDescription("**Joined** in <#" + memberChannel.getId() + ">")
                     .build())
@@ -95,7 +92,7 @@ public class Play implements Command {
         }
 
         PlayerManager.getInstance()
-                .loadAndPlay(event, link, commandHook);
+                .loadAndPlay(event, link, interactionHook);
 
         return;
     }

@@ -10,7 +10,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.CommandHook;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +40,7 @@ public class PlayerManager {
         });
     }
 
-    public void loadAndPlay(SlashCommandEvent event, String trackUrl, CommandHook commandHook) {
+    public void loadAndPlay(SlashCommandEvent event, String trackUrl, InteractionHook interactionHook) {
         final GuildMusicManager musicManager = this.getMusicManager(event.getGuild());
 
         this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
@@ -48,7 +48,7 @@ public class PlayerManager {
             public void trackLoaded(AudioTrack track) {
                 musicManager.scheduler.queue(track);
 
-                commandHook.sendMessage(new EmbedBuilder()
+                interactionHook.sendMessageEmbeds(new EmbedBuilder()
                         .setDescription("**Added** [" + track.getInfo().title + "](" + trackUrl + ") " +
                                 "**to the playlist**")
                         .build())
@@ -61,13 +61,13 @@ public class PlayerManager {
 
                 if (audioPlaylist.isSearchResult()) {
                     musicManager.scheduler.queue(tracks.get(0));
-                    commandHook.sendMessage(new EmbedBuilder()
+                    interactionHook.sendMessageEmbeds(new EmbedBuilder()
                             .setDescription("**Added** [" + tracks.get(0).getInfo().title + "](" + tracks.get(0).getInfo().uri + ") " +
                                     "** to the playlist**")
                             .build())
                             .queue();
                 } else {
-                    event.reply(new EmbedBuilder()
+                    event.replyEmbeds(new EmbedBuilder()
                             .setDescription(String.valueOf(tracks.size()) +
                                     " tracks from playlist" +
                                     audioPlaylist.getName())

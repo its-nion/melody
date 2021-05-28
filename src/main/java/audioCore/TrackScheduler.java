@@ -46,14 +46,14 @@ public class TrackScheduler extends AudioEventAdapter
                 this.player.startTrack(this.queue.poll(), false);
             }
 
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setDescription("**Skipped " + event.getOption("amount").getAsLong() + "** songs")
                     .build())
                     .queue();
         }
         else
         {
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                     .setColor(new Color(248,78,106,255))
                     .setDescription("Cant skip **" + event.getOption("amount").getAsLong() + "** tracks")
                     .build())

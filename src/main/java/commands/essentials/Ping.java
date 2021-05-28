@@ -40,9 +40,9 @@ public class Ping implements Command
     {
         long ping = event.getJDA().getGatewayPing();
 
-        event.reply(new EmbedBuilder()
+        event.replyEmbeds(new EmbedBuilder()
                 .setColor(getColorByPing(ping))
-                .setTitle(String.valueOf(ping) + " ms")
+                .setTitle(ping + " ms")
                 .build())
                 .setEphemeral(true)
                 .queue();

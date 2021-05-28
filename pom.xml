@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
             <artifactId>JDA</artifactId>
-            <version>5951675</version>
+            <version>f957801</version>
         </dependency>
 
         <dependency>
