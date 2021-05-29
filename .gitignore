@@ -3,7 +3,7 @@
 *.iml
 *.ipr
 *.iws
-target
+target/**
 
 # Default ignored files
 /shelf/
