@@ -6,7 +6,7 @@ public class Config
 {
     // ##### GENERAL BOT SETTINGS ##### //
 
-    public static String TOKEN = "ODQzMTA0NTkyNDE3MzkwNjEy.YJ_AVg.0yD6revjxpGFIQoa1tV4QffusKI";
+    public static String TOKEN = "Token";
 
     public static OnlineStatus STATUS = OnlineStatus.ONLINE;
 
