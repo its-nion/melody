@@ -1,5 +1,9 @@
-# IDE stuff:
-.idea
+# Intellij stuff:
+/.idea/
+*.iml
+*.ipr
+*.iws
+target
 
 # Default ignored files
 /shelf/
@@ -12,12 +16,8 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
-# Other unnescessary stuff
-target
-*.iml
-
 # Server database
 database.db
 
 # Secret bot stuff
-*/Config.java
+*Config.java
