@@ -20,4 +20,4 @@ target
 database.db
 
 # Secret bot stuff
-/src/main/java/utils/Config.java
+*/Config.java
