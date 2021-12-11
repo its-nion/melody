@@ -1,30 +1,26 @@
 package commands.perms;
 
-import commands.Command;
+import audioCore.slash.SlashCommand;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import static net.dv8tion.jda.api.interactions.commands.OptionType.ROLE;
-import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
+public class ShowPerms extends SlashCommand {
 
-public class ShowPerms implements Command
-{
+//    @Override
+//    public CommandData commandInfo() {
+//        return new CommandData("showperms", "Shows role permissions")
+//                .addOption(new OptionData(ROLE, "role", "The role which permissions you want to see")
+//                        .setRequired(true));
+//    }
 
-    @Override
-    public CommandData commandInfo() {
-        return new CommandData("showperms", "Shows role permissions")
-                .addOption(new OptionData(ROLE, "role", "The role which permissions you want to see")
-                        .setRequired(true));
-    }
 
     @Override
-    public void called(SlashCommandEvent event) {
+    protected void execute(SlashCommandEvent event) {
 
     }
 
     @Override
-    public void action(SlashCommandEvent event) {
+    protected void clicked(ButtonClickEvent event) {
 
     }
 }

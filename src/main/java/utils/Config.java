@@ -6,7 +6,7 @@ public class Config
 {
     // ##### GENERAL BOT SETTINGS ##### //
 
-    public static String TOKEN = "Token";
+    public static String TOKEN = "melody.Token";
 
     public static OnlineStatus STATUS = OnlineStatus.ONLINE;
 

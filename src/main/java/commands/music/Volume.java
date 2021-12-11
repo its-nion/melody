@@ -1,10 +1,11 @@
 package commands.music;
 
-import commands.Command;
+import audioCore.slash.SlashCommand;
 import database.DBVariables;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -14,18 +15,18 @@ import java.awt.*;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.INTEGER;
 
-public class Volume implements Command
-{
-    @Override
-    public CommandData commandInfo() {
-        return new CommandData("volume", "Check or change your current volume")
-                .addOption(new OptionData(INTEGER, "amount", "Volume in percentage [0 - 100]")
-                        .setRequired(false));
-    }
+public class Volume extends SlashCommand {
+//    @Override
+//    public CommandData commandInfo() {
+//        return new CommandData("volume", "Check or change your current volume")
+//                .addOption(new OptionData(INTEGER, "amount", "Volume in percentage [0 - 100]")
+//                        .setRequired(false));
+//    }
+
+
 
     @Override
-    public void called(SlashCommandEvent event)
-    {
+    protected void execute(SlashCommandEvent event) {
         final Member self = event.getGuild().getSelfMember();
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
@@ -35,10 +36,10 @@ public class Volume implements Command
         if(!event.getMember().getVoiceState().inVoiceChannel()) // If member is not inside voice channel
         {
             event.replyEmbeds(new EmbedBuilder()
-                    .setColor(new Color(248,78,106,255))
-                    .setDescription("This Command requires **you** to be **connected to a voice channel**")
-                    .build())
-                    .queue();
+                .setColor(new Color(248,78,106,255))
+                .setDescription("This Command requires **you** to be **connected to a voice channel**")
+                .build())
+                .queue();
 
             return;
         }
@@ -46,10 +47,10 @@ public class Volume implements Command
         if(!selfVoiceState.inVoiceChannel()) // If bot is not in voice channel
         {
             event.replyEmbeds(new EmbedBuilder()
-                    .setColor(new Color(248,78,106,255))
-                    .setDescription("This Command requires Melody to be **connected to your voice channel**")
-                    .build())
-                    .queue();
+                .setColor(new Color(248,78,106,255))
+                .setDescription("This Command requires Melody to be **connected to your voice channel**")
+                .build())
+                .queue();
 
             return;
         }
@@ -57,19 +58,14 @@ public class Volume implements Command
         if(selfVoiceState.inVoiceChannel() && !memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) // Checks if user is in same vc as Bot
         {
             event.replyEmbeds(new EmbedBuilder()
-                    .setColor(new Color(248,78,106,255))
-                    .setDescription("This Command requires **you** to be **in the same voice channel as Melody**")
-                    .build())
-                    .queue();
+                .setColor(new Color(248,78,106,255))
+                .setDescription("This Command requires **you** to be **in the same voice channel as Melody**")
+                .build())
+                .queue();
 
             return;
         }
 
-        this.action(event);
-    }
-
-    @Override
-    public void action(SlashCommandEvent event) {
         final OptionMapping option = event.getOption("amount");
 
         if(option != null)
@@ -81,19 +77,19 @@ public class Volume implements Command
                 DBVariables.setVolume(event.getGuild().getIdLong(), (int)vol);
 
                 event.replyEmbeds(new EmbedBuilder()
-                        .setDescription("Volume was set to **" + vol + "%**")
-                        .build())
-                        .queue();
+                    .setDescription("Volume was set to **" + vol + "%**")
+                    .build())
+                    .queue();
 
                 return;
             }
             else
             {
                 event.replyEmbeds(new EmbedBuilder()
-                        .setColor(new Color(248,78,106,255))
-                        .setDescription("Type in a number between **0 and 100**")
-                        .build())
-                        .queue();
+                    .setColor(new Color(248,78,106,255))
+                    .setDescription("Type in a number between **0 and 100**")
+                    .build())
+                    .queue();
 
                 return;
             }
@@ -103,10 +99,15 @@ public class Volume implements Command
             final int vol = DBVariables.getVolume(event.getGuild().getIdLong());
 
             event.replyEmbeds(new EmbedBuilder()
-                    .setTitle( vol + "%")
-                    .build())
-                    .queue();
+                .setTitle( vol + "%")
+                .build())
+                .queue();
             return;
         }
+    }
+
+    @Override
+    protected void clicked(ButtonClickEvent event) {
+
     }
 }

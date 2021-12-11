@@ -1,14 +1,13 @@
 package commands.essentials;
 
-import commands.Command;
+import audioCore.slash.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 
-public class Ping implements Command
+public class Ping extends SlashCommand
 {
     private Color getColorByPing(long ping) {
         if (ping < 100)
@@ -22,29 +21,20 @@ public class Ping implements Command
         return Color.red;
     }
 
-
     @Override
-    public CommandData commandInfo()
-    {
-        return new CommandData("ping", "Checks Melody's latency");
-    }
-
-    @Override
-    public void called(SlashCommandEvent event)
-    {
-        this.action(event);
-    }
-
-    @Override
-    public void action(SlashCommandEvent event)
-    {
+    protected void execute(SlashCommandEvent event) {
         long ping = event.getJDA().getGatewayPing();
 
         event.replyEmbeds(new EmbedBuilder()
-                .setColor(getColorByPing(ping))
-                .setTitle(ping + " ms")
-                .build())
-                .setEphemeral(true)
-                .queue();
+            .setColor(getColorByPing(ping))
+            .setTitle(ping + " ms")
+            .build())
+            .setEphemeral(true)
+            .queue();
+    }
+
+    @Override
+    protected void clicked(ButtonClickEvent event) {
+
     }
 }
