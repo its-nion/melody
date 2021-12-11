@@ -225,18 +225,15 @@ public class Play extends SlashCommand {
         if (spotifyMessage.hasPrevious()) {
           spotifyMessage.index--;
           spotifyMessage.show();
-          if (!event.isAcknowledged()) event.deferEdit().queue();
         }
         break;
       case PLAY:
         queue(event, guild, spotifyMessage);
-        if (!event.isAcknowledged()) event.deferEdit().queue();
         break;
       case NEXT:
         if (spotifyMessage.hasNext()) {
           spotifyMessage.index++;
           spotifyMessage.show();
-          if (!event.isAcknowledged()) event.deferEdit().queue();
         }
         break;
       default:

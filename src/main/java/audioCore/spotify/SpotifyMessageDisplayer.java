@@ -7,6 +7,7 @@ import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import utils.Error;
 import utils.ReactionEmoji;
 import utils.StringSimilarity;
 
@@ -68,11 +69,8 @@ public class SpotifyMessageDisplayer {
   private void showPlaylist(int index, boolean showReaction) {
     Message message = getMessage();
     PlaylistSimplified playlist = playlists[index];
-
     message.clearReactions().queue();
-
     EmbedBuilder eb = new EmbedBuilder();
-    eb.setColor(new Color(30, 215, 96));
 
     // author
     eb.setAuthor(playlists[index].getOwner().getDisplayName());
@@ -118,11 +116,8 @@ public class SpotifyMessageDisplayer {
   private void showTrack(int index, boolean showReaction) {
     Message message = getMessage();
     Track track = tracks[index];
-
     message.clearReactions().queue();
-
     EmbedBuilder eb = new EmbedBuilder();
-    eb.setColor(new Color(30, 215, 96));
 
     // author
     eb.setAuthor(track.getArtists()[0].getName());
@@ -175,17 +170,10 @@ public class SpotifyMessageDisplayer {
   private void showNoResults() {
     Message message = getMessage();
     message.clearReactions().queue();
-
-    EmbedBuilder eb = new EmbedBuilder();
-    eb.setTitle("No Results found");
-    eb.setColor(Color.RED);
-
-    getMessage().editMessageEmbeds(eb.build()).queue();
+    getMessage().editMessageEmbeds(Error.with("No results found")).queue();
   }
 
   private ArrayList<MessageEmbed> newArrayList(List<MessageEmbed> embeds) {
-    ArrayList<MessageEmbed> newList = new ArrayList<>();
-    for (MessageEmbed embed : embeds) newList.add(embed);
-    return newList;
+    return new ArrayList<>(embeds);
   }
 }

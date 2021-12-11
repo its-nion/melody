@@ -6,6 +6,11 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 
+/**
+ * Slash Command
+ * General functionality is defined here
+ * When entering a slash command in a guild chat, you are able to control the functionality of the command here.
+ */
 public abstract class SlashCommand {
 
   protected String name;

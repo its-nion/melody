@@ -42,7 +42,7 @@ public class SlashCommandClient extends ListenerAdapter {
 
   public static void main(String[] args) throws LoginException, InterruptedException {
     JDABuilder builder = JDABuilder.createDefault(Token.BOT_TOKEN);
-    builder.setActivity(Activity.of(Activity.ActivityType.DEFAULT, "reloading"));
+    builder.setActivity(Activity.of(Activity.ActivityType.DEFAULT, "Updating Commands"));
     SlashCommandClientBuilder slashCommandClientBuilder = new SlashCommandClientBuilder();
     slashCommandClientBuilder.addCommands(SlashCommands.commandMap.values().toArray(SlashCommand[]::new));
     slashCommandClientBuilder.build();
@@ -61,10 +61,10 @@ public class SlashCommandClient extends ListenerAdapter {
 //    }
     for (Guild guild : Main.manager.getGuilds())
       upsertCommands(guild);
-    System.out.printf("Queued an update for %d commands. This will take a while. Requester (This instance) will shutdown in 2 min... \n", SlashCommands.commandMap.values().stream().filter(i -> i.name != null).toArray(SlashCommand[]::new).length);
+    System.out.printf("Queued an update for %d commands. This will take a while. Requester (This instance) will shutdown in 20 sec... \n", SlashCommands.commandMap.values().stream().filter(i -> i.name != null).toArray(SlashCommand[]::new).length);
     new Thread(() -> {
       try {
-        Thread.sleep(1000 * 60 * 2);
+        Thread.sleep(1000 * 20);
       } catch (InterruptedException ignored){
       } finally {
         Main.manager.shutdown();
