@@ -3,7 +3,9 @@ package commands.music;
 import audioCore.handler.AudioStateChecks;
 import audioCore.handler.PlayerManager;
 import audioCore.slash.SlashCommand;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -73,5 +75,12 @@ public class Resume extends SlashCommand {
     @Override
     protected void clicked(ButtonClickEvent event) {
 
+    }
+
+    public void resume(Guild guild){
+        PlayerManager manager = PlayerManager.getInstance();
+        AudioPlayer player = manager.getGuildAudioManager(guild).player;
+        if (!player.isPaused()) return;
+        player.setPaused(false);
     }
 }

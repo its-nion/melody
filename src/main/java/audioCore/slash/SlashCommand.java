@@ -14,12 +14,14 @@ public abstract class SlashCommand {
   protected String help;
   protected String description;
 
-  protected abstract void execute(SlashCommandEvent event);
-
-  protected abstract void clicked(ButtonClickEvent event);
-
   protected CommandCreateAction onUpsert(CommandCreateAction cca){
     return cca;
+  }
+
+  protected abstract void execute(SlashCommandEvent event);
+
+  protected void clicked(ButtonClickEvent event){
+
   }
 
   protected void registerButton(Button button){

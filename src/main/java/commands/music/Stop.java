@@ -4,7 +4,9 @@ import audioCore.handler.AudioStateChecks;
 import audioCore.handler.GuildAudioManager;
 import audioCore.handler.PlayerManager;
 import audioCore.slash.SlashCommand;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -60,8 +62,10 @@ public class Stop extends SlashCommand {
             .queue();
     }
 
-    @Override
-    protected void clicked(ButtonClickEvent event) {
-
+    public void stop(Guild guild){
+        PlayerManager manager = PlayerManager.getInstance();
+        GuildAudioManager guildAudioManager = manager.getGuildAudioManager(guild);
+        guildAudioManager.scheduler.clearQueue();
+        guildAudioManager.player.destroy();
     }
 }

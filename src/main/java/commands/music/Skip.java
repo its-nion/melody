@@ -2,9 +2,11 @@ package commands.music;
 
 import audioCore.handler.AudioStateChecks;
 import audioCore.handler.PlayerManager;
+import audioCore.handler.TrackScheduler;
 import audioCore.slash.SlashCommand;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -89,5 +91,21 @@ public class Skip extends SlashCommand {
     @Override
     protected void clicked(ButtonClickEvent event) {
 
+    }
+
+    public boolean skip(Guild guild){
+        PlayerManager manager = PlayerManager.getInstance();
+        TrackScheduler scheduler = manager.getGuildAudioManager(guild).scheduler;
+        return scheduler.nextTrack();
+    }
+
+    public void skip(Guild guild, int amount){
+        while (amount > 0) {
+            boolean skipable = skip(guild);
+            if (!skipable) {
+                return;
+            }
+            amount--;
+        }
     }
 }
