@@ -2,7 +2,6 @@ package database;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import utils.Config;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,7 +47,7 @@ public class DBVariables
             e.printStackTrace();
         }
 
-        return Config.DEFAULTVOLUME;
+        return 75;
     }
 
     public static void setVolume (long guildID, int vol)

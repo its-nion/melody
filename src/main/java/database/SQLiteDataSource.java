@@ -4,7 +4,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.Config;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,8 +60,6 @@ public class SQLiteDataSource
 
         try (final Statement statement = getConnection().createStatement())
         {
-            final int defaultVolume = Config.DEFAULTVOLUME;
-
             statement.execute("CREATE TABLE IF NOT EXISTS roles(" +
                     "role_id INTEGER PRIMARY KEY," +
                     "perm_play INTEGER" +

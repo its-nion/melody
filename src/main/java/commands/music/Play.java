@@ -1,19 +1,27 @@
 package commands.music;
 
-
+import audioCore.handler.AudioStateChecks;
 import audioCore.handler.MusicLoader;
 import audioCore.slash.SlashCommand;
 import audioCore.spotify.Spotify;
 import audioCore.spotify.SpotifyButtonMessage;
+
+import net.dv8tion.jda.api.entities.Guild;
+import utils.Error;
+import utils.MessageStore;
+import utils.ReactionEmoji;
+import utils.SavedMessage;
+
+import melody.Main;
+
 import com.jagrosh.jdautilities.command.Command;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
-import melody.Main;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -23,9 +31,6 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
-import utils.MessageStore;
-import utils.ReactionEmoji;
-import utils.SavedMessage;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
@@ -33,263 +38,250 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Play Command
+ * General functionality is defined here
+ * When entering this command in a guild chat, you are able to search for a song, that is going to be played in your
+ * Voice Channel.
+ * Possible usage of the command:
+ * <p>/play with a link: When entering "/play" followed by a link, this link will be played directly</p>
+ * <p>/play with a query: When entering "/play" followed by any string, the string will be searched on Spotify.
+ * The results will be displayed in a {@link MessageEmbed}. You can select from here what song to play with provided {@link Button}s.
+ * Button Click will be handled in the {@link #clicked(ButtonClickEvent)}.</p>
+ * <p>/play with type and query: You can enter a search type for your query right before your query.
+ * Possible types are "playlist", "user" and "track".</p>
+ */
 public class Play extends SlashCommand {
 
-    public static Player player;
+  /**
+   * IDS for command options or buttons
+   */
+  public static final String URL_TYPE_SEARCH = "search";
+  public static final String NEXT = "next";
+  public static final String PREVIOUS = "previous";
+  public static final String PLAY = "play";
 
-    public static final String URL_TYPE_SEARCH = "search";
-    public static final String NEXT = "next";
-    public static final String PREVIOUS = "previous";
-    public static final String PLAY = "play";
-
-    public Play() {
-        super.name = "play";
-        super.category = new Command.Category("Sound");
-        super.help = """
+  /**
+   * Constructor for a Play Command Object. This is instantiated when building the Command Handler or for temporary operations
+   *
+   * {@link #name} The name of the command. The string you have to type after the '/'. i.e. /play
+   * {@link #category} The category of the command. Commands will be sorted by that
+   * {@link #help} The help message, in case someone types /help [command]
+   * {@link #description} This description will be shown together with the command name in the command preview
+   */
+  public Play() {
+    super.name = "play";
+    super.category = new Command.Category("Sound");
+    super.help = """
         /play [link] : plays the song/playlist of the link. possible links from youtube, soundcloud or bandcamp
         /play playlist [search] : searches for a playlist with spotify. react with eiter the "arrow left" or the "arrow right" to navigate threw the results, react with "musical_note" to play the playlist or react with "+" to queue the playlist. aliases: pl, list
         /play song [search] : searches for a song with spotify. react with eiter the "arrow left" or the "arrow right" to navigate threw the results, react with "musical_note" to play the song or react with "+" to queue the song. aliases: track
         /play user [userID] : lists the users playlists on spotify. react with eiter the "arrow left" or the "arrow right" to navigate threw the playlists, react with "musical_note" to play the playlist or react with "+" to queue the playlist. aliases: account, member
         /play [search] : searches for a song""";
-        super.description = "Search for your favourite songs to jam to.";
+    super.description = "Search for your favourite songs to jam to.";
+  }
+
+  /**
+   * This will fire whenever a command reload is executed. this defines how the play command is build.
+   * @param cca the object the command is build with. you can modify it as you want.
+   * @return the finished play command builder with an option for a search query
+   */
+  @Override
+  protected CommandCreateAction onUpsert(CommandCreateAction cca) {
+    return cca.addOption(OptionType.STRING, URL_TYPE_SEARCH, "URL or Type or Search", true);
+  }
+
+  /**
+   * This will fire whenever a user enters /play ... in a guild textchannel.
+   * If the requesting member is in a vc and the command is correct, the bot will join you and a list of possible search
+   * answers are presented to you.
+   * You can navigate with buttons and play your preferred songs
+   * @param event all the event data
+   */
+  @Override
+  protected void execute(SlashCommandEvent event) {
+    Main.log(event, "Play");
+
+    if (event.getGuild() == null){
+      event.replyEmbeds(Error.with("This command can only be executed in a server textchannel")).queue();
+      return;
     }
 
-//    private InteractionHook interactionHook;
-//
-//    private boolean isUrl(String url) {
-//        try {
-//            new URI(url);
-//            return true;
-//        } catch (URISyntaxException e) {
-//            return false;
-//        }
-//    }
-//
-//    @Override
-//    public CommandData commandInfo() {
-//        return new CommandData("play", "Adds a song to your queue")
-//                .addOption(new OptionData(STRING, "song", "The song name or Url")
-//                        .setRequired(true));
-//    }
-//
-//    @Override
-//    public void called(SlashCommandEvent event) {
-//
-//        if (AudioStateChecks.isMemberInVC(event) == false) {
-//            event.replyEmbeds(new EmbedBuilder()
-//                    .setColor(new Color(248, 78, 106, 255))
-//                    .setDescription("This Command requires **you** to be **connected to a voice channel**")
-//                    .build())
-//                    .queue();
-//
-//            return;
-//        }
-//
-//        if (AudioStateChecks.isMelodyInVC(event)) {
-//            if (AudioStateChecks.isMemberAndMelodyInSameVC(event) == false) {
-//                event.replyEmbeds(new EmbedBuilder()
-//                        .setColor(new Color(248, 78, 106, 255))
-//                        .setDescription("This Command requires **you** to be **in the same voice channel as Melody**")
-//                        .build())
-//                        .queue();
-//
-//                return;
-//            }
-//        }
-//
-//        this.action(event);
-//    }
-//
-//    @Override
-//    public void action(SlashCommandEvent event) {
-//        String link = event.getOption("song").getAsString();
-//
-//        if (isUrl(link) == false)
-//        {
-//            link = "ytsearch:" + link;
-//        }
-//
-//        //event.isAcknowledged() = true;
-//
-//        interactionHook = event.getHook();
-//
-//        if(AudioStateChecks.isMelodyInVC(event) == false)
-//        {
-//            AudioManager audioManager = event.getGuild().getAudioManager();
-//            VoiceChannel memberChannel = event.getMember().getVoiceState().getChannel();
-//
-//            audioManager.openAudioConnection(memberChannel);
-//
-//            interactionHook.sendMessageEmbeds(new EmbedBuilder()
-//                    .setColor(new Color(116, 196, 118, 255))
-//                    .setDescription("**Joined** in <#" + memberChannel.getId() + ">")
-//                    .build())
-//                    .queue();
-//        }
-//
-//        PlayerManager.getInstance()
-//                .loadAndPlay(event, link, interactionHook);
-//
-//        return;
-//    }
-
-    @Override
-    protected CommandCreateAction onUpsert(CommandCreateAction cca) {
-        return cca.addOption(OptionType.STRING, URL_TYPE_SEARCH, "URL or Type or Search", true);
+    if (!AudioStateChecks.isMemberInVC(event)) {
+      event.replyEmbeds(Error.with("This Command requires **you** to be **connected to a voice channel**")).queue();
+      return;
     }
 
-    @Override
-    protected void execute(SlashCommandEvent event) {
-        //Main.log(event, "Play");
-        TextChannel channel = event.getTextChannel();
-
-        if (event.getOptions().isEmpty()) {
-            channel.sendMessage("Please provide some arguments, type %help play for further information").queue();
-        } else {
-            Player player = getPlayer();
-            //Main.info(event, "Player loaded: " + player.name(), Main.ANSI_GREEN);
-            Play.player = player;
-            handlePlayCommand(event, player);
-
-        }
+    if (event.getOptions().isEmpty()) {
+      event.replyEmbeds(Error.with("Please provide some arguments, type /help play for further information")).queue();
+      return;
     }
 
-    public void handlePlayCommand(SlashCommandEvent event, Player player) {
-        assert event.getGuild() != null;
-        AudioManager audio = event.getGuild().getAudioManager();
-        MessageEmbed connect = null;
-        if (!audio.isConnected())
-            connect = new Join().connect(event);
+    Player player = getPlayer();
+    handlePlayCommand(event, event.getGuild(), player);
+  }
 
-        OptionMapping firstOption = event.getOption(URL_TYPE_SEARCH);
-        assert firstOption != null;
-        String firstArg = firstOption.getAsString();
+  /**
+   * This will fire whenever a user enters /play ... in a guild textchannel.
+   * The requesting member is in a vc and the command is correct. Therefore the bot will join you and a list of
+   * possible search answers are presented to you.
+   * You can navigate with buttons and play your preferred songs
+   * @param event all the event data
+   * @param player the player that should be used
+   */
+  private void handlePlayCommand(SlashCommandEvent event, @Nonnull Guild guild, Player player) {
+    AudioManager audio = guild.getAudioManager();
+    MessageEmbed connect = null;
+    if (!audio.isConnected())
+      connect = new Join().connectReturnEmbed(event);
 
-        if (isUrl(firstArg)) {
-            // URL
-            //Main.info(event, "Loading song or playlist " + firstArg, Main.ANSI_BLUE);
-            new MusicLoader().loadURL(event.getTextChannel(), firstArg.strip());
-        } else {
-            // create buttons
-            net.dv8tion.jda.api.interactions.components.Button[] buttons = new net.dv8tion.jda.api.interactions.components.Button[]{
-                net.dv8tion.jda.api.interactions.components.Button.danger(PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)),
-                net.dv8tion.jda.api.interactions.components.Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
-                net.dv8tion.jda.api.interactions.components.Button.secondary(NEXT, Emoji.fromUnicode(ReactionEmoji.NEXT))
-            };
-            for (net.dv8tion.jda.api.interactions.components.Button component : buttons)
-                registerButton(component);
+    OptionMapping firstOption = event.getOption(URL_TYPE_SEARCH);
+    assert firstOption != null;
+    String firstArg = firstOption.getAsString();
 
-            // create embeds
-            MessageEmbed first = connect != null ? connect : new EmbedBuilder().setDescription("Loading Spotify...").build();
-            MessageEmbed second = connect == null ? null : new EmbedBuilder().setDescription("Loading Spotify...").build();
-            List<MessageEmbed> embeds = newArrayList(first, second);
-            embeds.remove(null);
+    if (isUrl(firstArg)) {
+      // URL
+      new MusicLoader().loadURL(event.getTextChannel(), firstArg.strip());
+    } else {
+      // SEARCH
+      // create buttons
+      Button[] buttons = new Button[]{
+          Button.danger(PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)),
+          Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
+          Button.secondary(NEXT, Emoji.fromUnicode(ReactionEmoji.NEXT))
+      };
+      for (Button component : buttons)
+        registerButton(component);
 
-            // create Message from embeds and buttons
-            Message message = event
-                .replyEmbeds(embeds)
-                .addActionRow(buttons).complete().retrieveOriginal().complete();
+      // create embeds
+      MessageEmbed first = connect != null ? connect : new EmbedBuilder().setDescription("Loading Spotify...").build();
+      MessageEmbed second = connect == null ? null : new EmbedBuilder().setDescription("Loading Spotify...").build();
+      List<MessageEmbed> embeds = newArrayList(first, second);
+      embeds.remove(null);
 
-            //Main.info(event, "Searching for songs: '" + firstArg + "' with: " + player.name(), Main.ANSI_BLUE);
-            Spotify.searchSpotify(event, firstArg, message);
-        }
+      // create Message from embeds and buttons
+      Message message = event
+          .replyEmbeds(embeds)
+          .addActionRow(buttons).complete().retrieveOriginal().complete();
+
+      //Main.info(event, "Searching for songs: '" + firstArg + "' with: " + player.name(), Main.ANSI_BLUE);
+      Spotify.searchSpotify(event, firstArg, message);
+    }
+  }
+
+  private List<MessageEmbed> newArrayList(MessageEmbed... embeds) {
+    ArrayList<MessageEmbed> newList = new ArrayList<>();
+    for (MessageEmbed embed : embeds) if (embed != null) newList.add(embed);
+    return newList;
+  }
+
+  private boolean isUrl(String input) {
+    try {
+      new URL(input);
+      return true;
+    } catch (MalformedURLException ignored) {
+      return false;
+    }
+  }
+
+  /**
+   * This will fire when a user clicked on a button regarding this command.
+   * The Button has to be registered beforehand with {@link #registerButton(Button)}.
+   * The regarding message will be searched and continued with {@link #executeButtonAction(ButtonClickEvent, Guild, SpotifyButtonMessage)}
+   * @param event all the button click event data
+   */
+  @Override
+  protected void clicked(ButtonClickEvent event) {
+    if (event.getGuild() == null){
+      event.replyEmbeds(Error.with("This command can only be executed in a server textchannel")).queue();
+      return;
     }
 
-    private List<MessageEmbed> newArrayList(MessageEmbed... embeds) {
-        ArrayList<MessageEmbed> newList = new ArrayList<>();
-        for (MessageEmbed embed : embeds) if (embed != null) newList.add(embed);
-        return newList;
-    }
-
-    private boolean isUrl(String input) {
-        try {
-            new URL(input);
-            return true;
-        } catch (MalformedURLException ignored) {
-            return false;
-        }
-    }
-
-    @Override
-    protected void clicked(ButtonClickEvent event) {
-        assert event.getButton() != null;
-        assert event.getButton().getId() != null;
-        for (SavedMessage message : MessageStore.allMessages()) {
-            if (message.getMessageID() == event.getMessageIdLong() && message instanceof SpotifyButtonMessage) {
-                foundSpotifyMessage(event, (SpotifyButtonMessage) message);
-                if (!event.isAcknowledged())
-                    event.deferEdit().queue();
-                return;
-            }
-        }
-
-    }
-
-    private void foundSpotifyMessage(@Nonnull ButtonClickEvent event, SpotifyButtonMessage spotifyMessage) {
-        assert event.getButton() != null;
-        assert event.getButton().getId() != null;
-        switch (event.getButton().getId()){
-            case PREVIOUS:
-                if (spotifyMessage.hasPrevious()) {
-                    spotifyMessage.index--;
-                    spotifyMessage.show();
-                }
-                break;
-            case PLAY:
-                queue(event, spotifyMessage);
-                break;
-            case NEXT:
-                if (spotifyMessage.hasNext()) {
-                    spotifyMessage.index++;
-                    spotifyMessage.show();
-                }
-                break;
-            default:
-                break;
-        }
+    for (SavedMessage message : MessageStore.allMessages()) {
+      if (message.getMessageID() == event.getMessageIdLong() && message instanceof SpotifyButtonMessage) {
+        SpotifyButtonMessage spotifyMessage = (SpotifyButtonMessage) message;
+        executeButtonAction(event, event.getGuild(), spotifyMessage);
         event.editComponents(ActionRow.of(
-            net.dv8tion.jda.api.interactions.components.Button.of(spotifyMessage.hasPrevious() ? ButtonStyle.SECONDARY : ButtonStyle.DANGER, PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)),
-            net.dv8tion.jda.api.interactions.components.Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
+            Button.of(spotifyMessage.hasPrevious() ? ButtonStyle.SECONDARY : ButtonStyle.DANGER, PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)),
+            Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
             Button.of(spotifyMessage.hasNext() ? ButtonStyle.SECONDARY : ButtonStyle.DANGER, NEXT, Emoji.fromUnicode(ReactionEmoji.NEXT))
         )).queue();
+        return;
+      }
     }
+  }
 
-    private void queue(ButtonClickEvent event, SpotifyButtonMessage spotifyMessage) {
-        assert event.getGuild() != null;
-        new Join().connect(event.getGuild(), event.getMember(), event.getTextChannel());
+  /**
+   * After the correct saved data message has been found, regarding of what button was pressed, a different action
+   * will be executed
+   * @param event all the button click event data
+   * @param spotifyMessage the found data message
+   */
+  private void executeButtonAction(ButtonClickEvent event, @Nonnull Guild guild, SpotifyButtonMessage spotifyMessage) {
+    if (event.getButton() == null || event.getButton().getId() == null) return;
 
-        if (spotifyMessage.tracks == null) {
-            //PLAYLIST
-            List<String> queries = new ArrayList<>();
-            PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(spotifyMessage.getCurrentPlaylist().getId());
-            int maxLoadCount = 100;
-            for (int i = 0; i < tracks.length && i < maxLoadCount; i++) {
-                String artist = tracks[i].getTrack().getArtists()[0].getName();
-                String title = tracks[i].getTrack().getName();
-                String search = "ytsearch:" + artist + "-" + title;
-                queries.add(search);
-            }
-            Main.info(event, "Finding " + queries.size() + " Tracks on Youtube");
-            new MusicLoader().loadMultiple(event.getTextChannel(), spotifyMessage.getCurrentPlaylist(), queries.toArray(String[]::new));
-        } else {
-            //SINGLE
-            Track track = spotifyMessage.getCurrentTrack();
-            String url = "ytsearch:" + track.getArtists()[0].getName() + "-" + track.getName();
-            Main.info(event, "Finding Track on Youtube with: " + url);
-            new MusicLoader().loadOne(event.getTextChannel(), url);
+    switch (event.getButton().getId()) {
+      case PREVIOUS:
+        if (spotifyMessage.hasPrevious()) {
+          spotifyMessage.index--;
+          spotifyMessage.show();
+          if (!event.isAcknowledged()) event.deferEdit().queue();
         }
-    }
-
-    enum Player {
-        NONE, YOUTUBE, SPOTIFY
-    }
-
-    private Player getPlayer() {
-        if (player != Player.NONE && player != null) {
-            return player;
+        break;
+      case PLAY:
+        queue(event, guild, spotifyMessage);
+        if (!event.isAcknowledged()) event.deferEdit().queue();
+        break;
+      case NEXT:
+        if (spotifyMessage.hasNext()) {
+          spotifyMessage.index++;
+          spotifyMessage.show();
+          if (!event.isAcknowledged()) event.deferEdit().queue();
         }
-        // unknown player -> return default
-        player = Player.SPOTIFY;
-        return player;
+        break;
+      default:
+        break;
     }
+  }
+
+  /**
+   * This is queueing a track or other music object, that is selected in the current data message
+   * @param event all the button click event data
+   * @param guild the NonNull Guild the command was executed in
+   * @param spotifyMessage the found data message
+   */
+  private void queue(ButtonClickEvent event, @Nonnull Guild guild, SpotifyButtonMessage spotifyMessage) {
+    AudioManager audio = guild.getAudioManager();
+    if (!audio.isConnected())
+      new Join().connect(guild, event.getMember(), event.getTextChannel());
+
+    if (spotifyMessage.tracks == null) {
+      //PLAYLIST
+      List<String> queries = new ArrayList<>();
+      PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(spotifyMessage.getCurrentPlaylist().getId());
+      int maxLoadCount = 100;
+      for (int i = 0; i < tracks.length && i < maxLoadCount; i++) {
+        String artist = tracks[i].getTrack().getArtists()[0].getName();
+        String title = tracks[i].getTrack().getName();
+        String search = "ytsearch:" + artist + "-" + title;
+        queries.add(search);
+      }
+      Main.info(event, "Finding " + queries.size() + " Tracks on Youtube");
+      new MusicLoader().loadMultiple(event.getTextChannel(), spotifyMessage.getCurrentPlaylist(), queries.toArray(String[]::new));
+    } else {
+      //SINGLE
+      Track track = spotifyMessage.getCurrentTrack();
+      String url = "ytsearch:" + track.getArtists()[0].getName() + "-" + track.getName();
+      Main.info(event, "Finding Track on Youtube with: " + url);
+      new MusicLoader().loadOne(event.getTextChannel(), url);
+    }
+  }
+
+  private enum Player {
+    NONE, YOUTUBE, SPOTIFY
+  }
+
+  private Player getPlayer() {
+    return Player.SPOTIFY;
+  }
 }

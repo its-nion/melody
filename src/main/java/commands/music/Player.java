@@ -31,11 +31,10 @@ public class Player extends SlashCommand {
     public static final String Stop = "stop";
 
     public Player() {
-        super.name = "controls";
+        super.name = "player";
         super.category = new Command.Category("Sound");
-        super.arguments = "";
-        super.help = "/player : Shows some clickable buttons to control the best of all music bots. It also has a lot of donuts!";
-        super.description = "Shows some clickable buttons to control the best of all music bots. It also has a lot of donuts!";
+        super.help = "/player : Shows some clickable buttons to control the best of all music bots.";
+        super.description = "Shows some clickable buttons to control the best of all music bots.";
     }
 
 //    @Override

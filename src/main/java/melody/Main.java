@@ -9,6 +9,7 @@ import database.DBVariables;
 import audioCore.slash.SlashCommands;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -16,7 +17,6 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import utils.Config;
 
 import javax.security.auth.login.LoginException;
 import java.util.EnumSet;
@@ -43,14 +43,14 @@ public class Main
     }
 
     private void setup() throws LoginException, InterruptedException {
-        JDABuilder builder = JDABuilder.createLight(Token.BOT_TOKEN, EnumSet.noneOf(GatewayIntent.class));
+        JDABuilder builder = JDABuilder.createDefault(Token.BOT_TOKEN);
         builder.setActivity(Activity.of(Activity.ActivityType.LISTENING, "Music"));
         builder.setBulkDeleteSplittingEnabled(false);
         builder.setCompression(Compression.NONE);
         builder.enableIntents(GatewayIntent.GUILD_VOICE_STATES);
         builder.enableCache(CacheFlag.VOICE_STATE);
         builder.setAutoReconnect(true);
-        builder.setStatus(Config.STATUS);
+        builder.setStatus(OnlineStatus.ONLINE);
 
         SlashCommandClientBuilder slashCommandClientBuilder = new SlashCommandClientBuilder();
         slashCommandClientBuilder.addCommands(SlashCommands.commandMap.values().toArray(SlashCommand[]::new));
@@ -69,6 +69,10 @@ public class Main
 
     public static void log(CommandEvent event, String command) {
         System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + Main.ANSI_YELLOW + "Triggered " + command + Main.ANSI_RESET + ": " + event.getMessage().getContentRaw());
+    }
+
+    public static void log(SlashCommandEvent event, String command) {
+        System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + Main.ANSI_YELLOW + "Triggered " + command + Main.ANSI_RESET + ": " + event.getCommandString());
     }
 
     public static void info(CommandEvent event, String command) {
