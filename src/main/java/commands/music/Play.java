@@ -5,21 +5,13 @@ import audioCore.handler.MusicLoader;
 import audioCore.slash.SlashCommand;
 import audioCore.spotify.Spotify;
 import audioCore.spotify.SpotifyButtonMessage;
-
-import net.dv8tion.jda.api.entities.Guild;
-import utils.Error;
-import utils.MessageStore;
-import utils.ReactionEmoji;
-import utils.SavedMessage;
-
-import melody.Main;
-
 import com.jagrosh.jdautilities.command.Command;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
-
+import melody.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -28,9 +20,12 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
+import utils.Error;
+import utils.MessageStore;
+import utils.ReactionEmoji;
+import utils.SavedMessage;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
@@ -146,7 +141,7 @@ public class Play extends SlashCommand {
       // SEARCH
       // create buttons
       Button[] buttons = new Button[]{
-          Button.danger(PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)),
+          Button.secondary(PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)).asDisabled(),
           Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
           Button.secondary(NEXT, Emoji.fromUnicode(ReactionEmoji.NEXT))
       };
@@ -201,11 +196,16 @@ public class Play extends SlashCommand {
       if (message.getMessageID() == event.getMessageIdLong() && message instanceof SpotifyButtonMessage) {
         SpotifyButtonMessage spotifyMessage = (SpotifyButtonMessage) message;
         executeButtonAction(event, event.getGuild(), spotifyMessage);
+
+        Button[] buttons = new Button[3];
         event.editComponents(ActionRow.of(
-            Button.of(spotifyMessage.hasPrevious() ? ButtonStyle.SECONDARY : ButtonStyle.DANGER, PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)),
-            Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
-            Button.of(spotifyMessage.hasNext() ? ButtonStyle.SECONDARY : ButtonStyle.DANGER, NEXT, Emoji.fromUnicode(ReactionEmoji.NEXT))
+            buttons[0] = Button.secondary(PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)).withDisabled(!spotifyMessage.hasPrevious()),
+            buttons[1] = Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
+            buttons[2] = Button.secondary(NEXT, Emoji.fromUnicode(ReactionEmoji.NEXT)).withDisabled(!spotifyMessage.hasNext())
         )).queue();
+        for (Button component : buttons)
+          registerButton(component);
+
         return;
       }
     }
@@ -221,23 +221,10 @@ public class Play extends SlashCommand {
     if (event.getButton() == null || event.getButton().getId() == null) return;
 
     switch (event.getButton().getId()) {
-      case PREVIOUS:
-        if (spotifyMessage.hasPrevious()) {
-          spotifyMessage.index--;
-          spotifyMessage.show();
-        }
-        break;
-      case PLAY:
-        queue(event, guild, spotifyMessage);
-        break;
-      case NEXT:
-        if (spotifyMessage.hasNext()) {
-          spotifyMessage.index++;
-          spotifyMessage.show();
-        }
-        break;
-      default:
-        break;
+      case PREVIOUS -> spotifyMessage.previous();
+      case NEXT -> spotifyMessage.next();
+      case PLAY -> queue(event, guild, spotifyMessage);
+      default -> {}
     }
   }
 

@@ -19,8 +19,22 @@ public class SpotifyButtonMessage extends SpotifyMessage {
     new SpotifyMessageDisplayer(this).showNoReaction();
   }
 
+  public void previous(){
+    if (hasPrevious()) {
+      super.index--;
+      show();
+    }
+  }
+
   public boolean hasPrevious(){
     return super.index > 0;
+  }
+
+  public void next(){
+    if (hasNext()) {
+      super.index++;
+      show();
+    }
   }
 
   public boolean hasNext(){

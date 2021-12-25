@@ -1,138 +1,120 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
 import audioCore.slash.SlashCommand;
-import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
+import utils.EmbedColor;
+import utils.Error;
 
-import java.awt.*;
-import java.time.OffsetDateTime;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+/**
+ * Join Command
+ * General functionality is defined here
+ * When entering a join command in a guild chat, the bot will try to join your current voice channel
+ */
 public class Join extends SlashCommand {
 
+  /**
+   * Constructor for a Join Command Object. This is instantiated when building the Command Handler or for temporary operations
+   *
+   * {@link #name} The name of the command. The string you have to type after the '/'. i.e. /join
+   * {@link #category} The category of the command. Commands will be sorted by that
+   * {@link #help} The help message, in case someone types /help [command]
+   * {@link #description} This description will be shown together with the command name in the command preview
+   */
+  public Join() {
+    super.name = "join";
+    super.category = new Command.Category("Sound");
+    super.help = """
+        /join : Lets the bot join your current voice channel. This way you wont be alone forever.""";
+    super.description = "Lets the bot join your current voice channel";
+  }
 
-    @Override
-    protected void execute(SlashCommandEvent event) {
-        if(!AudioStateChecks.isMemberInVC(event))
-        {
-            event.replyEmbeds(new EmbedBuilder()
-                .setColor(new Color(248,78,106,255))
-                .setDescription("This command requires you to be **connected to a voice channel**")
-                .build())
-                .queue();
-
-            return;
-        }
-
-        AudioManager audioManager = event.getGuild().getAudioManager();
-        VoiceChannel memberChannel = event.getMember().getVoiceState().getChannel();
-
-        if(AudioStateChecks.isMelodyInVC(event))
-        {
-            audioManager.openAudioConnection(memberChannel);
-
-            event.replyEmbeds(new EmbedBuilder()
-                .setColor(new Color(88,199,235,255))
-                .setDescription("**Moved** to <#" + memberChannel.getId() + ">")
-                .build())
-                .queue();
-        }
-        else
-        {
-            audioManager.openAudioConnection(memberChannel);
-
-            event.replyEmbeds(new EmbedBuilder()
-                .setColor(new Color(116,196,118,255))
-                .setDescription("**Joined** in <#" + memberChannel.getId() + ">")
-                .build())
-                .queue();
-
-        }
+  /**
+   * This will fire whenever a user enters /join in a guild textchannel.
+   * If the requesting member is in a vc and the command is correct, the bot will join you.
+   * @param event all the event data
+   */
+  @Override
+  protected void execute(SlashCommandEvent event) {
+    if (event.getMember() == null || event.getMember().getVoiceState() == null || event.getMember().getVoiceState().getChannel() == null) {
+      event.replyEmbeds(Error.with("This Command requires **you** to be **connected to a voice channel**")).queue();
+      return;
     }
 
-    @Override
-    protected void clicked(ButtonClickEvent event) {
-
+    if (event.getGuild() == null) {
+      event.replyEmbeds(Error.with("This command can only be executed in a server textchannel")).queue();
+      return;
     }
 
-    public void connect(CommandEvent event){
-        AudioManager audio = event.getGuild().getAudioManager();
-        if (audio.isConnected())
-            return;
-        try {
-            assert event.getMember().getVoiceState() != null;
-            assert event.getMember().getVoiceState().getChannel() != null;
-            VoiceChannel channel = event.getMember().getVoiceState().getChannel();
-            audio.openAudioConnection(channel);
-            sendJoinMessage(channel, event.getTextChannel());
-        } catch (Exception e) {
-            event.reply("You have to be in a Voicechannel");
-        }
+    AudioManager audioManager = event.getGuild().getAudioManager();
+    VoiceChannel memberChannel = event.getMember().getVoiceState().getChannel();
+
+    event.replyEmbeds(getJoinMessageEmbed(memberChannel)).queue();
+    audioManager.openAudioConnection(memberChannel);
+  }
+
+  /**
+   * This function can be call from other Slash Functions. It will connect the bot to your voicechannel and return
+   * a fitting MessageEmbed.
+   * @param event the calling SlashCommandEvent
+   * @return a fitting MessageEmbed
+   */
+  public MessageEmbed connectReturnEmbed(SlashCommandEvent event) {
+    if (event.getGuild() == null) {
+      return Error.with("This command can only be executed in a server textchannel");
     }
 
-    public void connect(GuildMessageReceivedEvent event){
-        AudioManager audio = event.getGuild().getAudioManager();
-        if (audio.isConnected())
-            return;
-        try {
-            assert event.getMember() != null;
-            assert event.getMember().getVoiceState() != null;
-            assert event.getMember().getVoiceState().getChannel() != null;
-            VoiceChannel channel = event.getMember().getVoiceState().getChannel();
-            audio.openAudioConnection(channel);
-            sendJoinMessage(channel, event.getChannel());
-        } catch (Exception e) {
-            event.getChannel().sendMessage("You have to be in a Voicechannel").queue();
-        }
-    }
-    public MessageEmbed connect(SlashCommandEvent event){
-        assert event.getGuild() != null;
-        AudioManager audio = event.getGuild().getAudioManager();
-        if (audio.isConnected())
-            return null;
-        try {
-            assert event.getMember() != null;
-            assert event.getMember().getVoiceState() != null;
-            assert event.getMember().getVoiceState().getChannel() != null;
-            VoiceChannel channel = event.getMember().getVoiceState().getChannel();
-            audio.openAudioConnection(channel);
-            return getJoinMessageEmbed(channel);
-        } catch (Exception e) {
-            event.reply("You have to be in a Voicechannel").queue();
-            return null;
-        }
+    if (event.getMember() == null || event.getMember().getVoiceState() == null || event.getMember().getVoiceState().getChannel() == null) {
+      return Error.with("This Command requires **you** to be **connected to a voice channel**");
     }
 
+    VoiceChannel channel = event.getMember().getVoiceState().getChannel();
+    AudioManager audio = event.getGuild().getAudioManager();
+    MessageEmbed joinMessageEmbed = getJoinMessageEmbed(channel);
+    audio.openAudioConnection(channel);
+    return joinMessageEmbed;
+  }
 
-    public void connect(Guild guild, Member member, TextChannel textChannel){
-        AudioManager audio = guild.getAudioManager();
-        if (audio.isConnected())
-            return;
-        try {
-            assert member.getVoiceState() != null;
-            assert member.getVoiceState().getChannel() != null;
-            VoiceChannel channel = member.getVoiceState().getChannel();
-            audio.openAudioConnection(channel);
-            sendJoinMessage(channel, textChannel);
-        } catch (Exception e) {
-            textChannel.sendMessage("You have to be in a Voicechannel").queue();
-        }
+  /**
+   * This function can be called from anywhere.
+   * It will connect the bot to a voicechannel and send a fitting message to the provided TextChannel
+   * @param guild the current guild
+   * @param member the requester
+   * @param textChannel the TextChannel for a Message. Can be null
+   */
+  public void connect(@Nonnull Guild guild, @Nullable Member member, @Nullable TextChannel textChannel) {
+    AudioManager audio = guild.getAudioManager();
+
+    if (member == null || member.getVoiceState() == null || member.getVoiceState().getChannel() == null) {
+      if (textChannel != null) textChannel.sendMessageEmbeds(Error.with("This Command requires **you** to be **connected to a voice channel**")).queue();
+      return;
     }
 
-    private void sendJoinMessage(VoiceChannel channel, TextChannel textChannel) {
-        textChannel.sendMessageEmbeds(getJoinMessageEmbed(channel)).queue();
-    }
+    VoiceChannel channel = member.getVoiceState().getChannel();
+    if (textChannel != null) textChannel.sendMessageEmbeds(getJoinMessageEmbed(channel)).queue();
+    audio.openAudioConnection(channel);
+  }
 
-    private MessageEmbed getJoinMessageEmbed(VoiceChannel channel){
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(Color.ORANGE);
-        embed.setTitle("Joined voice channel '" + channel.getName() + "'. Ready to play some music and eat tons of donuts!");
-        embed.setTimestamp(OffsetDateTime.now());
-        return embed.build();
-    }
+  /**
+   * Returns a MessageEmbed with a descriptive content, how the bot behaved, while joining your VoiceChannel.
+   * @param channel The joining Channel
+   * @return a fitting MessageEmbed
+   */
+  private MessageEmbed getJoinMessageEmbed(VoiceChannel channel) {
+    if (channel.getGuild().getSelfMember().getVoiceState() != null)
+      return new EmbedBuilder()
+          .setColor(EmbedColor.BLUE)
+          .setDescription("**Moved** to <#" + channel.getId() + ">")
+          .build();
+    return new EmbedBuilder()
+        .setColor(EmbedColor.GREEN)
+        .setDescription("**Joined** in <#" + channel.getId() + ">")
+        .build();
+  }
 }

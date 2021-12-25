@@ -12,4 +12,11 @@ public class Error {
         .build();
   }
 
+  public static MessageEmbed withFormat(String message, Object... args){
+    return new EmbedBuilder()
+        .setColor(EmbedColor.RED)
+        .setDescription(String.format(message, args))
+        .build();
+  }
+
 }

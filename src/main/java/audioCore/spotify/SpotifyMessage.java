@@ -8,15 +8,11 @@ import net.dv8tion.jda.api.entities.Message;
 import utils.SavedMessage;
 
 public class SpotifyMessage extends SavedMessage {
-  public static final String ID_PLAY = "button_action_play";
-  public static final String ID_NEXT = "button_action_next";
-  public static final String ID_PREVIOUS = "button_action_previous";
-
 
   public PlaylistSimplified[] playlists;
   public Track[] tracks;
 
-  public int index;
+  protected int index;
 
   public SpotifyMessage(Message message, PlaylistSimplified[] playlists) {
     super(message);
@@ -58,5 +54,11 @@ public class SpotifyMessage extends SavedMessage {
     new SpotifyMessageDisplayer(this).show();
   }
 
-
+  public int size(){
+    if (playlists != null)
+      return playlists.length;
+    else if (tracks != null)
+      return tracks.length;
+    return 0;
+  }
 }
