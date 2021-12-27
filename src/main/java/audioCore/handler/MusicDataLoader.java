@@ -9,17 +9,17 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class DataManager {
-  private static DataManager INSTANCE;
+public class MusicDataLoader {
+  private static MusicDataLoader INSTANCE;
   private final AudioPlayerManager playerManager;
 
-  public static synchronized DataManager getInstance() {
+  public static synchronized MusicDataLoader getInstance() {
     if (INSTANCE == null)
-      INSTANCE = new DataManager();
+      INSTANCE = new MusicDataLoader();
     return INSTANCE;
   }
 
-  private DataManager() {
+  private MusicDataLoader() {
     this.playerManager = new DefaultAudioPlayerManager();
     AudioSourceManagers.registerRemoteSources(playerManager);
     AudioSourceManagers.registerLocalSource(playerManager);

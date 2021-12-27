@@ -172,6 +172,7 @@ public class Player extends SlashCommand {
                 break;
             case Stop:
                 new Stop().stop(event.getGuild());
+                new Disconnect().disconnect(event.getGuild());
                 break;
             default:
                 return;

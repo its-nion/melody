@@ -1,6 +1,6 @@
 package audioCore.spotify;
 
-import audioCore.handler.DataManager;
+import audioCore.handler.MusicDataLoader;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
@@ -139,7 +139,7 @@ public class SpotifyMessageDisplayer {
     eb.appendDescription("Popularity: " + track.getPopularity() + "\n");
 
     // loaded song
-    DataManager dataManager = DataManager.getInstance();
+    MusicDataLoader dataManager = MusicDataLoader.getInstance();
     dataManager.retrieveTrackInfo(getMessage().getGuild(), "ytsearch:" + track.getArtists()[0].getName() + "-" + track.getName(), loadedTrack -> {
       int closeness = (int) (StringSimilarity.similarity(loadedTrack, track) * 100);
       eb.appendDescription("Public Song similarity: " + closeness + "%\n");

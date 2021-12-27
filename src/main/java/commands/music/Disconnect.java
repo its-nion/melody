@@ -1,24 +1,24 @@
 package commands.music;
 
 import audioCore.handler.AudioStateChecks;
-import audioCore.handler.GuildAudioManager;
-import audioCore.handler.PlayerManager;
 import audioCore.slash.SlashCommand;
-import melody.Main;
-import net.dv8tion.jda.api.EmbedBuilder;
+import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.managers.AudioManager;
 import utils.Logging;
 import utils.embed.EmbedError;
 
-import java.awt.*;
-
 public class Disconnect extends SlashCommand {
+
+    public Disconnect() {
+        super.name = "disconnect";
+        super.category = new Command.Category("Sound");
+        super.help = "/disconnect : disconnects the bot from his channel";
+        super.description = "disconnects the bot from his channel";
+    }
 
     @Override
     protected void execute(SlashCommandEvent event) {
@@ -50,12 +50,15 @@ public class Disconnect extends SlashCommand {
             return;
         }
 
-        AudioManager audioManager = event.getGuild().getAudioManager();
-        GuildAudioManager musicManager = PlayerManager.getInstance().getGuildAudioManager(event.getGuild());
+        new Stop().stop(guild);
+        disconnect(guild);
         VoiceChannel memberChannel = event.getMember().getVoiceState().getChannel();
-        musicManager.player.stopTrack();
-        musicManager.scheduler.clearQueue();
-        audioManager.closeAudioConnection();
         event.replyEmbeds(EmbedError.friendly("**Disconnected** from <#" + memberChannel.getId() + ">")).queue();
+    }
+
+    public void disconnect(Guild guild){
+        if (guild == null) return;
+        AudioManager audioManager = guild.getAudioManager();
+        audioManager.closeAudioConnection();
     }
 }

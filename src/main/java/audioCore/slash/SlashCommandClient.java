@@ -8,8 +8,12 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
+import utils.Logging;
+import utils.annotation.NoUserCommand;
 
 import javax.security.auth.login.LoginException;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class SlashCommandClient extends ListenerAdapter {
   public static SlashCommandClient INSTANCE;
@@ -17,7 +21,7 @@ public class SlashCommandClient extends ListenerAdapter {
   public SlashCommand[] slashCommands;
   public ButtonManager buttonManager;
 
-  public static SlashCommandClient getInstance(){
+  public static SlashCommandClient getInstance() {
     return INSTANCE;
   }
 
@@ -27,8 +31,8 @@ public class SlashCommandClient extends ListenerAdapter {
     INSTANCE = this;
   }
 
-  public SlashCommand getCommandByKeyword(String keyword){
-    for (SlashCommand slashCommand : slashCommands){
+  public SlashCommand getCommandByKeyword(String keyword) {
+    for (SlashCommand slashCommand : slashCommands) {
       if (slashCommand.name != null && slashCommand.name.equals(keyword)) {
         return slashCommand;
       }
@@ -36,7 +40,7 @@ public class SlashCommandClient extends ListenerAdapter {
     return null;
   }
 
-  public SlashCommand getCommandByButton(Button button){
+  public SlashCommand getCommandByButton(Button button) {
     return buttonManager.request(button);
   }
 
@@ -51,35 +55,32 @@ public class SlashCommandClient extends ListenerAdapter {
     upsertCommands();
   }
 
-  public static void upsertCommands(){
-    Main.manager.updateCommands().queue();
-//    for (SlashCommand slashCommand : SlashCommands.commandMap.values().stream().filter(i -> i.name != null).toArray(SlashCommand[]::new)){
-//      CommandCreateAction cca = Main.manager.upsertCommand(slashCommand.name, slashCommand.description);
-//      System.out.printf("[Global] Command '%s' : %s \n", slashCommand.name, slashCommand.description);
-//      cca = slashCommand.onUpsert(cca);
-//      cca.queue();
-//    }
+  public static void upsertCommands() {
+    Main.manager.updateCommands().queue();  // delete all global commands
     for (Guild guild : Main.manager.getGuilds())
       upsertCommands(guild);
-    System.out.printf("Queued an update for %d commands. This will take a while. Requester (This instance) will shutdown in 20 sec... \n", SlashCommands.commandMap.values().stream().filter(i -> i.name != null).toArray(SlashCommand[]::new).length);
     new Thread(() -> {
       try {
         Thread.sleep(1000 * 20);
-      } catch (InterruptedException ignored){
+      } catch (InterruptedException ignored) {
       } finally {
         Main.manager.shutdown();
       }
     }).start();
   }
 
-  public static void upsertCommands(Guild guild){
+  public static void upsertCommands(Guild guild) {
     guild.updateCommands().queue();
-    for (SlashCommand slashCommand : SlashCommands.commandMap.values().stream().filter(i -> i.name != null).toArray(SlashCommand[]::new)){
+    SlashCommand[] slashCommands = SlashCommands.commandMap.values().stream()
+        .filter(i -> i.name != null && i.description != null && !i.getClass().isAnnotationPresent(NoUserCommand.class))
+        .toArray(SlashCommand[]::new);
+    for (SlashCommand slashCommand : slashCommands) {
       CommandCreateAction cca = guild.upsertCommand(slashCommand.name, slashCommand.description);
-      System.out.printf("[%s] Command '%s' : %s \n", guild.getName(), slashCommand.name, slashCommand.description);
       cca = slashCommand.onUpsert(cca);
       cca.queue();
     }
+    Logging.info(getInstance().getClass(), guild, null, "Loaded " + slashCommands.length + " commands");
+    Logging.info(getInstance().getClass(), guild, null, "Commands are: " + Arrays.toString(slashCommands));
   }
 
 }
