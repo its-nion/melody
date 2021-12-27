@@ -1,12 +1,8 @@
 package melody;
 
-import audioCore.slash.SlashCommand;
-import audioCore.slash.SlashCommandClient;
-import audioCore.slash.SlashCommandClientBuilder;
-import audioCore.slash.SlashCommandHandler;
+import audioCore.slash.*;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.DBVariables;
-import audioCore.slash.SlashCommands;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -17,9 +13,11 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.slf4j.LoggerFactory;
+import utils.Logging;
 
 import javax.security.auth.login.LoginException;
-import java.util.EnumSet;
+import java.util.logging.Logger;
 
 public class Main
 {
@@ -59,6 +57,7 @@ public class Main
 
         Main.manager = builder.build();
         Main.manager.awaitReady();
+        Logging.info(getClass(), null, null, "Loaded! Melody is now ready.");
 
         DBVariables.initiateCurrentServers(Main.manager);
     }
@@ -67,39 +66,8 @@ public class Main
     // Logger
     //
 
-    public static void log(CommandEvent event, String command) {
-        System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + Main.ANSI_YELLOW + "Triggered " + command + Main.ANSI_RESET + ": " + event.getMessage().getContentRaw());
-    }
-
-    public static void log(SlashCommandEvent event, String command) {
-        System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + Main.ANSI_YELLOW + "Triggered " + command + Main.ANSI_RESET + ": " + event.getCommandString());
-    }
-
-    public static void info(CommandEvent event, String command) {
-        System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + Main.ANSI_YELLOW + command + Main.ANSI_RESET);
-    }
-
-    public static void info(SlashCommandEvent event, String command) {
-        System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + Main.ANSI_YELLOW + command + Main.ANSI_RESET);
-    }
-
-    public static void info(ButtonClickEvent event, String command) {
-        System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + Main.ANSI_YELLOW + command + Main.ANSI_RESET);
-    }
-
-    public static void info(Guild guild, String command) {
-        System.out.println("[" + guild.getName() + "]: " + Main.ANSI_YELLOW + command + Main.ANSI_RESET);
-    }
-
-    public static void info(CommandEvent event, String command, String color) {
-        System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + color + command + Main.ANSI_RESET);
-    }
-
     public static void info(SlashCommandEvent event, String command, String color) {
         System.out.println("[" + event.getGuild().getName() + "]:[" + event.getMember().getEffectiveName() + "]: " + color + command + Main.ANSI_RESET);
     }
 
-    public static void info(Guild guild, String command, String color) {
-        System.out.println("[" + guild.getName() + "]: " + color + command + Main.ANSI_RESET);
-    }
 }
