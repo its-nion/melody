@@ -7,11 +7,10 @@ import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import utils.Error;
-import utils.ReactionEmoji;
+import utils.embed.EmbedError;
+import utils.embed.ReactionEmoji;
 import utils.StringSimilarity;
 
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -170,7 +169,7 @@ public class SpotifyMessageDisplayer {
   private void showNoResults() {
     Message message = getMessage();
     message.clearReactions().queue();
-    getMessage().editMessageEmbeds(Error.with("No results found")).queue();
+    getMessage().editMessageEmbeds(EmbedError.with("No results found")).queue();
   }
 
   private ArrayList<MessageEmbed> newArrayList(List<MessageEmbed> embeds) {

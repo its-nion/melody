@@ -15,11 +15,12 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
-import utils.EmbedColor;
-import utils.Error;
-import utils.ReactionEmoji;
+import utils.Logging;
+import utils.embed.EmbedColor;
+import utils.embed.EmbedError;
+import utils.embed.ReactionEmoji;
 
-import java.awt.*;
+import javax.annotation.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -50,15 +51,16 @@ public class Player extends SlashCommand {
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        Main.log(event, "Player");
+        Logging.slashCommand(getClass(), event);
 
         if (event.getGuild() == null){
-            event.replyEmbeds(Error.with("This command can only be executed in a server textchannel")).queue();
+            event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
             return;
         }
 
         if (!AudioStateChecks.isMelodyInVC(event)){
-            event.replyEmbeds(Error.with("This Command requires **Melody** to be **connected to a voice channel**")).queue();
+            event.replyEmbeds(EmbedError.with("This Command requires **Melody** to be **connected to a voice channel**")).queue();
+            return;
         }
 
         if (!AudioStateChecks.isMemberAndMelodyInSameVC(event)) {
@@ -66,13 +68,13 @@ public class Player extends SlashCommand {
             if (voiceState == null) return; // should be covered by the check above
             VoiceChannel channel = voiceState.getChannel();
             if (channel == null) return; // should be covered by the check above
-            event.replyEmbeds(Error.withFormat("This Command requires **you** to be **connected to Melody's voice channel** <#%S>", channel.getId())).queue();
+            event.replyEmbeds(EmbedError.withFormat("This Command requires **you** to be **connected to Melody's voice channel** <#%S>", channel.getId())).queue();
             return;
         }
 
         PlayerManager manager = PlayerManager.getInstance();
         AudioPlayer player = manager.getGuildAudioManager(event.getGuild()).player;
-        ActionRow buttons = getActionRow(event.getGuild());
+        ActionRow buttons = getActionRow(event.getGuild(), null);
         for (Button button : buttons.getButtons())
             registerButton(button);
 
@@ -81,18 +83,19 @@ public class Player extends SlashCommand {
             .queue();
     }
 
-    private ActionRow getActionRow(Guild guild){
+    private ActionRow getActionRow(Guild guild, @Nullable Boolean playing){
         PlayerManager manager = PlayerManager.getInstance();
         AudioPlayer player = manager.getGuildAudioManager(guild).player;
         TrackScheduler scheduler = manager.getGuildAudioManager(guild).scheduler;
 
         boolean isPlaying = !player.isPaused() && player.getPlayingTrack() != null;
+        if (playing != null) isPlaying = playing;
         boolean hasTrack = player.getPlayingTrack() != null;
         boolean hasNextTrack = !scheduler.getQueue().isEmpty();
 
         Button bPlayPause = Button.primary(PlayPause, Emoji.fromUnicode(isPlaying ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME)).withDisabled(!hasTrack);
-        Button bSkip = Button.secondary(SkipForward, Emoji.fromUnicode(ReactionEmoji.NEXT)).withDisabled(!hasNextTrack);
-        Button bPrevious = Button.danger(SkipBackwards, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)).asDisabled();
+        Button bSkip = Button.secondary(SkipForward, Emoji.fromUnicode(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
+        Button bPrevious = Button.danger(SkipBackwards, Emoji.fromUnicode(ReactionEmoji.BACKWARDS)).asDisabled();
         Button bStop = Button.secondary(Stop, Emoji.fromUnicode(ReactionEmoji.STOP)).withDisabled(!hasTrack);
 
         return ActionRow.of(bPrevious, bPlayPause, bSkip, bStop);
@@ -127,12 +130,13 @@ public class Player extends SlashCommand {
     @Override
     protected void clicked(ButtonClickEvent event) {
         if (event.getGuild() == null){
-            event.replyEmbeds(Error.with("This command can only be executed in a server textchannel")).queue();
+            event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
             return;
         }
 
         if (!AudioStateChecks.isMelodyInVC(event)){
-            event.replyEmbeds(Error.with("This Command requires **Melody** to be **connected to a voice channel**")).queue();
+            event.replyEmbeds(EmbedError.with("This Command requires **Melody** to be **connected to a voice channel**")).queue();
+            return;
         }
 
         if (!AudioStateChecks.isMemberAndMelodyInSameVC(event)) {
@@ -140,20 +144,21 @@ public class Player extends SlashCommand {
             if (voiceState == null) return; // should be covered by the check above
             VoiceChannel channel = voiceState.getChannel();
             if (channel == null) return; // should be covered by the check above
-            event.replyEmbeds(Error.withFormat("This Command requires **you** to be **connected to Melody's voice channel** <#%S>", channel.getId())).queue();
+            event.replyEmbeds(EmbedError.withFormat("This Command requires **you** to be **connected to Melody's voice channel** <#%S>", channel.getId())).queue();
             return;
         }
 
         if (event.getButton() == null || event.getButton().getId() == null || event.getButton().getEmoji() == null){
-            event.replyEmbeds(Error.with("Something is wrong with this button...")).queue();
+            event.replyEmbeds(EmbedError.with("Something is wrong with this button...")).queue();
             return;
         }
 
+        PlayerManager manager = PlayerManager.getInstance();
+        AudioPlayer player = manager.getGuildAudioManager(event.getGuild()).player;
+        boolean paused = player.isPaused();
+
         switch (event.getButton().getId()){
             case PlayPause:
-                PlayerManager manager = PlayerManager.getInstance();
-                AudioPlayer player = manager.getGuildAudioManager(event.getGuild()).player;
-                boolean paused = player.isPaused();
                 if (paused)
                     new Resume().resume(event.getGuild());
                 else
@@ -169,7 +174,18 @@ public class Player extends SlashCommand {
                 new Stop().stop(event.getGuild());
                 break;
             default:
-                break;
+                return;
         }
+
+        // reload Message
+        Message message = event.getMessage();
+
+        MessageEmbed embed = getSongEmbed(player.getPlayingTrack());
+        ActionRow buttons = getActionRow(event.getGuild(), paused);
+        message.editMessageEmbeds(embed).queue();
+        event.editComponents(buttons).queue();
+
+        for (Button button : buttons.getButtons())
+            registerButton(button);
     }
 }

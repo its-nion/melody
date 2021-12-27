@@ -1,4 +1,4 @@
-package utils;
+package utils.embed;
 
 public class ReactionEmoji {
   public static final String PREVIOUS = "U+2B05";
@@ -6,8 +6,11 @@ public class ReactionEmoji {
   public static final String PAUSE = "U+23F8";
   public static final String NEXT = "U+27A1";
   public static final String RESUME = "U+25B6";
-  public static final String QUEUE = "U+2795";
+  public static final String SHUFFLE = "U+1F500";
+  public static final String PLUS = "U+2795";
   public static final String CHECKMARK = "U+2705";
+  public static final String SKIP = "U+23ED";
+  public static final String BACKWARDS = "U+23EE";
 
   public static final String ONE = "U+0031";
   public static final String TWO = "U+0032";

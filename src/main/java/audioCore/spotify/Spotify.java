@@ -1,6 +1,6 @@
 package audioCore.spotify;
 
-import com.jagrosh.jdautilities.command.CommandEvent;
+import audioCore.slash.MessageStore;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.enums.ModelObjectType;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
@@ -9,86 +9,23 @@ import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
-import melody.Main;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.components.Component;
 import org.jetbrains.annotations.NotNull;
-import utils.MessageStore;
-import static melody.Token.*;
+import utils.Logging;
 
 import java.io.IOException;
 
+import static melody.Token.*;
+
 
 public class Spotify {
-
-  public Spotify() {
-
-  }
-
-  public static void searchSpotify(@NotNull CommandEvent event, @NotNull String search) {
-
-    // refresh Spotify
-    authorizationCodeRefresh_Sync();
-    Main.info(event, "Spotify Loaded", Main.ANSI_GREEN);
-
-    // create Message
-    Message message = event.getTextChannel().sendMessageEmbeds(new EmbedBuilder().setTitle("Waiting for Spotify").build()).complete();
-    Main.info(event, "Starting looking", Main.ANSI_GREEN);
-
-    // determine type
-    String[] args = search.split(" ");
-    if (args.length == 0 || args[0] == null || args[0].isEmpty()) return;
-    if (checkType(args[0], "playlist", "pl", "list")) {
-      // PLAYLIST
-      // api request
-      Main.info(event, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
-      PlaylistSimplified[] playlists = getPlaylists(search, new String[]{"playlist", "pl", "list"});
-      // save data
-      SpotifyMessage spotifyMessage = new SpotifyMessage(message, playlists);
-      MessageStore.saveMessage(spotifyMessage);
-      Main.info(event, "Added Message", Main.ANSI_GREEN);
-      // show data
-      spotifyMessage.show();
-    } else if (args[0].equals("user") || args[0].equals("account")) {
-      // USER
-      SpotifyMessage spotifyMessage =
-          new SpotifyMessage(message, getUserPlaylists(search.replaceAll("user ", "").replaceAll("account ", "")));
-      Main.info(event, "Added Message", Main.ANSI_GREEN);
-      MessageStore.saveMessage(spotifyMessage);
-      spotifyMessage.show();
-    } else if (checkType(args[0], "tracks", "track", "song")) {
-      // TRACK
-      // api request
-      Main.info(event, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
-      Track[] tracks = getTracks(search, new String[]{"tracks", "track", "song"});
-      // save data
-      SpotifyMessage spotifyMessage = new SpotifyMessage(message, tracks);
-      MessageStore.saveMessage(spotifyMessage);
-      Main.info(event, "Added Message", Main.ANSI_GREEN);
-      // show data
-      spotifyMessage.show();
-    } else {
-      // UNKNOWN -> apply default: TRACK
-      // api request
-      Main.info(event, "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
-      Track[] tracks = getTracks(search, new String[0]);
-      // save data
-      SpotifyMessage spotifyMessage = new SpotifyMessage(message, tracks);
-      MessageStore.saveMessage(spotifyMessage);
-      Main.info(event, "Added Message", Main.ANSI_GREEN);
-      // show data
-      spotifyMessage.show();
-    }
-    Main.info(event, "Showed Message", Main.ANSI_GREEN);
-  }
 
   public static void searchSpotify(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
 
     // refresh Spotify
     authorizationCodeRefresh_Sync();
-    Main.info(event, "Spotify Loaded", Main.ANSI_GREEN);
+    Logging.info(Spotify.class, event.getGuild(), event.getMember(), "Spotify Loaded");
     //melody.Main.info(event, "Starting looking", melody.Main.ANSI_GREEN);
 
     // determine type
@@ -97,7 +34,7 @@ public class Spotify {
     if (checkType(args[0], "playlist", "pl", "list")) {
       // PLAYLIST
       // api request
-      Main.info(event, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
+      Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
       PlaylistSimplified[] playlists = getPlaylists(search, new String[]{"playlist", "pl", "list"});
       // save data
       SpotifyButtonMessage spotifyMessage = new SpotifyButtonMessage(message, playlists);
@@ -114,7 +51,7 @@ public class Spotify {
     } else if (checkType(args[0], "tracks", "track", "song")) {
       // TRACK
       // api request
-      Main.info(event, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
+      Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
       Track[] tracks = getTracks(search, new String[]{"tracks", "track", "song"});
       // save data
       SpotifyMessage spotifyMessage = new SpotifyMessage(message, tracks);
@@ -124,7 +61,7 @@ public class Spotify {
     } else {
       // UNKNOWN -> apply default: TRACK
       // api request
-      Main.info(event, "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
+      Logging.info(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
       Track[] tracks = getTracks(search, new String[0]);
       // save data
       SpotifyButtonMessage spotifyMessage = new SpotifyButtonMessage(message, tracks);
@@ -132,7 +69,6 @@ public class Spotify {
       // show data
       spotifyMessage.show();
     }
-    Main.info(event, "Showed Results", Main.ANSI_GREEN);
   }
 
   private static PlaylistSimplified[] getPlaylists(String name, String[] ignores) {

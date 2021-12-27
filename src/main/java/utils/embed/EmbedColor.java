@@ -1,4 +1,4 @@
-package utils;
+package utils.embed;
 
 import java.awt.*;
 

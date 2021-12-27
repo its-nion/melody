@@ -6,8 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
-import utils.EmbedColor;
-import utils.Error;
+import utils.embed.EmbedColor;
+import utils.embed.EmbedError;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,12 +43,12 @@ public class Join extends SlashCommand {
   @Override
   protected void execute(SlashCommandEvent event) {
     if (event.getMember() == null || event.getMember().getVoiceState() == null || event.getMember().getVoiceState().getChannel() == null) {
-      event.replyEmbeds(Error.with("This Command requires **you** to be **connected to a voice channel**")).queue();
+      event.replyEmbeds(EmbedError.with("This Command requires **you** to be **connected to a voice channel**")).queue();
       return;
     }
 
     if (event.getGuild() == null) {
-      event.replyEmbeds(Error.with("This command can only be executed in a server textchannel")).queue();
+      event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
     }
 
@@ -67,11 +67,11 @@ public class Join extends SlashCommand {
    */
   public MessageEmbed connectReturnEmbed(SlashCommandEvent event) {
     if (event.getGuild() == null) {
-      return Error.with("This command can only be executed in a server textchannel");
+      return EmbedError.with("This command can only be executed in a server textchannel");
     }
 
     if (event.getMember() == null || event.getMember().getVoiceState() == null || event.getMember().getVoiceState().getChannel() == null) {
-      return Error.with("This Command requires **you** to be **connected to a voice channel**");
+      return EmbedError.with("This Command requires **you** to be **connected to a voice channel**");
     }
 
     VoiceChannel channel = event.getMember().getVoiceState().getChannel();
@@ -92,7 +92,7 @@ public class Join extends SlashCommand {
     AudioManager audio = guild.getAudioManager();
 
     if (member == null || member.getVoiceState() == null || member.getVoiceState().getChannel() == null) {
-      if (textChannel != null) textChannel.sendMessageEmbeds(Error.with("This Command requires **you** to be **connected to a voice channel**")).queue();
+      if (textChannel != null) textChannel.sendMessageEmbeds(EmbedError.with("This Command requires **you** to be **connected to a voice channel**")).queue();
       return;
     }
 
@@ -107,7 +107,8 @@ public class Join extends SlashCommand {
    * @return a fitting MessageEmbed
    */
   private MessageEmbed getJoinMessageEmbed(VoiceChannel channel) {
-    if (channel.getGuild().getSelfMember().getVoiceState() != null)
+    GuildVoiceState voiceState = channel.getGuild().getSelfMember().getVoiceState();
+    if (voiceState != null && voiceState.getChannel() != null)
       return new EmbedBuilder()
           .setColor(EmbedColor.BLUE)
           .setDescription("**Moved** to <#" + channel.getId() + ">")

@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class SlashCommands
 {
-    public static HashMap<String, SlashCommand> commandMap = new HashMap<String, SlashCommand>(Map.ofEntries(
+    public static HashMap<String, SlashCommand> commandMap = new HashMap<>(Map.ofEntries(
         Map.entry("ping", new Ping()),
         Map.entry("info", new Info()),
         Map.entry("player", new Player()),
@@ -25,6 +25,7 @@ public class SlashCommands
         Map.entry("stop", new Stop()),
         Map.entry("skip", new Skip()),
         Map.entry("volume", new Volume()),
+        Map.entry("queue", new Queue()),
         Map.entry("editperms", new EditPerms()),
         Map.entry("showperms", new ShowPerms())
     ));

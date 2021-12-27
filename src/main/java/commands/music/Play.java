@@ -22,10 +22,11 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
-import utils.Error;
-import utils.MessageStore;
-import utils.ReactionEmoji;
-import utils.SavedMessage;
+import utils.Logging;
+import utils.embed.EmbedError;
+import audioCore.slash.MessageStore;
+import utils.embed.ReactionEmoji;
+import audioCore.slash.SavedMessage;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
@@ -95,20 +96,20 @@ public class Play extends SlashCommand {
    */
   @Override
   protected void execute(SlashCommandEvent event) {
-    Main.log(event, "Play");
+    Logging.slashCommand(getClass(), event);
 
     if (event.getGuild() == null){
-      event.replyEmbeds(Error.with("This command can only be executed in a server textchannel")).queue();
+      event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
     }
 
     if (!AudioStateChecks.isMemberInVC(event)) {
-      event.replyEmbeds(Error.with("This Command requires **you** to be **connected to a voice channel**")).queue();
+      event.replyEmbeds(EmbedError.with("This Command requires **you** to be **connected to a voice channel**")).queue();
       return;
     }
 
     if (event.getOptions().isEmpty()) {
-      event.replyEmbeds(Error.with("Please provide some arguments, type /help play for further information")).queue();
+      event.replyEmbeds(EmbedError.with("Please provide some arguments, type /help play for further information")).queue();
       return;
     }
 
@@ -188,7 +189,7 @@ public class Play extends SlashCommand {
   @Override
   protected void clicked(ButtonClickEvent event) {
     if (event.getGuild() == null){
-      event.replyEmbeds(Error.with("This command can only be executed in a server textchannel")).queue();
+      event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
     }
 
@@ -250,13 +251,13 @@ public class Play extends SlashCommand {
         String search = "ytsearch:" + artist + "-" + title;
         queries.add(search);
       }
-      Main.info(event, "Finding " + queries.size() + " Tracks on Youtube");
+      Logging.info(getClass(), event.getGuild(), event.getMember(),  "Finding " + queries.size() + " Tracks on Youtube");
       new MusicLoader().loadMultiple(event.getTextChannel(), spotifyMessage.getCurrentPlaylist(), queries.toArray(String[]::new));
     } else {
       //SINGLE
       Track track = spotifyMessage.getCurrentTrack();
-      String url = "ytsearch:" + track.getArtists()[0].getName() + "-" + track.getName();
-      Main.info(event, "Finding Track on Youtube with: " + url);
+      String url = "ytsearch:" + track.getArtists()[0].getName() + " - " + track.getName();
+      Logging.debug(getClass(), event.getGuild(), event.getMember(), "Finding Track on Youtube with: " + url);
       new MusicLoader().loadOne(event.getTextChannel(), url);
     }
   }

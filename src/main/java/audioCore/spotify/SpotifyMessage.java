@@ -5,7 +5,7 @@ import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import utils.SavedMessage;
+import audioCore.slash.SavedMessage;
 
 public class SpotifyMessage extends SavedMessage {
 

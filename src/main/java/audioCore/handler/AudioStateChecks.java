@@ -23,7 +23,16 @@ public class AudioStateChecks
 
     public static boolean isMemberInVC(SlashCommandEvent event)
     {
-        Member user = event.getMember();
+        return isMemberInVC(event.getMember());
+    }
+
+    public static boolean isMemberInVC(ButtonClickEvent event)
+    {
+        return isMemberInVC(event.getMember());
+    }
+
+    public static boolean isMemberInVC(Member user)
+    {
         if (user == null) return false;
         GuildVoiceState userVS = user.getVoiceState();
         if (userVS == null) return false;

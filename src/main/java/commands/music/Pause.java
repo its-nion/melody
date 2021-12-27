@@ -9,9 +9,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import utils.annotation.NoUserCommand;
 
 import java.awt.*;
 
+@NoUserCommand
 public class Pause extends SlashCommand {
 
     @Override
