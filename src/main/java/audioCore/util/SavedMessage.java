@@ -1,4 +1,4 @@
-package audioCore.slash;
+package audioCore.util;
 
 import net.dv8tion.jda.api.entities.Message;
 

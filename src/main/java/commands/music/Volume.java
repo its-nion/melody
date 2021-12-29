@@ -1,11 +1,10 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
+import audioCore.util.AudioStateChecks;
 import audioCore.handler.GuildAudioManager;
 import audioCore.handler.PlayerManager;
 import audioCore.slash.SlashCommand;
 import com.jagrosh.jdautilities.command.Command;
-import melody.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;

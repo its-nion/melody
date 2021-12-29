@@ -1,23 +1,18 @@
 package melody;
 
 import audioCore.slash.*;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import database.DBVariables;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.slf4j.LoggerFactory;
 import utils.Logging;
 
 import javax.security.auth.login.LoginException;
-import java.util.logging.Logger;
 
 public class Main
 {

@@ -1,6 +1,7 @@
-package audioCore.spotify;
+package audioCore.provider.spotify;
 
-import audioCore.slash.MessageStore;
+import audioCore.provider.MusicDataSearcher;
+import audioCore.util.MessageStore;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.enums.ModelObjectType;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
@@ -18,57 +19,43 @@ import java.io.IOException;
 
 import static melody.Token.*;
 
+public class Spotify implements MusicDataSearcher {
 
-public class Spotify {
+  @Override
+  public void search(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
+    searchSpotify(event, search, message);
+  }
 
   public static void searchSpotify(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
-
     // refresh Spotify
     authorizationCodeRefresh_Sync();
-    Logging.info(Spotify.class, event.getGuild(), event.getMember(), "Spotify Loaded");
-    //melody.Main.info(event, "Starting looking", melody.Main.ANSI_GREEN);
+    Logging.debug(Spotify.class, event.getGuild(), null, "Spotify Re-Loaded");
 
-    // determine type
     String[] args = search.split(" ");
     if (args.length == 0 || args[0] == null || args[0].isEmpty()) return;
+
+    SpotifyMessage spotifyMessage = null;
     if (checkType(args[0], "playlist", "pl", "list")) {
-      // PLAYLIST
-      // api request
       Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
       PlaylistSimplified[] playlists = getPlaylists(search, new String[]{"playlist", "pl", "list"});
-      // save data
-      SpotifyButtonMessage spotifyMessage = new SpotifyButtonMessage(message, playlists);
-      MessageStore.saveMessage(spotifyMessage);
-      // show data
-      spotifyMessage.show();
+      spotifyMessage = new SpotifyButtonMessage(message, playlists);
     } else if (args[0].equals("user") || args[0].equals("account")) {
 //      // USER
 //      SpotifyMessage spotifyMessage =
 //          new SpotifyMessage(message, getUserPlaylists(search.replaceAll("user ", "").replaceAll("account ", "")));
-//      melody.Main.info(event, "Added Message", melody.Main.ANSI_GREEN);
-//      MessageStore.saveMessage(spotifyMessage);
-//      spotifyMessage.show();
     } else if (checkType(args[0], "tracks", "track", "song")) {
-      // TRACK
-      // api request
       Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
       Track[] tracks = getTracks(search, new String[]{"tracks", "track", "song"});
-      // save data
-      SpotifyMessage spotifyMessage = new SpotifyMessage(message, tracks);
-      MessageStore.saveMessage(spotifyMessage);
-      // show data
-      spotifyMessage.show();
+      spotifyMessage = new SpotifyMessage(message, tracks);
     } else {
-      // UNKNOWN -> apply default: TRACK
-      // api request
-      Logging.info(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
+      Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
       Track[] tracks = getTracks(search, new String[0]);
-      // save data
-      SpotifyButtonMessage spotifyMessage = new SpotifyButtonMessage(message, tracks);
-      MessageStore.saveMessage(spotifyMessage);
-      // show data
-      spotifyMessage.show();
+      spotifyMessage = new SpotifyButtonMessage(message, tracks);
     }
+    MessageStore.saveMessage(spotifyMessage);
+    // show data
+    if (spotifyMessage != null)
+      spotifyMessage.show();
   }
 
   private static PlaylistSimplified[] getPlaylists(String name, String[] ignores) {
@@ -148,6 +135,7 @@ public class Spotify {
       System.out.println("Error: " + e.getMessage());
     }
   }
+
 }
 
 

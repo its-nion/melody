@@ -1,14 +1,19 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
+import audioCore.provider.MusicDataSearcher;
+import audioCore.provider.youtube.Youtube;
+import audioCore.provider.youtube.YoutubeButtonMessage;
+import audioCore.util.AudioStateChecks;
 import audioCore.handler.MusicLoader;
+import audioCore.util.MessageStore;
+import audioCore.util.SavedMessage;
 import audioCore.slash.SlashCommand;
-import audioCore.spotify.Spotify;
-import audioCore.spotify.SpotifyButtonMessage;
+import audioCore.provider.spotify.Spotify;
+import audioCore.provider.spotify.SpotifyButtonMessage;
 import com.jagrosh.jdautilities.command.Command;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
-import melody.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
@@ -24,9 +29,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import utils.Logging;
 import utils.embed.EmbedError;
-import audioCore.slash.MessageStore;
 import utils.embed.ReactionEmoji;
-import audioCore.slash.SavedMessage;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
@@ -59,7 +62,7 @@ public class Play extends SlashCommand {
 
   /**
    * Constructor for a Play Command Object. This is instantiated when building the Command Handler or for temporary operations
-   *
+   * <p>
    * {@link #name} The name of the command. The string you have to type after the '/'. i.e. /play
    * {@link #category} The category of the command. Commands will be sorted by that
    * {@link #help} The help message, in case someone types /help [command]
@@ -79,6 +82,7 @@ public class Play extends SlashCommand {
 
   /**
    * This will fire whenever a command reload is executed. this defines how the play command is build.
+   *
    * @param cca the object the command is build with. you can modify it as you want.
    * @return the finished play command builder with an option for a search query
    */
@@ -92,13 +96,14 @@ public class Play extends SlashCommand {
    * If the requesting member is in a vc and the command is correct, the bot will join you and a list of possible search
    * answers are presented to you.
    * You can navigate with buttons and play your preferred songs
+   *
    * @param event all the event data
    */
   @Override
   protected void execute(SlashCommandEvent event) {
     Logging.slashCommand(getClass(), event);
 
-    if (event.getGuild() == null){
+    if (event.getGuild() == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
     }
@@ -122,7 +127,8 @@ public class Play extends SlashCommand {
    * The requesting member is in a vc and the command is correct. Therefore the bot will join you and a list of
    * possible search answers are presented to you.
    * You can navigate with buttons and play your preferred songs
-   * @param event all the event data
+   *
+   * @param event  all the event data
    * @param player the player that should be used
    */
   private void handlePlayCommand(SlashCommandEvent event, @Nonnull Guild guild, Player player) {
@@ -142,16 +148,16 @@ public class Play extends SlashCommand {
       // SEARCH
       // create buttons
       Button[] buttons = new Button[]{
-          Button.secondary(PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)).asDisabled(),
-          Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
-          Button.secondary(NEXT, Emoji.fromUnicode(ReactionEmoji.NEXT))
+          Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.LEFT)).asDisabled(),
+          Button.secondary(PLAY, Emoji.fromMarkdown(ReactionEmoji.MUSIC)),
+          Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.RIGHT))
       };
       for (Button component : buttons)
         registerButton(component);
 
       // create embeds
-      MessageEmbed first = connect != null ? connect : new EmbedBuilder().setDescription("Loading Spotify...").build();
-      MessageEmbed second = connect == null ? null : new EmbedBuilder().setDescription("Loading Spotify...").build();
+      MessageEmbed first = connect != null ? connect : new EmbedBuilder().setDescription("Loading " + player.toString() + "...").build();
+      MessageEmbed second = connect == null ? null : new EmbedBuilder().setDescription("Loading " + player.toString() + "...").build();
       List<MessageEmbed> embeds = newArrayList(first, second);
       embeds.remove(null);
 
@@ -161,7 +167,7 @@ public class Play extends SlashCommand {
           .addActionRow(buttons).complete().retrieveOriginal().complete();
 
       //Main.info(event, "Searching for songs: '" + firstArg + "' with: " + player.name(), Main.ANSI_BLUE);
-      Spotify.searchSpotify(event, firstArg, message);
+      player.getProvider().search(event, firstArg, message);
     }
   }
 
@@ -184,11 +190,12 @@ public class Play extends SlashCommand {
    * This will fire when a user clicked on a button regarding this command.
    * The Button has to be registered beforehand with {@link #registerButton(Button)}.
    * The regarding message will be searched and continued with {@link #executeButtonAction(ButtonClickEvent, Guild, SpotifyButtonMessage)}
+   *
    * @param event all the button click event data
    */
   @Override
   protected void clicked(ButtonClickEvent event) {
-    if (event.getGuild() == null){
+    if (event.getGuild() == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
     }
@@ -200,13 +207,27 @@ public class Play extends SlashCommand {
 
         Button[] buttons = new Button[3];
         event.editComponents(ActionRow.of(
-            buttons[0] = Button.secondary(PREVIOUS, Emoji.fromUnicode(ReactionEmoji.PREVIOUS)).withDisabled(!spotifyMessage.hasPrevious()),
-            buttons[1] = Button.secondary(PLAY, Emoji.fromUnicode(ReactionEmoji.PLAY)),
-            buttons[2] = Button.secondary(NEXT, Emoji.fromUnicode(ReactionEmoji.NEXT)).withDisabled(!spotifyMessage.hasNext())
+            buttons[0] = Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.LEFT)).withDisabled(!spotifyMessage.hasPrevious()),
+            buttons[1] = Button.secondary(PLAY, Emoji.fromMarkdown(ReactionEmoji.MUSIC)),
+            buttons[2] = Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.RIGHT)).withDisabled(!spotifyMessage.hasNext())
         )).queue();
         for (Button component : buttons)
           registerButton(component);
+        return;
+      }
 
+      if (message.getMessageID() == event.getMessageIdLong() && message instanceof YoutubeButtonMessage) {
+        YoutubeButtonMessage youtubeMessage = (YoutubeButtonMessage) message;
+        executeButtonAction(event, event.getGuild(), youtubeMessage);
+
+        Button[] buttons = new Button[3];
+        event.editComponents(ActionRow.of(
+            buttons[0] = Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.LEFT)).withDisabled(!youtubeMessage.hasPrevious()),
+            buttons[1] = Button.secondary(PLAY, Emoji.fromMarkdown(ReactionEmoji.MUSIC)),
+            buttons[2] = Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.RIGHT)).withDisabled(!youtubeMessage.hasNext())
+        )).queue();
+        for (Button component : buttons)
+          registerButton(component);
         return;
       }
     }
@@ -215,7 +236,8 @@ public class Play extends SlashCommand {
   /**
    * After the correct saved data message has been found, regarding of what button was pressed, a different action
    * will be executed
-   * @param event all the button click event data
+   *
+   * @param event          all the button click event data
    * @param spotifyMessage the found data message
    */
   private void executeButtonAction(ButtonClickEvent event, @Nonnull Guild guild, SpotifyButtonMessage spotifyMessage) {
@@ -225,14 +247,35 @@ public class Play extends SlashCommand {
       case PREVIOUS -> spotifyMessage.previous();
       case NEXT -> spotifyMessage.next();
       case PLAY -> queue(event, guild, spotifyMessage);
-      default -> {}
+      default -> {
+      }
+    }
+  }
+
+  /**
+   * After the correct saved data message has been found, regarding of what button was pressed, a different action
+   * will be executed
+   *
+   * @param event          all the button click event data
+   * @param youtubeMessage the found data message
+   */
+  private void executeButtonAction(ButtonClickEvent event, @Nonnull Guild guild, YoutubeButtonMessage youtubeMessage) {
+    if (event.getButton() == null || event.getButton().getId() == null) return;
+
+    switch (event.getButton().getId()) {
+      case PREVIOUS -> youtubeMessage.previous();
+      case NEXT -> youtubeMessage.next();
+      case PLAY -> queue(event, guild, youtubeMessage);
+      default -> {
+      }
     }
   }
 
   /**
    * This is queueing a track or other music object, that is selected in the current data message
-   * @param event all the button click event data
-   * @param guild the NonNull Guild the command was executed in
+   *
+   * @param event          all the button click event data
+   * @param guild          the NonNull Guild the command was executed in
    * @param spotifyMessage the found data message
    */
   private void queue(ButtonClickEvent event, @Nonnull Guild guild, SpotifyButtonMessage spotifyMessage) {
@@ -251,7 +294,7 @@ public class Play extends SlashCommand {
         String search = "ytsearch:" + artist + "-" + title;
         queries.add(search);
       }
-      Logging.info(getClass(), event.getGuild(), event.getMember(),  "Finding " + queries.size() + " Tracks on Youtube");
+      Logging.info(getClass(), event.getGuild(), event.getMember(), "Finding " + queries.size() + " Tracks on Youtube");
       new MusicLoader().loadMultiple(event.getTextChannel(), spotifyMessage.getCurrentPlaylist(), queries.toArray(String[]::new));
     } else {
       //SINGLE
@@ -262,11 +305,70 @@ public class Play extends SlashCommand {
     }
   }
 
+  private void queue(ButtonClickEvent event, @Nonnull Guild guild, YoutubeButtonMessage youtubeMessage) {
+    AudioManager audio = guild.getAudioManager();
+    if (!audio.isConnected())
+      new Join().connect(guild, event.getMember(), event.getTextChannel());
+
+    if (youtubeMessage.tracks == null) {
+      //PLAYLIST
+//      List<String> queries = new ArrayList<>();
+//      PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(youtubeMessage.getCurrentPlaylist().getId());
+//      int maxLoadCount = 100;
+//      for (int i = 0; i < tracks.length && i < maxLoadCount; i++) {
+//        String artist = tracks[i].getTrack().getArtists()[0].getName();
+//        String title = tracks[i].getTrack().getName();
+//        String search = "ytsearch:" + artist + "-" + title;
+//        queries.add(search);
+//      }
+//      Logging.info(getClass(), event.getGuild(), event.getMember(),  "Finding " + queries.size() + " Tracks on Youtube");
+//      new MusicLoader().loadMultiple(event.getTextChannel(), youtubeMessage.getCurrentPlaylist(), queries.toArray(String[]::new));
+    } else {
+      //SINGLE
+      AudioTrack track = youtubeMessage.getCurrentTrack();
+      String url = track.getInfo().uri;
+      Logging.debug(getClass(), event.getGuild(), event.getMember(), "Loading Youtube Track: " + url);
+      new MusicLoader().loadOne(event.getTextChannel(), url);
+    }
+  }
+
   private enum Player {
-    NONE, YOUTUBE, SPOTIFY
+    NONE, YOUTUBE, SPOTIFY;
+
+    public MusicDataSearcher getProvider() {
+      if (this == SPOTIFY) return new Spotify();
+      if (this == YOUTUBE) return new Youtube();
+      else return new Spotify(); // <- default
+    }
+
+
+    @Override
+    public String toString() {
+      return toCamelCase(super.name());
+    }
+
+    private static String toCamelCase(final String init) {
+      if (init == null)
+        return null;
+
+      final StringBuilder ret = new StringBuilder(init.length());
+
+      for (final String word : init.split(" ")) {
+        if (!word.isEmpty()) {
+          ret.append(Character.toUpperCase(word.charAt(0)));
+          ret.append(word.substring(1).toLowerCase());
+        }
+        if (!(ret.length() == init.length()))
+          ret.append(" ");
+      }
+
+      return ret.toString();
+    }
   }
 
   private Player getPlayer() {
-    return Player.SPOTIFY;
+    return Player.YOUTUBE;
+    //TODO generic
   }
+
 }

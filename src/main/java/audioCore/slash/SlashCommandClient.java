@@ -13,7 +13,6 @@ import utils.annotation.NoUserCommand;
 
 import javax.security.auth.login.LoginException;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class SlashCommandClient extends ListenerAdapter {
   public static SlashCommandClient INSTANCE;
@@ -52,35 +51,57 @@ public class SlashCommandClient extends ListenerAdapter {
     slashCommandClientBuilder.build();
     Main.manager = builder.build();
     Main.manager.awaitReady();
-    upsertCommands();
+    upsertAllGuildsCommands();
   }
 
-  public static void upsertCommands() {
+  public static void upsertAllGuildsCommands() {
     Main.manager.updateCommands().queue();  // delete all global commands
-    for (Guild guild : Main.manager.getGuilds())
-      upsertCommands(guild);
-    new Thread(() -> {
-      try {
-        Thread.sleep(1000 * 20);
-      } catch (InterruptedException ignored) {
-      } finally {
-        Main.manager.shutdown();
-      }
-    }).start();
-  }
-
-  public static void upsertCommands(Guild guild) {
-    guild.updateCommands().queue();
     SlashCommand[] slashCommands = SlashCommands.commandMap.values().stream()
         .filter(i -> i.name != null && i.description != null && !i.getClass().isAnnotationPresent(NoUserCommand.class))
         .toArray(SlashCommand[]::new);
-    for (SlashCommand slashCommand : slashCommands) {
-      CommandCreateAction cca = guild.upsertCommand(slashCommand.name, slashCommand.description);
-      cca = slashCommand.onUpsert(cca);
-      cca.queue();
-    }
-    Logging.info(getInstance().getClass(), guild, null, "Loaded " + slashCommands.length + " commands");
-    Logging.info(getInstance().getClass(), guild, null, "Commands are: " + Arrays.toString(slashCommands));
+    upsertGuildRecursive(Main.manager.getGuilds().toArray(Guild[]::new), slashCommands, 0, (g, c) -> {
+      Main.manager.shutdown();
+      Logging.info(getInstance().getClass(), null, null, "Reloading " + g + " guilds finished");
+    });
+  }
+
+  public static void upsertGuildRecursive(Guild[] guilds, SlashCommand[] slashCommands, int index, CommandReload callback) {
+    Guild guild = guilds[index];
+    Logging.info(getInstance().getClass(), guild, null, "Reloading [" + guild.getName() + "]s commands...");
+    guild.updateCommands().queue();
+    upsertCommandsRecursive(guild, slashCommands, 0, commands -> {
+      Logging.info(getInstance().getClass(), guild, null, "Loaded " + slashCommands.length + " commands");
+      Logging.info(getInstance().getClass(), guild, null, "Commands are: " + Arrays.toString(Arrays.stream(slashCommands).map(sc -> sc.name).toArray()));
+      int newIndex = index + 1;
+      if (newIndex >= guilds.length){
+        callback.onFinish(newIndex, slashCommands.length);
+        return;
+      }
+      upsertGuildRecursive(guilds, slashCommands, newIndex, callback);
+    });
+
+  }
+
+  private static void upsertCommandsRecursive(Guild guild, SlashCommand[] commands, int index, GuildCommandReload callback){
+    SlashCommand slashCommand = commands[index];
+    CommandCreateAction cca = guild.upsertCommand(slashCommand.name, slashCommand.description);
+    cca = slashCommand.onUpsert(cca);
+    cca.queue(c -> {
+      int newIndex = index + 1;
+      if (newIndex >= commands.length){
+        callback.onFinish(newIndex);
+        return;
+      }
+      upsertCommandsRecursive(guild, commands, newIndex, callback);
+    });
+  }
+
+  private interface GuildCommandReload{
+    void onFinish(int amount);
+  }
+
+  private interface CommandReload{
+    void onFinish(int guilds, int commands);
   }
 
 }

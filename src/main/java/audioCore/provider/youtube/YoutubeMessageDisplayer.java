@@ -1,15 +1,19 @@
-package audioCore.spotify;
+package audioCore.provider.youtube;
 
-import audioCore.handler.MusicDataLoader;
+import audioCore.provider.TrackDataLoader;
+import audioCore.provider.youtube.YoutubeButtonMessage;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import utils.StringSimilarity;
+import utils.annotation.NotYetImplemented;
 import utils.embed.EmbedError;
 import utils.embed.ReactionEmoji;
-import utils.StringSimilarity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,24 +21,24 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class SpotifyMessageDisplayer {
+public class YoutubeMessageDisplayer {
 
-  private final SpotifyMessage spotifyMessage;
-  private final Track[] tracks;
+  private final YoutubeButtonMessage youtubeButtonMessage;
+  private final AudioTrack[] tracks;
   private final PlaylistSimplified[] playlists;
 
-  public SpotifyMessageDisplayer(SpotifyMessage spotifyMessage) {
-    this.spotifyMessage = spotifyMessage;
+  public YoutubeMessageDisplayer(YoutubeButtonMessage spotifyMessage) {
+    this.youtubeButtonMessage = spotifyMessage;
     this.tracks = spotifyMessage.tracks;
     this.playlists = spotifyMessage.playlists;
   }
 
   private Message getMessage() {
-    return spotifyMessage.getMessage();
+    return youtubeButtonMessage.getMessage();
   }
 
   public void show() {
-    int index = spotifyMessage.index;
+    int index = youtubeButtonMessage.index;
 
     if (tracks != null) {
       if (tracks.length != 0)
@@ -50,7 +54,7 @@ public class SpotifyMessageDisplayer {
   }
 
   public void showNoReaction(){
-    int index = spotifyMessage.index;
+    int index = youtubeButtonMessage.index;
 
     if (tracks != null) {
       if (tracks.length != 0)
@@ -65,6 +69,7 @@ public class SpotifyMessageDisplayer {
     }
   }
 
+  @NotYetImplemented
   private void showPlaylist(int index, boolean showReaction) {
     Message message = getMessage();
     PlaylistSimplified playlist = playlists[index];
@@ -84,18 +89,18 @@ public class SpotifyMessageDisplayer {
 
     // content
     eb.appendDescription("**Tracks:**\n");
-    PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(playlist.getId());
+//    PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(playlist.getId());
     for (int i = 0; i < 5; i++) {
       if (i >= tracks.length) break;
-      PlaylistTrack track = tracks[i];
-      eb.appendDescription(track.getTrack().getArtists()[0].getName() + " - " + track.getTrack().getName() + "\n");
+//      PlaylistTrack track = tracks[i];
+//      eb.appendDescription(track.getTrack().getArtists()[0].getName() + " - " + track.getTrack().getName() + "\n");
     }
     if (tracks.length >= 5){
       eb.appendDescription((tracks.length - 5) + " more");
     }
 
     // length
-    eb.setFooter("Songs: " + tracks.length + "\n" + "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(t -> t.getTrack().getDurationMs()).sum())));
+//    eb.setFooter("Songs: " + tracks.length + "\n" + "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(t -> t.getTrack().getDurationMs()).sum())));
 
     // show
     List<MessageEmbed> embeds = message.getEmbeds();
@@ -104,51 +109,40 @@ public class SpotifyMessageDisplayer {
     message.editMessageEmbeds(newEmbeds).queue();
 
     if (!showReaction) return;
-    // reactions
+    // reactions //TODO deprecated
     if (index != 0)
-      message.addReaction(ReactionEmoji.PREVIOUS).queue();
-    message.addReaction(ReactionEmoji.PLAY).queue();
+      message.addReaction(ReactionEmoji.LEFT).queue();
+    message.addReaction(ReactionEmoji.MUSIC).queue();
     if (index != tracks.length - 1)
-      message.addReaction(ReactionEmoji.NEXT).queue();
+      message.addReaction(ReactionEmoji.RIGHT).queue();
   }
 
   private void showTrack(int index, boolean showReaction) {
     Message message = getMessage();
-    Track track = tracks[index];
+    AudioTrack track = tracks[index];
     message.clearReactions().queue();
     EmbedBuilder eb = new EmbedBuilder();
 
     // author
-    eb.setAuthor(track.getArtists()[0].getName());
+    eb.setAuthor(track.getInfo().author);
 
     // title
-    eb.setTitle(track.getName());
+    eb.setTitle(track.getInfo().title);
 
     // image
-    if (track.getAlbum().getImages().length >= 1)
-      eb.setThumbnail(track.getAlbum().getImages()[0].getUrl());
+    eb.setThumbnail(getThumbnail(track.getInfo().uri));
 
     // length
-    eb.setFooter("Duration: " + new SimpleDateFormat("mm:ss").format(new Date(track.getDurationMs())));
 
-    //album
-    eb.appendDescription("Album: " + track.getAlbum().getName() + "\n");
-    eb.appendDescription("Year: " + track.getAlbum().getReleaseDate().split("-")[0] + "\n");
 
-    //popularity
-    eb.appendDescription("Popularity: " + track.getPopularity() + "\n");
+    // page + duration
+    eb.setFooter(
+        "Duration: " + new SimpleDateFormat("mm:ss").format(new Date(track.getDuration())) + "\n" +
+            "Page: " + (index+1) + " / " + tracks.length,
 
-    // loaded song
-    MusicDataLoader dataManager = MusicDataLoader.getInstance();
-    dataManager.retrieveTrackInfo(getMessage().getGuild(), "ytsearch:" + track.getArtists()[0].getName() + "-" + track.getName(), loadedTrack -> {
-      int closeness = (int) (StringSimilarity.similarity(loadedTrack, track) * 100);
-      eb.appendDescription("Public Song similarity: " + closeness + "%\n");
-      eb.appendDescription("Public platform: Youtube");
-      List<MessageEmbed> embeds = message.getEmbeds();
-      ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
-      newEmbeds.set(embeds.size() -1, eb.build());
-      message.editMessageEmbeds(newEmbeds).queue();
-    });
+    // icon
+        "https://cdn.discordapp.com/emojis/925827032485621791.png?size=96");
+
 
     // show
     List<MessageEmbed> embeds = message.getEmbeds();
@@ -159,11 +153,21 @@ public class SpotifyMessageDisplayer {
     if (!showReaction) return;
     // reactions
     if (index != 0)
-      message.addReaction(ReactionEmoji.PREVIOUS).queue();
-    message.addReaction(ReactionEmoji.PLAY).queue();
+      message.addReaction(ReactionEmoji.LEFT).queue();
+    message.addReaction(ReactionEmoji.MUSIC).queue();
     if (index != tracks.length - 1)
-      message.addReaction(ReactionEmoji.NEXT).queue();
+      message.addReaction(ReactionEmoji.RIGHT).queue();
 
+  }
+
+  private String getThumbnail(String uri){
+    // i.e. https://www.youtube.com/watch?v=dQw4w9WgXcQ
+    uri = uri.replaceAll("//youtube", "//img.youtube");
+    uri = uri.replaceAll("www", "img");
+    uri = uri.replaceAll("watch\\?v=", "vi/");
+    uri = uri + "/hqdefault.jpg";
+    // i.e. https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg
+    return uri;
   }
 
   private void showNoResults() {

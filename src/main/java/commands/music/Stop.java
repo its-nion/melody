@@ -1,6 +1,6 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
+import audioCore.util.AudioStateChecks;
 import audioCore.handler.GuildAudioManager;
 import audioCore.handler.PlayerManager;
 import audioCore.slash.SlashCommand;

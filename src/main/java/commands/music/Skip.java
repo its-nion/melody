@@ -1,6 +1,6 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
+import audioCore.util.AudioStateChecks;
 import audioCore.handler.GuildAudioManager;
 import audioCore.handler.PlayerManager;
 import audioCore.handler.TrackScheduler;
@@ -9,7 +9,6 @@ import com.jagrosh.jdautilities.command.Command.Category;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import melody.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -141,8 +140,8 @@ public class Skip extends SlashCommand {
     TrackScheduler scheduler = manager.getGuildAudioManager(guild).scheduler;
     boolean hasNextTrack = !scheduler.getQueue().isEmpty();
 
-    Button bPrevious = Button.danger(Backwards, Emoji.fromUnicode(ReactionEmoji.BACKWARDS)).asDisabled();
-    Button bSkip = Button.secondary(Forwards, Emoji.fromUnicode(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
+    Button bPrevious = Button.danger(Backwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).asDisabled();
+    Button bSkip = Button.secondary(Forwards, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
 
     return ActionRow.of(bPrevious, bSkip);
   }

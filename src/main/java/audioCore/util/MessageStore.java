@@ -1,5 +1,6 @@
-package audioCore.slash;
+package audioCore.util;
 
+import audioCore.util.SavedMessage;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.ArrayList;

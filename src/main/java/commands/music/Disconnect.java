@@ -1,6 +1,6 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
+import audioCore.util.AudioStateChecks;
 import audioCore.slash.SlashCommand;
 import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.entities.Guild;

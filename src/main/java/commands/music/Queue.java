@@ -1,6 +1,6 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
+import audioCore.util.AudioStateChecks;
 import audioCore.handler.GuildAudioManager;
 import audioCore.handler.PlayerManager;
 import audioCore.handler.TrackScheduler;
@@ -9,7 +9,6 @@ import com.jagrosh.jdautilities.command.Command.Category;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import melody.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -82,10 +81,10 @@ public class Queue extends SlashCommand {
   private ActionRow getActionRow(GuildAudioManager guildAudioManager){
     ArrayList<AudioTrack> queue = guildAudioManager.scheduler.getQueue();
 
-    Button bPrevious = Button.danger(QueueSkipBackwards, Emoji.fromUnicode(ReactionEmoji.BACKWARDS)).asDisabled();
-    Button bSkip = Button.secondary(QueueSkipForward, Emoji.fromUnicode(ReactionEmoji.SKIP)).withDisabled(queue.isEmpty());
-    Button bShuffle = Button.secondary(Shuffle, Emoji.fromUnicode(ReactionEmoji.SHUFFLE)).withDisabled(queue.isEmpty());
-    Button bStop = Button.secondary(DeleteQueue, Emoji.fromUnicode(ReactionEmoji.STOP)).withDisabled(queue.isEmpty());
+    Button bPrevious = Button.danger(QueueSkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).asDisabled();
+    Button bSkip = Button.secondary(QueueSkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(queue.isEmpty());
+    Button bShuffle = Button.secondary(Shuffle, Emoji.fromMarkdown(ReactionEmoji.SHUFFLE)).withDisabled(queue.isEmpty());
+    Button bStop = Button.secondary(DeleteQueue, Emoji.fromMarkdown(ReactionEmoji.STOP)).withDisabled(queue.isEmpty());
 
     return ActionRow.of(bPrevious, bSkip, bShuffle, bStop);
   }

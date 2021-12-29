@@ -1,4 +1,4 @@
-package audioCore.handler;
+package audioCore.provider;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -9,17 +9,17 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class MusicDataLoader {
-  private static MusicDataLoader INSTANCE;
+public class TrackDataLoader {
+  private static TrackDataLoader INSTANCE;
   private final AudioPlayerManager playerManager;
 
-  public static synchronized MusicDataLoader getInstance() {
+  public static synchronized TrackDataLoader getInstance() {
     if (INSTANCE == null)
-      INSTANCE = new MusicDataLoader();
+      INSTANCE = new TrackDataLoader();
     return INSTANCE;
   }
 
-  private MusicDataLoader() {
+  private TrackDataLoader() {
     this.playerManager = new DefaultAudioPlayerManager();
     AudioSourceManagers.registerRemoteSources(playerManager);
     AudioSourceManagers.registerLocalSource(playerManager);

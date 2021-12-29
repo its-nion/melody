@@ -54,8 +54,9 @@ public class Join extends SlashCommand {
 
     AudioManager audioManager = event.getGuild().getAudioManager();
     VoiceChannel memberChannel = event.getMember().getVoiceState().getChannel();
-
-    event.replyEmbeds(getJoinMessageEmbed(memberChannel)).queue();
+    GuildVoiceState botVS = event.getGuild().getSelfMember().getVoiceState();
+    VoiceChannel old = botVS == null ? null : botVS.getChannel();
+    event.replyEmbeds(createJoinMessageEmbed(old, memberChannel)).queue();
     audioManager.openAudioConnection(memberChannel);
   }
 
@@ -75,8 +76,10 @@ public class Join extends SlashCommand {
     }
 
     VoiceChannel channel = event.getMember().getVoiceState().getChannel();
+    GuildVoiceState botVS = event.getGuild().getSelfMember().getVoiceState();
+    VoiceChannel old = botVS == null ? null : botVS.getChannel();
+    MessageEmbed joinMessageEmbed = getJoinMessageEmbed(old, channel);
     AudioManager audio = event.getGuild().getAudioManager();
-    MessageEmbed joinMessageEmbed = getJoinMessageEmbed(channel);
     audio.openAudioConnection(channel);
     return joinMessageEmbed;
   }
@@ -96,26 +99,60 @@ public class Join extends SlashCommand {
       return;
     }
 
+    GuildVoiceState botVS = guild.getSelfMember().getVoiceState();
+    VoiceChannel old = botVS == null ? null : botVS.getChannel();
     VoiceChannel channel = member.getVoiceState().getChannel();
-    if (textChannel != null) textChannel.sendMessageEmbeds(getJoinMessageEmbed(channel)).queue();
+    MessageEmbed joinMessageEmbed = getJoinMessageEmbed(old, channel);
+    if (textChannel != null && joinMessageEmbed != null)
+      textChannel.sendMessageEmbeds(joinMessageEmbed).queue();
     audio.openAudioConnection(channel);
   }
 
   /**
    * Returns a MessageEmbed with a descriptive content, how the bot behaved, while joining your VoiceChannel.
-   * @param channel The joining Channel
+   * @param newChannel The joining Channel
+   * @param oldChannel The previous channel, null if not connected
    * @return a fitting MessageEmbed
    */
-  private MessageEmbed getJoinMessageEmbed(VoiceChannel channel) {
-    GuildVoiceState voiceState = channel.getGuild().getSelfMember().getVoiceState();
-    if (voiceState != null && voiceState.getChannel() != null)
+  @Nullable
+  private MessageEmbed getJoinMessageEmbed(@Nullable VoiceChannel oldChannel, @Nonnull VoiceChannel newChannel) {
+    if (oldChannel == null){
       return new EmbedBuilder()
           .setColor(EmbedColor.BLUE)
-          .setDescription("**Moved** to <#" + channel.getId() + ">")
+          .setDescription("**Joined** in <#" + newChannel.getId() + ">")
+          .build();
+    }
+    if (oldChannel.getIdLong() != newChannel.getIdLong())
+      return new EmbedBuilder()
+          .setColor(EmbedColor.BLUE)
+          .setDescription("**Moved** to <#" + newChannel.getId() + ">")
+          .build();
+    return null;
+  }
+
+  /**
+   * Returns a MessageEmbed with a descriptive content, how the bot behaved, while joining your VoiceChannel.
+   * Also returns a embed when nothing happened
+   * @param newChannel The joining Channel
+   * @param oldChannel The previous channel, null if not connected
+   * @return a fitting MessageEmbed
+   */
+  @Nonnull
+  private MessageEmbed createJoinMessageEmbed(@Nullable VoiceChannel oldChannel, @Nonnull VoiceChannel newChannel) {
+    if (oldChannel == null) {
+      return new EmbedBuilder()
+          .setColor(EmbedColor.BLUE)
+          .setDescription("**Joined** in <#" + newChannel.getId() + ">")
+          .build();
+    }
+    if (oldChannel.getIdLong() != newChannel.getIdLong())
+      return new EmbedBuilder()
+          .setColor(EmbedColor.BLUE)
+          .setDescription("**Moved** to <#" + newChannel.getId() + ">")
           .build();
     return new EmbedBuilder()
-        .setColor(EmbedColor.GREEN)
-        .setDescription("**Joined** in <#" + channel.getId() + ">")
+        .setColor(EmbedColor.BLUE)
+        .setDescription("**I'm already connected** to <#" + newChannel.getId() + ">")
         .build();
   }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!--Disable the next lines to re-activate all logs-->
-    <logger name="net.dv8tion.jda.api.JDA" level="OFF"/>
-    <logger name="net.dv8tion.jda.internal.requests.WebSocketClient" level="OFF"/>
-    <logger name="com.zaxxer.hikari.HikariDataSource" level="OFF"/>
-    <logger name="com.sedmelluq.lava.common.natives.NativeLibraryLoader" level="OFF"/>
+    <logger name="net.dv8tion.jda.api.JDA" level="ERROR"/>
+    <logger name="net.dv8tion.jda.internal.requests.WebSocketClient" level="ERROR"/>
+    <logger name="com.zaxxer.hikari.HikariDataSource" level="ERROR"/>
+    <logger name="com.sedmelluq.lava.common.natives.NativeLibraryLoader" level="ERROR"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

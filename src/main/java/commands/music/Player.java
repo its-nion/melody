@@ -1,6 +1,6 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
+import audioCore.util.AudioStateChecks;
 import audioCore.handler.PlayerManager;
 import audioCore.handler.TrackScheduler;
 import audioCore.slash.SlashCommand;
@@ -8,7 +8,6 @@ import com.jagrosh.jdautilities.command.Command;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import melody.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -93,10 +92,10 @@ public class Player extends SlashCommand {
         boolean hasTrack = player.getPlayingTrack() != null;
         boolean hasNextTrack = !scheduler.getQueue().isEmpty();
 
-        Button bPlayPause = Button.primary(PlayPause, Emoji.fromUnicode(isPlaying ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME)).withDisabled(!hasTrack);
-        Button bSkip = Button.secondary(SkipForward, Emoji.fromUnicode(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
-        Button bPrevious = Button.danger(SkipBackwards, Emoji.fromUnicode(ReactionEmoji.BACKWARDS)).asDisabled();
-        Button bStop = Button.secondary(Stop, Emoji.fromUnicode(ReactionEmoji.STOP)).withDisabled(!hasTrack);
+        Button bPlayPause = Button.primary(PlayPause, Emoji.fromMarkdown(isPlaying ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME)).withDisabled(!hasTrack);
+        Button bSkip = Button.secondary(SkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
+        Button bPrevious = Button.danger(SkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).asDisabled();
+        Button bStop = Button.secondary(Stop, Emoji.fromMarkdown(ReactionEmoji.STOP)).withDisabled(!hasTrack);
 
         return ActionRow.of(bPrevious, bPlayPause, bSkip, bStop);
     }

@@ -1,4 +1,4 @@
-package audioCore.spotify;
+package audioCore.provider.spotify;
 
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.Track;

@@ -1,11 +1,12 @@
 package commands.music;
 
-import audioCore.handler.AudioStateChecks;
+import audioCore.util.AudioStateChecks;
 import audioCore.handler.GuildAudioManager;
 import audioCore.handler.PlayerManager;
 import audioCore.slash.SlashCommand;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -65,7 +66,7 @@ public class Resume extends SlashCommand {
     }
 
     resume(guild);
-    Button button = Button.secondary(RESUME, ReactionEmoji.PAUSE);
+    Button button = Button.secondary(RESUME, Emoji.fromMarkdown(ReactionEmoji.PAUSE));
     event.replyEmbeds(new EmbedBuilder().setDescription("**Resumed** the player").build())
         .addActionRow(button)
         .queue();
@@ -112,7 +113,7 @@ public class Resume extends SlashCommand {
       new Pause().pause(guild);
       event.getMessage().editMessageEmbeds(new EmbedBuilder().setDescription("**Paused** the player").build()).queue();
     }
-    Button button = Button.secondary(RESUME, paused ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME);
+    Button button = Button.secondary(RESUME, Emoji.fromMarkdown(paused ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME));
     event.editComponents(ActionRow.of(button)).queue();
     registerButton(button);
   }
