@@ -1,7 +1,7 @@
 package com.lopl.melody;
 
 import com.lopl.melody.audioCore.slash.*;
-import com.lopl.melody.database.DBVariables;
+import com.lopl.melody.utils.database.DBVariables;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -46,7 +46,7 @@ public class Main
         builder.setStatus(OnlineStatus.ONLINE);
 
         SlashCommandClientBuilder slashCommandClientBuilder = new SlashCommandClientBuilder();
-        slashCommandClientBuilder.addCommands(SlashCommands.commandMap.values().toArray(SlashCommand[]::new));
+        slashCommandClientBuilder.addCommands(SlashCommands.getCommands().toArray(SlashCommand[]::new));
         SlashCommandClient slashCommandClient = slashCommandClientBuilder.build();
         builder.addEventListeners(new SlashCommandHandler(), slashCommandClient);
 

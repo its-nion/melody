@@ -1,4 +1,4 @@
-package com.lopl.melody.database;
+package com.lopl.melody.utils.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -21,17 +21,17 @@ public class SQLiteDataSource
     {
         try
         {
-            final File dbFile = new File("com.lopl.melody.database.db");
+            final File dbFile = new File("com.lopl.melody.utils.database.db");
 
             if(!dbFile.exists())
             {
                 if(dbFile.createNewFile())
                 {
-                    LOGGER.info("Created com.lopl.melody.database file");
+                    LOGGER.info("Created com.lopl.melody.utils.database file");
                 }
                 else
                 {
-                    LOGGER.info("Could not create com.lopl.melody.database file");
+                    LOGGER.info("Could not create com.lopl.melody.utils.database file");
                 }
             }
         }
@@ -40,7 +40,7 @@ public class SQLiteDataSource
             e.printStackTrace();
         }
 
-        config.setJdbcUrl("jdbc:sqlite:com.lopl.melody.database.db");
+        config.setJdbcUrl("jdbc:sqlite:com.lopl.melody.utils.database.db");
         config.setConnectionTestQuery("SELECT 1");
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCachesize", "250");

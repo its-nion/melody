@@ -59,7 +59,7 @@ public class SlashCommandClient extends ListenerAdapter {
     JDABuilder builder = JDABuilder.createDefault(Token.BOT_TOKEN);
     builder.setActivity(Activity.of(Activity.ActivityType.DEFAULT, "Updating Commands"));
     SlashCommandClientBuilder slashCommandClientBuilder = new SlashCommandClientBuilder();
-    slashCommandClientBuilder.addCommands(SlashCommands.commandMap.values().toArray(SlashCommand[]::new));
+    slashCommandClientBuilder.addCommands(SlashCommands.getCommands().toArray(SlashCommand[]::new));
     slashCommandClientBuilder.build();
     Main.manager = builder.build();
     Main.manager.awaitReady();
@@ -68,7 +68,7 @@ public class SlashCommandClient extends ListenerAdapter {
 
   public static void upsertAllGuildsCommands() {
     Main.manager.updateCommands().queue();  // delete all global com.lopl.melody.commands
-    SlashCommand[] slashCommands = SlashCommands.commandMap.values().stream()
+    SlashCommand[] slashCommands = SlashCommands.getCommands().stream()
         .filter(i -> i.name != null && i.description != null && !i.getClass().isAnnotationPresent(NoUserCommand.class))
         .toArray(SlashCommand[]::new);
     upsertGuildRecursive(Main.manager.getGuilds().toArray(Guild[]::new), slashCommands, 0, (g, c) -> {

@@ -105,21 +105,21 @@ public class Help extends SlashCommand {
   }
 
   private List<Choice> getChoices() {
-    return SlashCommands.commandMap.values().stream()
+    return SlashCommands.getCommands().stream()
         .filter(i -> i.getName() != null && i.getHelp() != null && !i.getClass().isAnnotationPresent(NoUserCommand.class))
         .map(i -> new Choice(i.getName(), i.getName()))
         .collect(Collectors.toList());
   }
 
   private List<SelectOption> getOptions() {
-    return SlashCommands.commandMap.values().stream()
+    return SlashCommands.getCommands().stream()
         .filter(i -> i.getName() != null && i.getHelp() != null && !i.getClass().isAnnotationPresent(NoUserCommand.class))
         .map(i -> SelectOption.of(i.getName(), i.getName()))
         .collect(Collectors.toList());
   }
 
   private List<SelectOption> getOptions(SlashCommand selected) {
-    return SlashCommands.commandMap.values().stream()
+    return SlashCommands.getCommands().stream()
         .filter(i -> i.getName() != null && i.getHelp() != null && !i.getClass().isAnnotationPresent(NoUserCommand.class))
         .map(i -> SelectOption.of(i.getName(), i.getName()).withDefault(selected.getName().equals(i.getName())))
         .collect(Collectors.toList());
@@ -128,7 +128,7 @@ public class Help extends SlashCommand {
   @Nullable
   private SlashCommand getCommandByName(String name) {
     AtomicReference<SlashCommand> out = new AtomicReference<>();
-    SlashCommands.commandMap.values().stream()
+    SlashCommands.getCommands().stream()
         .filter(i -> i.getName() != null && i.getName().equals(name) && i.getHelp() != null && !i.getClass().isAnnotationPresent(NoUserCommand.class))
         .findFirst().ifPresent(out::set);
     return out.get();
@@ -171,7 +171,7 @@ public class Help extends SlashCommand {
 
   private List<Category> getCategories() {
     List<Category> categories = new ArrayList<>();
-    SlashCommands.commandMap.values().stream()
+    SlashCommands.getCommands().stream()
         .filter(i -> i.getName() != null && i.getHelp() != null && !i.getClass().isAnnotationPresent(NoUserCommand.class))
         .forEach(i -> {
           Category cat = null;

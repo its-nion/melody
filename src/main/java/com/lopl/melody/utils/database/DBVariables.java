@@ -1,4 +1,4 @@
-package com.lopl.melody.database;
+package com.lopl.melody.utils.database;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
