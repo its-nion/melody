@@ -1,5 +1,6 @@
-package audioCore.slash;
+package audioCore.slash.component;
 
+import audioCore.slash.SlashCommand;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 
 import java.util.HashMap;

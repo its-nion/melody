@@ -14,15 +14,24 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
+import org.jetbrains.annotations.Nullable;
 import utils.Logging;
 import utils.annotation.NoUserCommand;
 import utils.embed.EmbedError;
 import utils.embed.ReactionEmoji;
 
+import java.util.List;
+
 @NoUserCommand
 public class Resume extends SlashCommand {
 
   public static final String RESUME = "resume";
+
+  @Nullable
+  @Override
+  protected List<String> allowAnonymousComponentCall() {
+    return List.of(RESUME);
+  }
 
   @Deprecated
   @Override
@@ -75,7 +84,7 @@ public class Resume extends SlashCommand {
 
   @Deprecated
   @Override
-  protected void clicked(ButtonClickEvent event) {
+  protected void clicked(ButtonClickEvent event, boolean anonymous) {
     Guild guild = event.getGuild();
 
     if (guild == null) {

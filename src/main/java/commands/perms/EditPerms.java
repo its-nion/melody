@@ -12,11 +12,6 @@ public class EditPerms extends SlashCommand {
 
     }
 
-    @Override
-    protected void clicked(ButtonClickEvent event) {
-
-    }
-
 //    @Override
 //    public CommandData commandInfo() {
 //        return new CommandData("editperms", "Edit role permissions")

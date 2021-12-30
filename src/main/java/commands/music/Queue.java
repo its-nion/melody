@@ -16,12 +16,14 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import utils.Logging;
 import utils.embed.EmbedColor;
 import utils.embed.EmbedError;
 import utils.embed.ReactionEmoji;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Queue extends SlashCommand {
 
@@ -35,6 +37,12 @@ public class Queue extends SlashCommand {
     super.category = new Category("Sound");
     super.help = "/queue : shows the current queue"; // TODO set good help and description
     super.description = "shows the current queue";
+  }
+
+  @Nullable
+  @Override
+  protected List<String> allowAnonymousComponentCall() {
+    return List.of(Shuffle, QueueSkipForward, QueueSkipBackwards, DeleteQueue);
   }
 
   @Override
@@ -140,7 +148,7 @@ public class Queue extends SlashCommand {
   }
 
   @Override
-  protected void clicked(ButtonClickEvent event) {
+  protected void clicked(ButtonClickEvent event, boolean anonymous) {
     if (event.getGuild() == null){
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;

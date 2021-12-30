@@ -194,7 +194,7 @@ public class Play extends SlashCommand {
    * @param event all the button click event data
    */
   @Override
-  protected void clicked(ButtonClickEvent event) {
+  protected void clicked(ButtonClickEvent event, boolean anonymous) {
     if (event.getGuild() == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;

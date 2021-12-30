@@ -14,10 +14,13 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import utils.Logging;
 import utils.embed.EmbedError;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.INTEGER;
 
@@ -29,6 +32,12 @@ public class Volume extends SlashCommand {
     super.help = "/volume : shows the current volume \n" +
         "/volume [amount] : sets the volume to amount"; // TODO set good help and description
     super.description = "shows and sets the current volume";
+  }
+
+  @Nullable
+  @Override
+  protected List<String> allowAnonymousComponentCall() {
+    return IntStream.range(1, 101).boxed().map(i -> "volume_" + i).collect(Collectors.toList());
   }
 
   @Override
@@ -116,7 +125,7 @@ public class Volume extends SlashCommand {
   }
 
   @Override
-  protected void clicked(ButtonClickEvent event) {
+  protected void clicked(ButtonClickEvent event, boolean anonymous) {
     Guild guild = event.getGuild();
 
     if (guild == null) {

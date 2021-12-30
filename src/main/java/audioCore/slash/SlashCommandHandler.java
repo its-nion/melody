@@ -12,18 +12,30 @@ public class SlashCommandHandler extends ListenerAdapter {
   public void onButtonClick(@NotNull ButtonClickEvent event) {
     SlashCommandClient slashCommandClient = SlashCommandClient.getInstance();
     SlashCommand command = slashCommandClient.getCommandByButton(event.getButton());
-    if (command == null) return; // TODO try to get class with the public static defined ids in the command classes
-
-    command.clicked(event);
+    boolean anonymous = false;
+    if (command == null) {
+      if (event.getButton() == null) return;
+      String id = event.getButton().getId();
+      command = slashCommandClient.anonymousComponentManager.request(id);
+      anonymous = true;
+    }
+    if (command == null) return;
+    command.clicked(event, anonymous);
   }
 
   @Override
   public void onSelectionMenu(@NotNull SelectionMenuEvent event) {
     SlashCommandClient slashCommandClient = SlashCommandClient.getInstance();
     SlashCommand command = slashCommandClient.getCommandByDropdown(event.getComponent());
-    if (command == null) return; // TODO try to get class with the public static defined ids in the command classes
-
-    command.dropdown(event);
+    boolean anonymous = false;
+    if (command == null) {
+      if (event.getSelectionMenu() == null) return;
+      String id = event.getSelectionMenu().getId();
+      command = slashCommandClient.anonymousComponentManager.request(id);
+      anonymous = true;
+    }
+    if (command == null) return;
+    command.dropdown(event, anonymous);
   }
 
   @Override

@@ -22,6 +22,7 @@ import utils.embed.ReactionEmoji;
 import javax.annotation.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class Player extends SlashCommand {
 
@@ -47,6 +48,13 @@ public class Player extends SlashCommand {
 //                .addActionRow(Button.secondary("0", "ᐅ"), Button.secondary("0", "□"), Button.secondary("0", "»"), Button.secondary("0", "↝"))
 //        .queue();
 //    }
+
+
+    @Nullable
+    @Override
+    protected List<String> allowAnonymousComponentCall() {
+        return List.of(PlayPause, SkipBackwards, SkipForward, Stop);
+    }
 
     @Override
     protected void execute(SlashCommandEvent event) {
@@ -127,7 +135,7 @@ public class Player extends SlashCommand {
     }
 
     @Override
-    protected void clicked(ButtonClickEvent event) {
+    protected void clicked(ButtonClickEvent event, boolean anonymous) {
         if (event.getGuild() == null){
             event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
             return;

@@ -41,18 +41,20 @@ public abstract class SlashCommand {
   /**
    * This will fire when a user clicked on a button regarding this command.
    * The Button has to be registered beforehand with {@link #registerButton(Button)}.
-   * @param event all the button click event data
+   * @param event     all the button click event data
+   * @param anonymous is true if the button was not cached and the class was found only with the ID
    */
-  protected void clicked(ButtonClickEvent event){
+  protected void clicked(ButtonClickEvent event, boolean anonymous){
 
   }
 
   /**
    * This will fire when a user selected a option from a dropdown regarding this command.
    * The Dropdown has to be registered beforehand with {@link #registerDropdown(SelectionMenu)}.
-   * @param event all the dropdown event data
+   * @param event     all the dropdown event data
+   * @param anonymous is true if the dropdown was not cached and the class was found only with the ID
    */
-  protected void dropdown(SelectionMenuEvent event){
+  protected void dropdown(SelectionMenuEvent event, boolean anonymous){
 
   }
 

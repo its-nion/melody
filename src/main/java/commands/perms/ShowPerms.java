@@ -19,8 +19,4 @@ public class ShowPerms extends SlashCommand {
 
     }
 
-    @Override
-    protected void clicked(ButtonClickEvent event) {
-
-    }
 }

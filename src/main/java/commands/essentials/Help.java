@@ -43,6 +43,12 @@ public class Help extends SlashCommand {
             .addChoices(getChoices()));
   }
 
+  @Nullable
+  @Override
+  protected List<String> allowAnonymousComponentCall() {
+    return List.of(COMMAND_DROPDOWN);
+  }
+
   @Override
   protected void execute(SlashCommandEvent event) {
     Logging.slashCommand(getClass(), event);
@@ -74,7 +80,7 @@ public class Help extends SlashCommand {
   }
 
   @Override
-  protected void dropdown(SelectionMenuEvent event) {
+  protected void dropdown(SelectionMenuEvent event, boolean anonymous) {
     List<SelectOption> selection = event.getInteraction().getSelectedOptions();
     if (selection == null || selection.isEmpty())
       return;

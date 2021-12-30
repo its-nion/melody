@@ -1,5 +1,8 @@
 package audioCore.slash;
 
+import audioCore.slash.component.AnonymousComponentManager;
+import audioCore.slash.component.ButtonManager;
+import audioCore.slash.component.DropdownManager;
 import melody.Main;
 import melody.Token;
 import net.dv8tion.jda.api.JDABuilder;
@@ -21,15 +24,17 @@ public class SlashCommandClient extends ListenerAdapter {
   public SlashCommand[] slashCommands;
   public ButtonManager buttonManager;
   public DropdownManager dropdownManager;
+  public AnonymousComponentManager anonymousComponentManager;
 
   public static SlashCommandClient getInstance() {
     return INSTANCE;
   }
 
-  public SlashCommandClient(SlashCommand[] slashCommands) {
+  SlashCommandClient(SlashCommand[] slashCommands) {
     this.slashCommands = slashCommands;
     this.buttonManager = new ButtonManager();
     this.dropdownManager = new DropdownManager();
+    this.anonymousComponentManager = new AnonymousComponentManager(Arrays.asList(slashCommands));
     INSTANCE = this;
   }
 

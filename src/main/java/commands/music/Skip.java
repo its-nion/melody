@@ -18,10 +18,13 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import utils.Logging;
 import utils.embed.EmbedColor;
 import utils.embed.EmbedError;
 import utils.embed.ReactionEmoji;
+
+import java.util.List;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.INTEGER;
 
@@ -42,6 +45,12 @@ public class Skip extends SlashCommand {
   @Override
   protected CommandCreateAction onUpsert(CommandCreateAction cca) {
     return cca.addOption(INTEGER, SKIP_AMOUNT, "How many songs to skip", false);
+  }
+
+  @Nullable
+  @Override
+  protected List<String> allowAnonymousComponentCall() {
+    return List.of(Forwards, Backwards);
   }
 
   @Override
@@ -147,7 +156,7 @@ public class Skip extends SlashCommand {
   }
 
   @Override
-  protected void clicked(ButtonClickEvent event) {
+  protected void clicked(ButtonClickEvent event, boolean anonymous) {
     if (event.getGuild() == null){
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
