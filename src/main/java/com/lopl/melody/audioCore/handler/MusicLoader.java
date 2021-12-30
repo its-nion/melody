@@ -1,5 +1,6 @@
 package com.lopl.melody.audioCore.handler;
 
+import com.lopl.melody.utils.Logging;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -24,6 +25,7 @@ public class MusicLoader {
     player.playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
       @Override
       public void trackLoaded(AudioTrack track) {
+        Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + track.getInfo().title + " complete");
         channel.sendMessageEmbeds(getMessage(track, musicManager)).queue();
         // Play the song
         player.play(musicManager, track);
@@ -37,7 +39,7 @@ public class MusicLoader {
 
       @Override
       public void noMatches() {
-        new RuntimeException("No matches").printStackTrace();
+        Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + trackUrl + " failed");
       }
 
       @Override
@@ -89,6 +91,7 @@ public class MusicLoader {
       player.playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
         @Override
         public void trackLoaded(AudioTrack track) {
+          Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + track.getInfo().title + " in playlist " + (iLoaded[0] + 1) + "/" + trackUrls.length);
           player.play(musicManager, track);
           iLoaded[0] += 1;
 
@@ -110,7 +113,7 @@ public class MusicLoader {
 
         @Override
         public void noMatches() {
-          new RuntimeException("No matches").printStackTrace();
+          Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + trackUrl + " failed");
         }
 
         @Override
@@ -130,6 +133,7 @@ public class MusicLoader {
     player.playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
       @Override
       public void trackLoaded(AudioTrack track) {
+        Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + track.getInfo().title + " complete");
         channel.sendMessageEmbeds(getMessage(track, musicManager)).queue();
         player.play(musicManager, track);
       }
@@ -143,6 +147,7 @@ public class MusicLoader {
 
       @Override
       public void noMatches() {
+        Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + trackUrl + " failed");
         channel.sendMessage("Nothing found by " + trackUrl).queue();
       }
 

@@ -46,7 +46,7 @@ import java.util.List;
  * <p>/play with a link: When entering "/play" followed by a link, this link will be played directly</p>
  * <p>/play with a query: When entering "/play" followed by any string, the string will be searched on Spotify.
  * The results will be displayed in a {@link MessageEmbed}. You can select from here what song to play with provided {@link Button}s.
- * Button Click will be handled in the {@link #clicked(ButtonClickEvent)}.</p>
+ * Button Click will be handled in the {@link #clicked(ButtonClickEvent, boolean)}.</p>
  * <p>/play with type and query: You can enter a search type for your query right before your query.
  * Possible types are "playlist", "user" and "track".</p>
  */
@@ -195,6 +195,8 @@ public class Play extends SlashCommand {
    */
   @Override
   protected void clicked(ButtonClickEvent event, boolean anonymous) {
+    Logging.button(getClass(), event);
+
     if (event.getGuild() == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
@@ -328,7 +330,7 @@ public class Play extends SlashCommand {
       AudioTrack track = youtubeMessage.getCurrentTrack();
       String url = track.getInfo().uri;
       Logging.debug(getClass(), event.getGuild(), event.getMember(), "Loading Youtube Track: " + url);
-      new MusicLoader().loadOne(event.getTextChannel(), url);
+      new MusicLoader().loadURL(event.getTextChannel(), url);
     }
   }
 

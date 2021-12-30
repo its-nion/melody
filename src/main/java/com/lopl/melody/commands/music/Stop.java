@@ -59,5 +59,6 @@ public class Stop extends SlashCommand {
     guildAudioManager.scheduler.clearQueue();
     guildAudioManager.player.stopTrack();
     guildAudioManager.player.destroy();
+    Logging.debug(getClass(), guild, null, "Stopped the player");
   }
 }

@@ -82,6 +82,8 @@ public class Help extends SlashCommand {
 
   @Override
   protected void dropdown(SelectionMenuEvent event, boolean anonymous) {
+    Logging.dropdown(getClass(), event);
+
     List<SelectOption> selection = event.getInteraction().getSelectedOptions();
     if (selection == null || selection.isEmpty())
       return;

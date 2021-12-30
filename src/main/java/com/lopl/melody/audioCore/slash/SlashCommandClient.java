@@ -79,11 +79,11 @@ public class SlashCommandClient extends ListenerAdapter {
 
   public static void upsertGuildRecursive(Guild[] guilds, SlashCommand[] slashCommands, int index, CommandReload callback) {
     Guild guild = guilds[index];
-    Logging.info(getInstance().getClass(), guild, null, "Reloading [" + guild.getName() + "]s com.lopl.melody.commands...");
+    Logging.info(getInstance().getClass(), guild, null, "Reloading [" + guild.getName() + "]s commands...");
     guild.updateCommands().queue();
     upsertCommandsRecursive(guild, slashCommands, 0, commands -> {
-      Logging.info(getInstance().getClass(), guild, null, "Loaded " + slashCommands.length + "com/lopl/melody/commands");
-      Logging.info(getInstance().getClass(), guild, null, "Commands are: " + Arrays.toString(Arrays.stream(slashCommands).map(sc -> sc.name).toArray()));
+      Logging.info(getInstance().getClass(), guild, null, "Loaded " + slashCommands.length + "commands");
+      Logging.debug(getInstance().getClass(), guild, null, "Commands are: " + Arrays.toString(Arrays.stream(slashCommands).map(sc -> sc.name).toArray()));
       int newIndex = index + 1;
       if (newIndex >= guilds.length){
         callback.onFinish(newIndex, slashCommands.length);

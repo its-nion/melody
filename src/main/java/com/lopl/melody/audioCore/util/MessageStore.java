@@ -1,7 +1,7 @@
 package com.lopl.melody.audioCore.util;
 
 import net.dv8tion.jda.api.entities.Message;
-
+import com.lopl.melody.utils.Logging;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +16,7 @@ public class MessageStore {
     for (SavedMessage savedMessage : savedMessages){
       if (savedMessage.equals(message)) return savedMessage;
     }
+    Logging.debug(MessageStore.class, message.getGuild(), null, "Found no message with id: " + message.getId());
     return null;
   }
 

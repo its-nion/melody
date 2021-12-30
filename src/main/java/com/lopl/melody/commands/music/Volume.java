@@ -94,6 +94,7 @@ public class Volume extends SlashCommand {
     PlayerManager playerManager = PlayerManager.getInstance();
     GuildAudioManager guildAudioManager = playerManager.getGuildAudioManager(guild);
     guildAudioManager.player.setVolume(newVolume);
+    Logging.debug(getClass(), guild, null, "Set Volume to " + volume + "%");
   }
 
   private MessageEmbed getVolumeEmbed(GuildAudioManager guildAudioManager) {
@@ -126,8 +127,9 @@ public class Volume extends SlashCommand {
 
   @Override
   protected void clicked(ButtonClickEvent event, boolean anonymous) {
-    Guild guild = event.getGuild();
+    Logging.button(getClass(), event);
 
+    Guild guild = event.getGuild();
     if (guild == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;

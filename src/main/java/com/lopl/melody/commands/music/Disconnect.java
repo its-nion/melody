@@ -60,5 +60,6 @@ public class Disconnect extends SlashCommand {
         if (guild == null) return;
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
+        Logging.info(getClass(), guild, null, "Disconnected");
     }
 }

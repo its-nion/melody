@@ -28,6 +28,7 @@ public class Ping extends SlashCommand
             .build())
             .setEphemeral(true)
             .queue();
+        Logging.debug(getClass(), event.getGuild(), null, "Current ping is " + ping + "ms");
     }
 
     private Color getColorByPing(long ping) {

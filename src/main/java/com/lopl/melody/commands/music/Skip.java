@@ -157,6 +157,8 @@ public class Skip extends SlashCommand {
 
   @Override
   protected void clicked(ButtonClickEvent event, boolean anonymous) {
+    Logging.button(getClass(), event);
+
     if (event.getGuild() == null){
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
@@ -212,5 +214,4 @@ public class Skip extends SlashCommand {
     if (!skip(guild)) return false;
     return skip(guild, amountLeft - 1);
   }
-
 }

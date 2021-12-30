@@ -6,6 +6,7 @@ import com.lopl.melody.utils.Logging;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AnonymousComponentManager {
   //public static final int MAX_CACHE = 50;
@@ -15,7 +16,9 @@ public class AnonymousComponentManager {
   public AnonymousComponentManager(List<SlashCommand> commands) {
     this.idCache = new HashMap<>();
     this.cache(commands);
-    Logging.debug(getClass(), null, null, "Cached anonymous IDs:" + Arrays.toString(idCache.keySet().toArray(String[]::new)));
+    List<String> loggedIds = idCache.keySet().stream().filter(c -> !c.contains("volume")).collect(Collectors.toList());
+    loggedIds.add("volume_1-100");
+    Logging.debug(getClass(), null, null, "Cached anonymous IDs:" + Arrays.toString(loggedIds.toArray()));
   }
 
   private void cache(List<SlashCommand> commands){

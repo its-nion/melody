@@ -1,6 +1,7 @@
 package com.lopl.melody.audioCore.slash;
 
 import com.jagrosh.jdautilities.command.Command.Category;
+import com.lopl.melody.utils.Logging;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -71,6 +72,7 @@ public abstract class SlashCommand {
   protected final void registerButton(Button button){
     SlashCommandClient slashCommandClient = SlashCommandClient.getInstance();
     slashCommandClient.buttonManager.cache(button, this);
+//    Logging.debug(getClass(), null, null, "registered new button");
   }
 
   /**
@@ -81,6 +83,7 @@ public abstract class SlashCommand {
   protected final void registerDropdown(SelectionMenu dropdown){
     SlashCommandClient slashCommandClient = SlashCommandClient.getInstance();
     slashCommandClient.dropdownManager.cache(dropdown, this);
+//    Logging.debug(getClass(), null, null, "Registered new dropdown");
   }
 
   public String getName() {
@@ -98,4 +101,5 @@ public abstract class SlashCommand {
   public String getDescription() {
     return description;
   }
+
 }

@@ -1,6 +1,7 @@
 package com.lopl.melody.commands.music;
 
 import com.lopl.melody.audioCore.slash.SlashCommand;
+import com.lopl.melody.utils.Logging;
 import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -42,6 +43,8 @@ public class Join extends SlashCommand {
    */
   @Override
   protected void execute(SlashCommandEvent event) {
+    Logging.slashCommand(getClass(), event);
+
     if (event.getMember() == null || event.getMember().getVoiceState() == null || event.getMember().getVoiceState().getChannel() == null) {
       event.replyEmbeds(EmbedError.with("This Command requires **you** to be **connected to a voice channel**")).queue();
       return;
@@ -58,6 +61,7 @@ public class Join extends SlashCommand {
     VoiceChannel old = botVS == null ? null : botVS.getChannel();
     event.replyEmbeds(createJoinMessageEmbed(old, memberChannel)).queue();
     audioManager.openAudioConnection(memberChannel);
+    Logging.info(getClass(), event.getGuild(), null, "Joined channel " + memberChannel.getName());
   }
 
   /**

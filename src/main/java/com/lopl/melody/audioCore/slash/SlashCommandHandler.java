@@ -1,5 +1,6 @@
 package com.lopl.melody.audioCore.slash;
 
+import com.lopl.melody.utils.Logging;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -19,7 +20,10 @@ public class SlashCommandHandler extends ListenerAdapter {
       command = slashCommandClient.anonymousComponentManager.request(id);
       anonymous = true;
     }
-    if (command == null) return;
+    if (command == null) {
+      Logging.debug(getClass(), event.getGuild(), null, "Found no associated Button command... sad.");
+      return;
+    }
     command.clicked(event, anonymous);
   }
 
@@ -34,7 +38,10 @@ public class SlashCommandHandler extends ListenerAdapter {
       command = slashCommandClient.anonymousComponentManager.request(id);
       anonymous = true;
     }
-    if (command == null) return;
+    if (command == null) {
+      Logging.debug(getClass(), event.getGuild(), null, "Found no associated SelectionMenu command... sad.");
+      return;
+    }
     command.dropdown(event, anonymous);
   }
 
@@ -42,7 +49,10 @@ public class SlashCommandHandler extends ListenerAdapter {
   public void onSlashCommand(@NotNull SlashCommandEvent event) {
     SlashCommandClient slashCommandClient = SlashCommandClient.getInstance();
     SlashCommand command = slashCommandClient.getCommandByKeyword(event.getName());
-    if (command == null) return;
+    if (command == null) {
+      Logging.debug(getClass(), event.getGuild(), null, "Found no associated command for command " + event.getCommandString() + "... This is bad!");
+      return;
+    }
 
     command.execute(event);
   }

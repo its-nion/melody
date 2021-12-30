@@ -19,7 +19,7 @@ public class Youtube implements MusicDataSearcher {
   public static void searchYoutube(@NotNull SlashCommandEvent event, @NotNull String search, Message message){
     Logging.debug(Youtube.class, event.getGuild(), null, "Youtube Re-Loaded");
     YoutubeButtonMessage youtubeButtonMessage;
-    Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
+    Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
     AudioTrack[] tracks = getTracks("ytsearch:" + search, new String[0]);
     youtubeButtonMessage = new YoutubeButtonMessage(message, tracks);
     MessageStore.saveMessage(youtubeButtonMessage);

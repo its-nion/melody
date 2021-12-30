@@ -85,8 +85,9 @@ public class Resume extends SlashCommand {
   @Deprecated
   @Override
   protected void clicked(ButtonClickEvent event, boolean anonymous) {
-    Guild guild = event.getGuild();
+    Logging.button(getClass(), event);
 
+    Guild guild = event.getGuild();
     if (guild == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
@@ -132,5 +133,6 @@ public class Resume extends SlashCommand {
     AudioPlayer player = manager.getGuildAudioManager(guild).player;
     if (!player.isPaused()) return;
     player.setPaused(false);
+    Logging.debug(getClass(), guild, null, "Resumed the player");
   }
 }

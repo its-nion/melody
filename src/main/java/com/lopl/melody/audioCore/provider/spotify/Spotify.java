@@ -36,7 +36,7 @@ public class Spotify implements MusicDataSearcher {
 
     SpotifyMessage spotifyMessage = null;
     if (checkType(args[0], "playlist", "pl", "list")) {
-      Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
+      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
       PlaylistSimplified[] playlists = getPlaylists(search, new String[]{"playlist", "pl", "list"});
       spotifyMessage = new SpotifyButtonMessage(message, playlists);
     } else if (args[0].equals("user") || args[0].equals("account")) {
@@ -44,11 +44,11 @@ public class Spotify implements MusicDataSearcher {
 //      SpotifyMessage spotifyMessage =
 //          new SpotifyMessage(message, getUserPlaylists(search.replaceAll("user ", "").replaceAll("account ", "")));
     } else if (checkType(args[0], "tracks", "track", "song")) {
-      Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
+      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
       Track[] tracks = getTracks(search, new String[]{"tracks", "track", "song"});
       spotifyMessage = new SpotifyMessage(message, tracks);
     } else {
-      Logging.debug(Spotify.class, event.getGuild(), event.getMember(), "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
+      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
       Track[] tracks = getTracks(search, new String[0]);
       spotifyMessage = new SpotifyButtonMessage(message, tracks);
     }
