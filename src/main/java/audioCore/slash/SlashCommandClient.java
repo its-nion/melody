@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import utils.Logging;
 import utils.annotation.NoUserCommand;
@@ -19,6 +20,7 @@ public class SlashCommandClient extends ListenerAdapter {
 
   public SlashCommand[] slashCommands;
   public ButtonManager buttonManager;
+  public DropdownManager dropdownManager;
 
   public static SlashCommandClient getInstance() {
     return INSTANCE;
@@ -27,6 +29,7 @@ public class SlashCommandClient extends ListenerAdapter {
   public SlashCommandClient(SlashCommand[] slashCommands) {
     this.slashCommands = slashCommands;
     this.buttonManager = new ButtonManager();
+    this.dropdownManager = new DropdownManager();
     INSTANCE = this;
   }
 
@@ -41,6 +44,10 @@ public class SlashCommandClient extends ListenerAdapter {
 
   public SlashCommand getCommandByButton(Button button) {
     return buttonManager.request(button);
+  }
+
+  public SlashCommand getCommandByDropdown(SelectionMenu selectionMenu){
+    return dropdownManager.request(selectionMenu);
   }
 
   public static void main(String[] args) throws LoginException, InterruptedException {

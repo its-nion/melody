@@ -1,6 +1,7 @@
 package audioCore.slash;
 
 
+import commands.essentials.Help;
 import commands.essentials.Info;
 import commands.essentials.Ping;
 import commands.music.*;
@@ -15,6 +16,7 @@ public class SlashCommands
     public static HashMap<String, SlashCommand> commandMap = new HashMap<>(Map.ofEntries(
         Map.entry("ping", new Ping()),
         Map.entry("info", new Info()),
+        Map.entry("help", new Help()),
         Map.entry("player", new Player()),
         Map.entry("join", new Join()),
         Map.entry("disconnect", new Disconnect()),

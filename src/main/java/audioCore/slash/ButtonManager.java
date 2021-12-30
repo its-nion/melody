@@ -7,17 +7,17 @@ import java.util.HashMap;
 public class ButtonManager {
   //public static final int MAX_CACHE = 50;
 
-  private final HashMap<Button, SlashCommand> buttonCache;
+  private final HashMap<String, SlashCommand> buttonCache;
 
   public ButtonManager() {
     this.buttonCache = new HashMap<>();
   }
 
   public void cache(Button button, SlashCommand slashCommand){
-    buttonCache.put(button, slashCommand);
+    buttonCache.put(button.getId(), slashCommand);
   }
 
   public SlashCommand request(Button button){
-    return buttonCache.getOrDefault(button, null);
+    return buttonCache.getOrDefault(button.getId(), null);
   }
 }
