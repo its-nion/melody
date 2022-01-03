@@ -134,7 +134,7 @@ public class Settings extends SlashCommand {
     }
 
     setting.updateData(data);
-    //TODO: tell guildsettings that the data has changed so it can change the db
+    guildSettings.notifyDatasetChanged();
 
     MessageEmbed embed = getSettingsMessage(event.getGuild());
     event.editMessageEmbeds(embed).queue();

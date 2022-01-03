@@ -1,16 +1,19 @@
 package com.lopl.melody.settings;
 
+import net.dv8tion.jda.api.entities.Guild;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GuildSettings {
 
-  public final Map<Class<?>, Setting<?>> settings;
+  private final Map<Class<?>, Setting<?>> settings;
+  private final Guild guild;
 
-  public GuildSettings() {
-    settings = new HashMap<>();
-    //TODO load all default settings
+  public GuildSettings(Guild guild) {
+    this.settings = new HashMap<>();
+    this.guild = guild;
   }
 
   public <T> void register(Class<T> tClass, Setting<?> setting){
@@ -33,5 +36,9 @@ public class GuildSettings {
 
   public List<Setting<?>> getSettings(){
     return List.copyOf(settings.values());
+  }
+
+  public void notifyDatasetChanged() {
+    new SettingSaver().saveSettings(guild, this);
   }
 }
