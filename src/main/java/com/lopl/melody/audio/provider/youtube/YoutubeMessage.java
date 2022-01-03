@@ -53,7 +53,7 @@ public class YoutubeMessage extends SavedMessage {
   }
 
   public void show(){
-    new YoutubeMessageDisplayer(this).showNoReaction();
+    new YoutubeMessageDisplayer(this).show();
   }
 
   public int size(){

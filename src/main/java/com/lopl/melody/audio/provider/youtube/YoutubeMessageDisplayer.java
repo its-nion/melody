@@ -1,13 +1,12 @@
 package com.lopl.melody.audio.provider.youtube;
 
+import com.lopl.melody.utils.annotation.NotYetImplemented;
+import com.lopl.melody.utils.embed.EmbedError;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.lopl.melody.utils.annotation.NotYetImplemented;
-import com.lopl.melody.utils.embed.EmbedError;
-import com.lopl.melody.utils.embed.ReactionEmoji;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,35 +34,20 @@ public class YoutubeMessageDisplayer {
 
     if (tracks != null) {
       if (tracks.length != 0)
-        showTrack(index, true);
+        showTrack(index);
       else
         showNoResults();
     } else if (playlists != null) {
       if (playlists.length != 0)
-        showPlaylist(index, true);
+        showPlaylist(index);
       else
         showNoResults();
     }
   }
 
-  public void showNoReaction(){
-    int index = youtubeMessage.index;
-
-    if (tracks != null) {
-      if (tracks.length != 0)
-        showTrack(index, false);
-      else
-        showNoResults();
-    } else if (playlists != null) {
-      if (playlists.length != 0)
-        showPlaylist(index, false);
-      else
-        showNoResults();
-    }
-  }
 
   @NotYetImplemented
-  private void showPlaylist(int index, boolean showReaction) {
+  private void showPlaylist(int index) {
     Message message = getMessage();
     PlaylistSimplified playlist = playlists[index];
     message.clearReactions().queue();
@@ -100,17 +84,9 @@ public class YoutubeMessageDisplayer {
     ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
     newEmbeds.set(embeds.size() -1, eb.build());
     message.editMessageEmbeds(newEmbeds).queue();
-
-    if (!showReaction) return;
-    // reactions //TODO deprecated
-    if (index != 0)
-      message.addReaction(ReactionEmoji.LEFT).queue();
-    message.addReaction(ReactionEmoji.MUSIC).queue();
-    if (index != tracks.length - 1)
-      message.addReaction(ReactionEmoji.RIGHT).queue();
   }
 
-  private void showTrack(int index, boolean showReaction) {
+  private void showTrack(int index) {
     Message message = getMessage();
     AudioTrack track = tracks[index];
     message.clearReactions().queue();
@@ -142,14 +118,6 @@ public class YoutubeMessageDisplayer {
     ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
     newEmbeds.set(embeds.size() -1, eb.build());
     message.editMessageEmbeds(newEmbeds).queue();
-
-    if (!showReaction) return;
-    // reactions
-    if (index != 0)
-      message.addReaction(ReactionEmoji.LEFT).queue();
-    message.addReaction(ReactionEmoji.MUSIC).queue();
-    if (index != tracks.length - 1)
-      message.addReaction(ReactionEmoji.RIGHT).queue();
 
   }
 

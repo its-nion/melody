@@ -35,7 +35,7 @@ public class Queue extends SlashCommand {
   public Queue() {
     super.name = "queue";
     super.category = new Category("Sound");
-    super.help = "/queue : shows the current queue"; // TODO set good help and description
+    super.help = "/queue : shows the current queue";
     super.description = "shows the current queue";
   }
 

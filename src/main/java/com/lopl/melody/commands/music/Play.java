@@ -5,6 +5,10 @@ import com.lopl.melody.audio.provider.youtube.Youtube;
 import com.lopl.melody.audio.provider.youtube.YoutubeMessage;
 import com.lopl.melody.audio.util.AudioStateChecks;
 import com.lopl.melody.audio.handler.MusicLoader;
+import com.lopl.melody.settings.GuildSettings;
+import com.lopl.melody.settings.SettingsManager;
+import com.lopl.melody.settings.items.MusicPlayerProvider;
+import com.lopl.melody.utils.annotation.NotYetImplemented;
 import com.lopl.melody.utils.message.MessageStore;
 import com.lopl.melody.utils.message.SavedMessage;
 import com.lopl.melody.slash.SlashCommand;
@@ -76,7 +80,7 @@ public class Play extends SlashCommand {
         /play playlist [search] : searches for a playlist with spotify. react with eiter the "arrow left" or the "arrow right" to navigate threw the results, react with "musical_note" to play the playlist or react with "+" to queue the playlist. aliases: pl, list
         /play song [search] : searches for a song with spotify. react with eiter the "arrow left" or the "arrow right" to navigate threw the results, react with "musical_note" to play the song or react with "+" to queue the song. aliases: track
         /play user [userID] : lists the users playlists on spotify. react with eiter the "arrow left" or the "arrow right" to navigate threw the playlists, react with "musical_note" to play the playlist or react with "+" to queue the playlist. aliases: account, member
-        /play [search] : searches for a song""";
+        /play [search] : searches for answer of the type defined in the settings""";
     super.description = "Search for your favourite songs to jam to.";
   }
 
@@ -118,7 +122,7 @@ public class Play extends SlashCommand {
       return;
     }
 
-    Player player = getPlayer();
+    Player player = getPlayer(event.getGuild());
     handlePlayCommand(event, event.getGuild(), player);
   }
 
@@ -335,7 +339,7 @@ public class Play extends SlashCommand {
   }
 
   private enum Player {
-    NONE, YOUTUBE, SPOTIFY;
+    YOUTUBE, SPOTIFY;
 
     public MusicDataSearcher getProvider() {
       if (this == SPOTIFY) return new Spotify();
@@ -368,9 +372,12 @@ public class Play extends SlashCommand {
     }
   }
 
-  private Player getPlayer() {
-    return Player.YOUTUBE;
-    //TODO generic
+  private Player getPlayer(Guild guild) {
+    GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(guild);
+    MusicPlayerProvider.Value provider = guildSettings.getSetting(MusicPlayerProvider.class).getValue();
+    if (provider.isYoutube()) return Player.YOUTUBE;
+    if (provider.isSpotify()) return Player.SPOTIFY;
+    return Player.YOUTUBE; // <- default, this probably gets used never
   }
 
 }

@@ -30,7 +30,7 @@ public class Volume extends SlashCommand {
     super.name = "volume";
     super.category = new Command.Category("Sound");
     super.help = "/volume : shows the current volume \n" +
-        "/volume [amount] : sets the volume to amount"; // TODO set good help and description
+        "/volume [amount] : sets the volume to amount";
     super.description = "shows and sets the current volume";
   }
 

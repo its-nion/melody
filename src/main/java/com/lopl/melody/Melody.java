@@ -42,8 +42,5 @@ public class Melody
 
         Melody.manager = builder.build();
         Melody.manager.awaitReady();
-
-        //TODO: DataBase
-//        DBVariables.initiateCurrentServers(Main.manager);
     }
 }
