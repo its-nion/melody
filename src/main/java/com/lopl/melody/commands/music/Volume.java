@@ -1,9 +1,9 @@
 package com.lopl.melody.commands.music;
 
-import com.lopl.melody.audioCore.util.AudioStateChecks;
-import com.lopl.melody.audioCore.handler.GuildAudioManager;
-import com.lopl.melody.audioCore.handler.PlayerManager;
-import com.lopl.melody.audioCore.slash.SlashCommand;
+import com.lopl.melody.audio.util.AudioStateChecks;
+import com.lopl.melody.audio.handler.GuildAudioManager;
+import com.lopl.melody.audio.handler.PlayerManager;
+import com.lopl.melody.slash.SlashCommand;
 import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;

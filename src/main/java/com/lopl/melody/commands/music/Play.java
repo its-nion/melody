@@ -1,15 +1,15 @@
 package com.lopl.melody.commands.music;
 
-import com.lopl.melody.audioCore.provider.MusicDataSearcher;
-import com.lopl.melody.audioCore.provider.youtube.Youtube;
-import com.lopl.melody.audioCore.provider.youtube.YoutubeButtonMessage;
-import com.lopl.melody.audioCore.util.AudioStateChecks;
-import com.lopl.melody.audioCore.handler.MusicLoader;
-import com.lopl.melody.audioCore.util.MessageStore;
-import com.lopl.melody.audioCore.util.SavedMessage;
-import com.lopl.melody.audioCore.slash.SlashCommand;
-import com.lopl.melody.audioCore.provider.spotify.Spotify;
-import com.lopl.melody.audioCore.provider.spotify.SpotifyButtonMessage;
+import com.lopl.melody.audio.provider.MusicDataSearcher;
+import com.lopl.melody.audio.provider.youtube.Youtube;
+import com.lopl.melody.audio.provider.youtube.YoutubeMessage;
+import com.lopl.melody.audio.util.AudioStateChecks;
+import com.lopl.melody.audio.handler.MusicLoader;
+import com.lopl.melody.utils.message.MessageStore;
+import com.lopl.melody.utils.message.SavedMessage;
+import com.lopl.melody.slash.SlashCommand;
+import com.lopl.melody.audio.provider.spotify.Spotify;
+import com.lopl.melody.audio.provider.spotify.SpotifyMessage;
 import com.jagrosh.jdautilities.command.Command;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
@@ -189,7 +189,7 @@ public class Play extends SlashCommand {
   /**
    * This will fire when a user clicked on a button regarding this command.
    * The Button has to be registered beforehand with {@link #registerButton(Button)}.
-   * The regarding message will be searched and continued with {@link #executeButtonAction(ButtonClickEvent, Guild, SpotifyButtonMessage)}
+   * The regarding message will be searched and continued with {@link #executeButtonAction(ButtonClickEvent, Guild, SpotifyMessage)}
    *
    * @param event all the button click event data
    */
@@ -203,8 +203,8 @@ public class Play extends SlashCommand {
     }
 
     for (SavedMessage message : MessageStore.allMessages()) {
-      if (message.getMessageID() == event.getMessageIdLong() && message instanceof SpotifyButtonMessage) {
-        SpotifyButtonMessage spotifyMessage = (SpotifyButtonMessage) message;
+      if (message.getMessageID() == event.getMessageIdLong() && message instanceof SpotifyMessage) {
+        SpotifyMessage spotifyMessage = (SpotifyMessage) message;
         executeButtonAction(event, event.getGuild(), spotifyMessage);
 
         Button[] buttons = new Button[3];
@@ -218,8 +218,8 @@ public class Play extends SlashCommand {
         return;
       }
 
-      if (message.getMessageID() == event.getMessageIdLong() && message instanceof YoutubeButtonMessage) {
-        YoutubeButtonMessage youtubeMessage = (YoutubeButtonMessage) message;
+      if (message.getMessageID() == event.getMessageIdLong() && message instanceof YoutubeMessage) {
+        YoutubeMessage youtubeMessage = (YoutubeMessage) message;
         executeButtonAction(event, event.getGuild(), youtubeMessage);
 
         Button[] buttons = new Button[3];
@@ -242,7 +242,7 @@ public class Play extends SlashCommand {
    * @param event          all the button click event data
    * @param spotifyMessage the found data message
    */
-  private void executeButtonAction(ButtonClickEvent event, @Nonnull Guild guild, SpotifyButtonMessage spotifyMessage) {
+  private void executeButtonAction(ButtonClickEvent event, @Nonnull Guild guild, SpotifyMessage spotifyMessage) {
     if (event.getButton() == null || event.getButton().getId() == null) return;
 
     switch (event.getButton().getId()) {
@@ -261,7 +261,7 @@ public class Play extends SlashCommand {
    * @param event          all the button click event data
    * @param youtubeMessage the found data message
    */
-  private void executeButtonAction(ButtonClickEvent event, @Nonnull Guild guild, YoutubeButtonMessage youtubeMessage) {
+  private void executeButtonAction(ButtonClickEvent event, @Nonnull Guild guild, YoutubeMessage youtubeMessage) {
     if (event.getButton() == null || event.getButton().getId() == null) return;
 
     switch (event.getButton().getId()) {
@@ -280,7 +280,7 @@ public class Play extends SlashCommand {
    * @param guild          the NonNull Guild the command was executed in
    * @param spotifyMessage the found data message
    */
-  private void queue(ButtonClickEvent event, @Nonnull Guild guild, SpotifyButtonMessage spotifyMessage) {
+  private void queue(ButtonClickEvent event, @Nonnull Guild guild, SpotifyMessage spotifyMessage) {
     AudioManager audio = guild.getAudioManager();
     if (!audio.isConnected())
       new Join().connect(guild, event.getMember(), event.getTextChannel());
@@ -307,7 +307,7 @@ public class Play extends SlashCommand {
     }
   }
 
-  private void queue(ButtonClickEvent event, @Nonnull Guild guild, YoutubeButtonMessage youtubeMessage) {
+  private void queue(ButtonClickEvent event, @Nonnull Guild guild, YoutubeMessage youtubeMessage) {
     AudioManager audio = guild.getAudioManager();
     if (!audio.isConnected())
       new Join().connect(guild, event.getMember(), event.getTextChannel());

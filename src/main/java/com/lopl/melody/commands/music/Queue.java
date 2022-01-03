@@ -1,10 +1,10 @@
 package com.lopl.melody.commands.music;
 
-import com.lopl.melody.audioCore.util.AudioStateChecks;
-import com.lopl.melody.audioCore.handler.GuildAudioManager;
-import com.lopl.melody.audioCore.handler.PlayerManager;
-import com.lopl.melody.audioCore.handler.TrackScheduler;
-import com.lopl.melody.audioCore.slash.SlashCommand;
+import com.lopl.melody.audio.util.AudioStateChecks;
+import com.lopl.melody.audio.handler.GuildAudioManager;
+import com.lopl.melody.audio.handler.PlayerManager;
+import com.lopl.melody.audio.handler.TrackScheduler;
+import com.lopl.melody.slash.SlashCommand;
 import com.jagrosh.jdautilities.command.Command.Category;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;

@@ -1,15 +1,15 @@
 package com.lopl.melody.commands.essentials;
 
 import com.jagrosh.jdautilities.command.Command;
-import com.lopl.melody.audioCore.slash.SlashCommand;
+import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.embed.EmbedError;
-import com.lopl.melody.utils.settings.GuildSettings;
-import com.lopl.melody.utils.settings.Setting;
-import com.lopl.melody.utils.settings.SettingValue;
-import com.lopl.melody.utils.settings.SettingsManager;
-import com.lopl.melody.utils.settings.items.DefaultMusicType;
-import com.lopl.melody.utils.settings.items.MusicPlayerProvider;
+import com.lopl.melody.settings.GuildSettings;
+import com.lopl.melody.settings.Setting;
+import com.lopl.melody.settings.SettingValue;
+import com.lopl.melody.settings.SettingsManager;
+import com.lopl.melody.settings.items.DefaultMusicType;
+import com.lopl.melody.settings.items.MusicPlayerProvider;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;

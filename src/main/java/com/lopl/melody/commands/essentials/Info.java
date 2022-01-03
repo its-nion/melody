@@ -1,6 +1,6 @@
 package com.lopl.melody.commands.essentials;
 
-import com.lopl.melody.audioCore.slash.SlashCommand;
+import com.lopl.melody.slash.SlashCommand;
 import com.jagrosh.jdautilities.command.Command.Category;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -26,7 +26,7 @@ public class Info extends SlashCommand {
             .build())
             .addActionRow(Button.link("https://github.com/its-nion/melody", "Github"),
                 Button.link("https://discord.com/api/oauth2/authorize?client_id=843" +
-                    "104592417390612&permissions=2184202240&scope=bot%20applications.com.lopl.melody.commands", "Invite"))
+                    "104592417390612&permissions=2184202240&scope=bot%20applications.commands", "Invite"))
             .setEphemeral(true)
             .queue();
     }

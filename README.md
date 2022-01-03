@@ -5,7 +5,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/necsii/melody.svg)
 ![Downloads](https://img.shields.io/github/downloads/necsii/melody/total.svg)
 
-Melody is a visually pleasing and easy to use discord music bot. Using slash com.lopl.melody.commands and buttons, Melody offers playing and searching for song's and playlist's in youtube, soundcloud and more. Managing command permissions and saving them in a com.lopl.melody.database is also possible. 
+Melody is a visually pleasing and easy to use discord music bot. Using slash commands and buttons, Melody offers playing and searching for song's and playlist's in youtube, soundcloud and more. Managing command permissions and saving them in a database is also possible. 
 
 > Melody was made using **Java and SQLite**
 
@@ -14,13 +14,13 @@ Melody is a visually pleasing and easy to use discord music bot. Using slash com
 * [Core features](#core-features)
 * [To do list](#to-do-list)
 * [Command List](#command-list)
-  * [General com.lopl.melody.commands](#general)
-  * [Music com.lopl.melody.commands](#music)
+  * [General commands](#general)
+  * [Music commands](#music)
 * [Dependencies](#dependencies)
 
 ## Core features
 * Visually pleasing and clean interface
-* Simple yet functional com.lopl.melody.commands
+* Simple yet functional commands
 * Easy to run
 * Thanks to Lavaplayer, Melody supports YouTube, SoundCloud, Bandcamp, Vimeo, Twitch streams
 
@@ -28,13 +28,13 @@ Melody is a visually pleasing and easy to use discord music bot. Using slash com
 
 Keep in mind that Melody is nowhere near finished. There may still be buggs and missing features. Im currently working to implement the following:
 
-* [ ] Implementing buttons
+* [x] Implementing buttons
 * [ ] Adding loopqueue command
 * [ ] Adding repeat command
-* [ ] Adding showqueue feature
-* [ ] Adding shuffle command
-* [ ] Fixing volume command
-* [ ] Fixing the com.lopl.melody.database
+* [x] Adding showqueue feature
+* [x] Adding shuffle command
+* [x] Fixing volume command
+* [ ] Fixing the database
 
 ## Command List
 
@@ -60,9 +60,9 @@ Command | Description
 
 ## Dependencies
 
-Melody would't work without the following API's
+Melody wouldn't work without the following API's
 * JDA
-   * Version: **#1501**
+   * Version: *#1501*
    * [Github](https://github.com/DV8FromTheWorld/JDA)
 * Lavaplayer
    * Version: *1.3.75*

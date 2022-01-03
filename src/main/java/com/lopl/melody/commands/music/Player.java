@@ -1,10 +1,10 @@
 package com.lopl.melody.commands.music;
 
 import com.jagrosh.jdautilities.command.Command;
-import com.lopl.melody.audioCore.handler.PlayerManager;
-import com.lopl.melody.audioCore.handler.TrackScheduler;
-import com.lopl.melody.audioCore.slash.SlashCommand;
-import com.lopl.melody.audioCore.util.AudioStateChecks;
+import com.lopl.melody.audio.handler.PlayerManager;
+import com.lopl.melody.audio.handler.TrackScheduler;
+import com.lopl.melody.slash.SlashCommand;
+import com.lopl.melody.audio.util.AudioStateChecks;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.embed.EmbedColor;
 import com.lopl.melody.utils.embed.EmbedError;

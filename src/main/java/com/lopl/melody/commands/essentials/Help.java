@@ -1,8 +1,9 @@
 package com.lopl.melody.commands.essentials;
 
-import com.lopl.melody.audioCore.slash.SlashCommand;
-import com.lopl.melody.audioCore.slash.SlashCommands;
+import com.lopl.melody.slash.SlashCommand;
+import com.lopl.melody.slash.SlashCommands;
 import com.jagrosh.jdautilities.command.Command;
+import com.lopl.melody.utils.embed.EmbedError;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
@@ -32,7 +33,7 @@ public class Help extends SlashCommand {
   public Help() {
     super.name = "help";
     super.category = new Command.Category("Essentials");
-    super.description = "shows a list of all com.lopl.melody.commands with a description";
+    super.description = "shows a list of all commands with a description";
     super.help = "/help : shows this help message";
   }
 
@@ -83,6 +84,11 @@ public class Help extends SlashCommand {
   @Override
   protected void dropdown(SelectionMenuEvent event, boolean anonymous) {
     Logging.dropdown(getClass(), event);
+
+    if (event.getGuild() == null) {
+      event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
+      return;
+    }
 
     List<SelectOption> selection = event.getInteraction().getSelectedOptions();
     if (selection == null || selection.isEmpty())
@@ -139,7 +145,7 @@ public class Help extends SlashCommand {
     for (Category category : categories) {
       embedBuilder.addField(category.name, getCategoryString(category), true);
     }
-    embedBuilder.setAuthor("Melody's com.lopl.melody.commands:");
+    embedBuilder.setAuthor("Melody's commands:");
     embedBuilder.setFooter("Type /help followed by a command from the list to learn more about a specific command");
     return embedBuilder.build();
   }

@@ -1,8 +1,9 @@
 package com.lopl.melody.commands.perms;
 
-import com.lopl.melody.audioCore.slash.SlashCommand;
+import com.lopl.melody.slash.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
+@Deprecated
 public class EditPerms extends SlashCommand {
 
 

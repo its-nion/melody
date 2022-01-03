@@ -1,6 +1,6 @@
 package com.lopl.melody.commands.essentials;
 
-import com.lopl.melody.audioCore.slash.SlashCommand;
+import com.lopl.melody.slash.SlashCommand;
 import com.jagrosh.jdautilities.command.Command.Category;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
