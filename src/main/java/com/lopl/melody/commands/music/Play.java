@@ -1,20 +1,22 @@
 package com.lopl.melody.commands.music;
 
+import com.jagrosh.jdautilities.command.Command;
+import com.lopl.melody.audio.handler.MusicLoader;
 import com.lopl.melody.audio.provider.MusicDataSearcher;
+import com.lopl.melody.audio.provider.spotify.Spotify;
+import com.lopl.melody.audio.provider.spotify.SpotifyMessage;
 import com.lopl.melody.audio.provider.youtube.Youtube;
 import com.lopl.melody.audio.provider.youtube.YoutubeMessage;
 import com.lopl.melody.audio.util.AudioStateChecks;
-import com.lopl.melody.audio.handler.MusicLoader;
 import com.lopl.melody.settings.GuildSettings;
 import com.lopl.melody.settings.SettingsManager;
 import com.lopl.melody.settings.items.MusicPlayerProvider;
-import com.lopl.melody.utils.annotation.NotYetImplemented;
+import com.lopl.melody.slash.SlashCommand;
+import com.lopl.melody.utils.Logging;
+import com.lopl.melody.utils.embed.EmbedError;
+import com.lopl.melody.utils.embed.ReactionEmoji;
 import com.lopl.melody.utils.message.MessageStore;
 import com.lopl.melody.utils.message.SavedMessage;
-import com.lopl.melody.slash.SlashCommand;
-import com.lopl.melody.audio.provider.spotify.Spotify;
-import com.lopl.melody.audio.provider.spotify.SpotifyMessage;
-import com.jagrosh.jdautilities.command.Command;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
@@ -31,9 +33,6 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
-import com.lopl.melody.utils.Logging;
-import com.lopl.melody.utils.embed.EmbedError;
-import com.lopl.melody.utils.embed.ReactionEmoji;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
@@ -137,9 +136,9 @@ public class Play extends SlashCommand {
    */
   private void handlePlayCommand(SlashCommandEvent event, @Nonnull Guild guild, Player player) {
     AudioManager audio = guild.getAudioManager();
-    MessageEmbed connect = null;
+    List<MessageEmbed> embeds = null;
     if (!audio.isConnected())
-      connect = new Join().connectReturnEmbed(event);
+      embeds = new Join().connectReturnEmbed(event);
 
     OptionMapping firstOption = event.getOption(URL_TYPE_SEARCH);
     assert firstOption != null;
@@ -160,10 +159,8 @@ public class Play extends SlashCommand {
         registerButton(component);
 
       // create embeds
-      MessageEmbed first = connect != null ? connect : new EmbedBuilder().setDescription("Loading " + player.toString() + "...").build();
-      MessageEmbed second = connect == null ? null : new EmbedBuilder().setDescription("Loading " + player.toString() + "...").build();
-      List<MessageEmbed> embeds = newArrayList(first, second);
-      embeds.remove(null);
+      if (embeds == null) embeds = new ArrayList<>();
+      embeds.add(new EmbedBuilder().setDescription("Loading " + player.toString() + "...").build());
 
       // create Message from embeds and buttons
       Message message = event
@@ -173,12 +170,6 @@ public class Play extends SlashCommand {
       //Main.info(event, "Searching for songs: '" + firstArg + "' with: " + player.name(), Main.ANSI_BLUE);
       player.getProvider().search(event, firstArg, message);
     }
-  }
-
-  private List<MessageEmbed> newArrayList(MessageEmbed... embeds) {
-    ArrayList<MessageEmbed> newList = new ArrayList<>();
-    for (MessageEmbed embed : embeds) if (embed != null) newList.add(embed);
-    return newList;
   }
 
   private boolean isUrl(String input) {
@@ -317,6 +308,7 @@ public class Play extends SlashCommand {
       new Join().connect(guild, event.getMember(), event.getTextChannel());
 
     if (youtubeMessage.tracks == null) {
+      throw  new UnsupportedOperationException();
       //PLAYLIST
 //      List<String> queries = new ArrayList<>();
 //      PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(youtubeMessage.getCurrentPlaylist().getId());

@@ -1,14 +1,13 @@
 package com.lopl.melody.slash;
 
 
-import com.lopl.melody.commands.essentials.Help;
-import com.lopl.melody.commands.essentials.Info;
-import com.lopl.melody.commands.essentials.Ping;
-import com.lopl.melody.commands.essentials.Settings;
+import com.lopl.melody.commands.essentials.*;
 import com.lopl.melody.commands.music.*;
 import com.lopl.melody.commands.music.Queue;
 import com.lopl.melody.commands.perms.EditPerms;
 import com.lopl.melody.commands.perms.ShowPerms;
+import com.lopl.melody.commands.record.Clip;
+import com.lopl.melody.commands.record.Record;
 
 import java.util.*;
 
@@ -30,6 +29,9 @@ public class SlashCommands
         new Skip(),
         new Volume(),
         new Queue(),
+
+        new Record(),
+        new Clip(),
 
         new ShowPerms(),
         new EditPerms()

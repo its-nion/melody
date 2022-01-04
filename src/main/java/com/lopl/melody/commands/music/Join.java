@@ -12,6 +12,10 @@ import com.lopl.melody.utils.embed.EmbedError;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Join Command
@@ -70,13 +74,13 @@ public class Join extends SlashCommand {
    * @param event the calling SlashCommandEvent
    * @return a fitting MessageEmbed
    */
-  public MessageEmbed connectReturnEmbed(SlashCommandEvent event) {
+  public List<MessageEmbed> connectReturnEmbed(SlashCommandEvent event) {
     if (event.getGuild() == null) {
-      return EmbedError.with("This command can only be executed in a server textchannel");
+      return new ArrayList<>(Collections.singletonList(EmbedError.with("This command can only be executed in a server textchannel")));
     }
 
     if (event.getMember() == null || event.getMember().getVoiceState() == null || event.getMember().getVoiceState().getChannel() == null) {
-      return EmbedError.with("This Command requires **you** to be **connected to a voice channel**");
+      return new ArrayList<>(Collections.singletonList(EmbedError.with("This Command requires **you** to be **connected to a voice channel**")));
     }
 
     VoiceChannel channel = event.getMember().getVoiceState().getChannel();
@@ -85,7 +89,9 @@ public class Join extends SlashCommand {
     MessageEmbed joinMessageEmbed = getJoinMessageEmbed(old, channel);
     AudioManager audio = event.getGuild().getAudioManager();
     audio.openAudioConnection(channel);
-    return joinMessageEmbed;
+    if (joinMessageEmbed == null) return new ArrayList<>();
+    return new ArrayList<>(Collections.singletonList(joinMessageEmbed));
+    //TODO: also return record if necessary
   }
 
   /**
@@ -122,7 +128,7 @@ public class Join extends SlashCommand {
   private MessageEmbed getJoinMessageEmbed(@Nullable VoiceChannel oldChannel, @Nonnull VoiceChannel newChannel) {
     if (oldChannel == null){
       return new EmbedBuilder()
-          .setColor(EmbedColor.BLUE)
+          .setColor(EmbedColor.GREEN)
           .setDescription("**Joined** in <#" + newChannel.getId() + ">")
           .build();
     }
@@ -145,7 +151,7 @@ public class Join extends SlashCommand {
   private MessageEmbed createJoinMessageEmbed(@Nullable VoiceChannel oldChannel, @Nonnull VoiceChannel newChannel) {
     if (oldChannel == null) {
       return new EmbedBuilder()
-          .setColor(EmbedColor.BLUE)
+          .setColor(EmbedColor.GREEN)
           .setDescription("**Joined** in <#" + newChannel.getId() + ">")
           .build();
     }
@@ -155,7 +161,7 @@ public class Join extends SlashCommand {
           .setDescription("**Moved** to <#" + newChannel.getId() + ">")
           .build();
     return new EmbedBuilder()
-        .setColor(EmbedColor.BLUE)
+        .setColor(EmbedColor.RED)
         .setDescription("**I'm already connected** to <#" + newChannel.getId() + ">")
         .build();
   }

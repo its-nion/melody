@@ -3,6 +3,7 @@ package com.lopl.melody.commands.music;
 import com.jagrosh.jdautilities.command.Command;
 import com.lopl.melody.audio.handler.PlayerManager;
 import com.lopl.melody.audio.handler.TrackScheduler;
+import com.lopl.melody.commands.essentials.Disconnect;
 import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.audio.util.AudioStateChecks;
 import com.lopl.melody.utils.Logging;

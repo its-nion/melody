@@ -1,6 +1,8 @@
-package com.lopl.melody.commands.music;
+package com.lopl.melody.commands.essentials;
 
 import com.lopl.melody.audio.util.AudioStateChecks;
+import com.lopl.melody.commands.music.Stop;
+import com.lopl.melody.commands.record.Record;
 import com.lopl.melody.slash.SlashCommand;
 import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.entities.Guild;
@@ -15,7 +17,7 @@ public class Disconnect extends SlashCommand {
 
     public Disconnect() {
         super.name = "disconnect";
-        super.category = new Command.Category("Sound");
+        super.category = new Command.Category("Essentials");
         super.help = "/disconnect : disconnects the bot from his channel";
         super.description = "disconnects the bot from his channel";
     }
@@ -51,6 +53,7 @@ public class Disconnect extends SlashCommand {
         }
 
         new Stop().stop(guild);
+        new Record().stop(guild);
         disconnect(guild);
         VoiceChannel memberChannel = event.getMember().getVoiceState().getChannel();
         event.replyEmbeds(EmbedError.friendly("**Disconnected** from <#" + memberChannel.getId() + ">")).queue();

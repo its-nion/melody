@@ -103,6 +103,14 @@
             <version>v3-rev222-1.25.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.sourceforge</groupId>
+            <artifactId>lame</artifactId>
+            <version>3.98.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/net.sourceforge.lame-3.98.4.jar</systemPath>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
