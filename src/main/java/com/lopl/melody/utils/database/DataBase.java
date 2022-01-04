@@ -21,6 +21,7 @@ public class DataBase
     private static final Logger LOGGER = LoggerFactory.getLogger(DataBase.class);
     private static final HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
+    private static Connection connection;
 
     static {
         createDatabaseFile();
@@ -91,9 +92,9 @@ public class DataBase
         }
     }
 
-    public static Connection getConnection() throws SQLException
-    {
-        return ds.getConnection();
+    public static Connection getConnection() throws SQLException {
+        if (connection != null) return connection;
+        return connection = ds.getConnection();
     }
 
 }

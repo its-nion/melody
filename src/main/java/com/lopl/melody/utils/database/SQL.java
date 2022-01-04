@@ -9,7 +9,8 @@ public class SQL {
     try {
       String call = String.format(sql, args);
       return DataBase.getConnection().prepareStatement(call).executeQuery();
-    } catch (SQLException ignored) {
+    } catch (SQLException sqle) {
+      sqle.printStackTrace();
       return null;
     }
   }
@@ -19,7 +20,8 @@ public class SQL {
       String call = String.format(sql, args);
       DataBase.getConnection().prepareStatement(call).execute();
       return true;
-    } catch (SQLException ignored) {
+    } catch (SQLException sqle) {
+      sqle.printStackTrace();
       return false;
     }
   }
