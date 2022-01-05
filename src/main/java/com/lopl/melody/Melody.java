@@ -37,6 +37,7 @@ public class Melody
 
         SlashCommandClientBuilder slashCommandClientBuilder = new SlashCommandClientBuilder();
         slashCommandClientBuilder.addCommands(SlashCommands.getCommands().toArray(SlashCommand[]::new));
+        slashCommandClientBuilder.addEventListeners(builder, SlashCommands.getCommands().toArray(SlashCommand[]::new));
         SlashCommandClient slashCommandClient = slashCommandClientBuilder.build();
         builder.addEventListeners(new SlashCommandHandler(), slashCommandClient);
 

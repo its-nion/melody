@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command.Category;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
@@ -60,6 +61,11 @@ public abstract class SlashCommand {
 
   @Nullable
   public List<String> allowAnonymousComponentCall(){
+    return null;
+  }
+
+  @Nullable
+  public ListenerAdapter getCommandEventListener(){
     return null;
   }
 
