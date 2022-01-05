@@ -8,10 +8,14 @@ import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.embed.EmbedError;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Disconnect extends SlashCommand {
 
@@ -20,6 +24,12 @@ public class Disconnect extends SlashCommand {
         super.category = new Command.Category("Essentials");
         super.help = "/disconnect : disconnects the bot from his channel";
         super.description = "disconnects the bot from his channel";
+    }
+
+    @Nullable
+    @Override
+    public ListenerAdapter getCommandEventListener() {
+        return new AutomaticDisconnect();
     }
 
     @Override
@@ -64,5 +74,21 @@ public class Disconnect extends SlashCommand {
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
         Logging.info(getClass(), guild, null, "Disconnected");
+    }
+
+
+    public static class AutomaticDisconnect extends ListenerAdapter {
+
+        @Override
+        public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
+            if (!event.getGuild().getAudioManager().isConnected()) return; // not even connected
+            VoiceChannel botChannel = event.getGuild().getAudioManager().getConnectedChannel();
+            if (botChannel == null) return; // also not connected to a guild
+            VoiceChannel eventChannel = event.getChannelLeft();
+            if (botChannel.getIdLong() != eventChannel.getIdLong()) return; // not in the same guild channel
+            if (eventChannel.getMembers().stream().filter(m -> !m.getUser().isBot()).toArray().length != 0) return; // I am not the last in this channel (bots don't count)
+            if (eventChannel.getMembers().get(0).getUser().getIdLong() != event.getJDA().getSelfUser().getIdLong()) return;
+            new Disconnect().disconnect(event.getGuild());
+        }
     }
 }
