@@ -1,19 +1,22 @@
 package com.lopl.melody.commands.music;
 
+import com.jagrosh.jdautilities.command.Command;
+import com.lopl.melody.commands.record.Record;
+import com.lopl.melody.settings.GuildSettings;
+import com.lopl.melody.settings.SettingsManager;
+import com.lopl.melody.settings.items.AutomaticRecording;
 import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.utils.Logging;
-import com.jagrosh.jdautilities.command.Command;
+import com.lopl.melody.utils.embed.EmbedColor;
+import com.lopl.melody.utils.embed.EmbedError;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
-import com.lopl.melody.utils.embed.EmbedColor;
-import com.lopl.melody.utils.embed.EmbedError;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,8 +66,23 @@ public class Join extends SlashCommand {
     VoiceChannel memberChannel = event.getMember().getVoiceState().getChannel();
     GuildVoiceState botVS = event.getGuild().getSelfMember().getVoiceState();
     VoiceChannel old = botVS == null ? null : botVS.getChannel();
-    event.replyEmbeds(createJoinMessageEmbed(old, memberChannel)).queue();
+
+    List<MessageEmbed> embeds = new ArrayList<>();
+    MessageEmbed joinEb = createJoinMessageEmbed(old, memberChannel);
+    embeds.add(joinEb);
     audioManager.openAudioConnection(memberChannel);
+
+    GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(event.getGuild());
+    AutomaticRecording.Value autoRecord = guildSettings.getSetting(AutomaticRecording.class).getValue();
+    if (autoRecord.isMessage()){
+      MessageEmbed recEb = new Record().getRecordMessage(memberChannel);
+      if (recEb != null) embeds.add(recEb);
+    }
+    if (autoRecord.isOn()){
+      new Record().record(memberChannel);
+    }
+
+    event.replyEmbeds(embeds).queue();
     Logging.info(getClass(), event.getGuild(), null, "Joined channel " + memberChannel.getName());
   }
 
@@ -86,12 +104,23 @@ public class Join extends SlashCommand {
     VoiceChannel channel = event.getMember().getVoiceState().getChannel();
     GuildVoiceState botVS = event.getGuild().getSelfMember().getVoiceState();
     VoiceChannel old = botVS == null ? null : botVS.getChannel();
+
     MessageEmbed joinMessageEmbed = getJoinMessageEmbed(old, channel);
     AudioManager audio = event.getGuild().getAudioManager();
     audio.openAudioConnection(channel);
     if (joinMessageEmbed == null) return new ArrayList<>();
+
+    GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(event.getGuild());
+    AutomaticRecording.Value autoRecord = guildSettings.getSetting(AutomaticRecording.class).getValue();
+    if (autoRecord.isMessage()){
+      MessageEmbed recEb = new Record().getRecordMessage(channel);
+      if (recEb != null) return new ArrayList<>(List.of(joinMessageEmbed, recEb));
+    }
+    if (autoRecord.isOn()){
+      new Record().record(channel);
+    }
+
     return new ArrayList<>(Collections.singletonList(joinMessageEmbed));
-    //TODO: also return record if necessary
   }
 
   /**

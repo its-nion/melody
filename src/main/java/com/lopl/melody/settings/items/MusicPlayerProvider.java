@@ -19,6 +19,13 @@ public class MusicPlayerProvider extends Setting<MusicPlayerProvider.Value> {
   @Override
   public void updateData(int data) {
     setValue(new Value(data));
+    if (data <= 0 || data >= 3)
+      setValue(getDefaultValue());
+  }
+
+  @Override
+  public String getName() {
+    return "Music searcher";
   }
 
   public static class Value extends SettingValue{

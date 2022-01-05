@@ -20,6 +20,13 @@ public class DefaultMusicType extends Setting<DefaultMusicType.Value> {
   @Override
   public void updateData(int data) {
     setValue(new Value(data));
+    if (data <= 0 || data >= 4)
+      setValue(getDefaultValue());
+  }
+
+  @Override
+  public String getName() {
+    return "Default music type";
   }
 
   public static class Value extends SettingValue {

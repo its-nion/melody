@@ -1,6 +1,7 @@
 package com.lopl.melody.commands.essentials;
 
 import com.jagrosh.jdautilities.command.Command;
+import com.lopl.melody.settings.items.AutomaticRecording;
 import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.embed.EmbedError;
@@ -30,7 +31,8 @@ public class Settings extends SlashCommand {
 
   public static final List<Setting<? extends SettingValue>> settings = Arrays.asList(
       new MusicPlayerProvider(),
-      new DefaultMusicType());
+      new DefaultMusicType(),
+      new AutomaticRecording());
 
   public static final String SETTINGS_DROPDOWN = "settings_dropdown";
 
@@ -150,7 +152,7 @@ public class Settings extends SlashCommand {
       embedBuilder.addField(
           setting.getName(), // title
           "```" + setting.getValueRepresentation() + "```", // content
-          true
+          false
       );
     }
     return embedBuilder.build();

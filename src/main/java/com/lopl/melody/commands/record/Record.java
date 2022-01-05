@@ -67,13 +67,13 @@ public class Record extends SlashCommand {
     }
 
     OptionMapping actionOp = event.getOption(RECORD_ACTION);
-    AudioReceiveHandler ah =  guild.getAudioManager().getReceivingHandler();
-    if (ah instanceof AudioReceiveListener && actionOp != null && !actionOp.getAsString().equals(RECORD_STOP)){
+    AudioReceiveHandler ah = guild.getAudioManager().getReceivingHandler();
+    if (ah instanceof AudioReceiveListener && actionOp != null && !actionOp.getAsString().equals(RECORD_STOP)) {
       event.replyEmbeds(EmbedError.with("**Melody** is already **recording**")).queue();
       return;
     }
 
-    if (ah == null && actionOp != null && actionOp.getAsString().equals(RECORD_STOP)){
+    if (ah == null && actionOp != null && actionOp.getAsString().equals(RECORD_STOP)) {
       event.replyEmbeds(EmbedError.with("**Melody** was **not recording**")).queue();
       return;
     }
@@ -84,25 +84,35 @@ public class Record extends SlashCommand {
       embeds = new Join().connectReturnEmbed(event);
 
     if (actionOp == null || actionOp.getAsString().equals(RECORD_START)) {
-      record(event.getMember().getVoiceState().getChannel());
       if (embeds == null) embeds = new ArrayList<>();
-      embeds.add(getRecordMessage(voiceChannel));
+      if (embeds.size() <= 1)
+        embeds.add(createRecordMessage(voiceChannel));
+      record(event.getMember().getVoiceState().getChannel());
       event.replyEmbeds(embeds).queue();
-    }else if (actionOp.getAsString().equals(RECORD_STOP)){
+    } else if (actionOp.getAsString().equals(RECORD_STOP)) {
       stop(event.getGuild());
       event.replyEmbeds(getRecordStopMessage()).queue();
     }
 
   }
 
-  private MessageEmbed getRecordMessage(VoiceChannel channel){
+  public MessageEmbed getRecordMessage(VoiceChannel channel) {
+    AudioReceiveHandler ah = channel.getGuild().getAudioManager().getReceivingHandler();
+    if (ah instanceof AudioReceiveListener) return null;
     return new EmbedBuilder()
         .setColor(EmbedColor.GREEN)
         .setDescription("**Now recording** in <#" + channel.getId() + ">")
         .build();
   }
 
-  private MessageEmbed getRecordStopMessage(){
+  public MessageEmbed createRecordMessage(VoiceChannel channel) {
+    return new EmbedBuilder()
+        .setColor(EmbedColor.GREEN)
+        .setDescription("**Now recording** in <#" + channel.getId() + ">")
+        .build();
+  }
+
+  private MessageEmbed getRecordStopMessage() {
     return new EmbedBuilder()
         .setColor(EmbedColor.RED)
         .setDescription("**Stopped recording**")
@@ -117,7 +127,7 @@ public class Record extends SlashCommand {
     Logging.info(getClass(), vc.getGuild(), null, "Started recording in " + vc.getName());
   }
 
-  public void stop(Guild guild){
+  public void stop(Guild guild) {
     AudioReceiveListener ah = (AudioReceiveListener) guild.getAudioManager().getReceivingHandler();
     if (ah != null) {
       ah.canReceive = false;
