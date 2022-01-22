@@ -82,6 +82,8 @@ public class Join extends SlashCommand {
       new Record().record(memberChannel);
     }
 
+    //TODO deafen
+
     event.replyEmbeds(embeds).queue();
     Logging.info(getClass(), event.getGuild(), null, "Joined channel " + memberChannel.getName());
   }
@@ -145,6 +147,8 @@ public class Join extends SlashCommand {
     if (textChannel != null && joinMessageEmbed != null)
       textChannel.sendMessageEmbeds(joinMessageEmbed).queue();
     audio.openAudioConnection(channel);
+    //TODO undeafen
+
   }
 
   /**

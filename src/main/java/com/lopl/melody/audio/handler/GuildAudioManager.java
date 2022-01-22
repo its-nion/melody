@@ -3,20 +3,20 @@ package com.lopl.melody.audio.handler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
+import net.dv8tion.jda.api.entities.Guild;
 
 /**
  * Holder for both the player and a track scheduler for one guild.
  */
 public class GuildAudioManager {
+
+    public final Guild guild;
+
     /**
      * Audio player for the guild.
      */
     public final AudioPlayer player;
 
-    /**
-     * Text to speech player for the guild
-     */
-    //public final TTSEngine ttsEngine;
     /**
      * Track scheduler for the player.
      */
@@ -26,9 +26,10 @@ public class GuildAudioManager {
      * Creates a player and a track scheduler.
      * @param manager Audio player manager to use for creating the player.
      */
-    public GuildAudioManager(AudioPlayerManager manager) {
+    public GuildAudioManager(Guild guild, AudioPlayerManager manager) {
+        this.guild = guild;
         this.player = manager.createPlayer();
-        this.scheduler = new TrackScheduler(player);
+        this.scheduler = new TrackScheduler(this, player);
         this.player.addListener(scheduler);
         //this.ttsEngine = new TTSEngine();
     }

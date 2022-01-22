@@ -1,5 +1,6 @@
 package com.lopl.melody;
 
+import com.lopl.melody.audio.util.BotRightsManager;
 import com.lopl.melody.slash.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -40,6 +41,7 @@ public class Melody
         slashCommandClientBuilder.addEventListeners(builder, SlashCommands.getCommands().toArray(SlashCommand[]::new));
         SlashCommandClient slashCommandClient = slashCommandClientBuilder.build();
         builder.addEventListeners(new SlashCommandHandler(), slashCommandClient);
+        builder.addEventListeners(new BotRightsManager());
 
         Melody.manager = builder.build();
         Melody.manager.awaitReady();

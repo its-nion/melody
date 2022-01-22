@@ -3,6 +3,7 @@ package com.lopl.melody.commands.record;
 import com.jagrosh.jdautilities.command.Command.Category;
 import com.lopl.melody.audio.handler.AudioReceiveListener;
 import com.lopl.melody.audio.util.AudioStateChecks;
+import com.lopl.melody.audio.util.BotRightsManager;
 import com.lopl.melody.commands.music.Join;
 import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.utils.Logging;
@@ -124,6 +125,7 @@ public class Record extends SlashCommand {
     AudioManager audioManager = vc.getGuild().getAudioManager();
     if (audioManager.getReceivingHandler() == null || !(audioManager.getReceivingHandler() instanceof AudioReceiveListener))
       audioManager.setReceivingHandler(new AudioReceiveListener(1, vc));
+    BotRightsManager.of(vc.getGuild()).requestUndeafen();
     Logging.info(getClass(), vc.getGuild(), null, "Started recording in " + vc.getName());
   }
 
@@ -134,6 +136,7 @@ public class Record extends SlashCommand {
       ah.compVoiceData = null;
       guild.getAudioManager().setReceivingHandler(null);
     }
+    BotRightsManager.of(guild).requestDeafen();
     Logging.debug(getClass(), guild, null, "Destroyed audio handlers for " + guild.getName());
     System.gc();
   }

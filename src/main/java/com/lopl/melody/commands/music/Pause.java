@@ -3,6 +3,7 @@ package com.lopl.melody.commands.music;
 import com.lopl.melody.audio.util.AudioStateChecks;
 import com.lopl.melody.audio.handler.GuildAudioManager;
 import com.lopl.melody.audio.handler.PlayerManager;
+import com.lopl.melody.audio.util.BotRightsManager;
 import com.lopl.melody.slash.SlashCommand;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -133,6 +134,7 @@ public class Pause extends SlashCommand {
     AudioPlayer player = manager.getGuildAudioManager(guild).player;
     if (player.isPaused()) return;
     player.setPaused(true);
+    BotRightsManager.of(guild).requestMute();
     Logging.debug(getClass(), guild, null, "Paused the player");
   }
 }
