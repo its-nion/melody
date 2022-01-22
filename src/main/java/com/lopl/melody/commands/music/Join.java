@@ -74,7 +74,7 @@ public class Join extends SlashCommand {
 
     GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(event.getGuild());
     AutomaticRecording.Value autoRecord = guildSettings.getSetting(AutomaticRecording.class).getValue();
-    if (autoRecord.isMessage()){
+    if (autoRecord.isWithMessage()){
       MessageEmbed recEb = new Record().getRecordMessage(memberChannel);
       if (recEb != null) embeds.add(recEb);
     }
@@ -114,7 +114,7 @@ public class Join extends SlashCommand {
 
     GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(event.getGuild());
     AutomaticRecording.Value autoRecord = guildSettings.getSetting(AutomaticRecording.class).getValue();
-    if (autoRecord.isMessage()){
+    if (autoRecord.isWithMessage()){
       MessageEmbed recEb = new Record().getRecordMessage(channel);
       if (recEb != null) return new ArrayList<>(List.of(joinMessageEmbed, recEb));
     }

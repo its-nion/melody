@@ -1,5 +1,6 @@
 package com.lopl.melody.settings;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class Setting<T extends SettingValue> {
@@ -11,6 +12,7 @@ public abstract class Setting<T extends SettingValue> {
     setValue(getDefaultValue());
   }
 
+  @Nonnull
   protected abstract T getDefaultValue();
   public abstract List<T> getPossibilities();
   public abstract void updateData(int data);

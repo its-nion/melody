@@ -3,7 +3,6 @@ package com.lopl.melody.settings;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.database.SQL;
 import net.dv8tion.jda.api.entities.Guild;
-import org.jetbrains.annotations.TestOnly;
 
 import java.util.stream.Collectors;
 
@@ -14,14 +13,6 @@ public class SettingSaver {
         "INSERT OR REPLACE INTO guild_settings (guild_id, %s) VALUES (%s, %S)",
         getDatabaseFields(settings), guild.getId(), getDatabaseValues(settings));
     if (!result) Logging.debug(getClass(), guild, null, "Saving guild settings failed!");
-  }
-
-  @TestOnly
-  public void saveSettings(long guild, GuildSettings settings) {
-    boolean result = new SQL().execute(
-        "INSERT OR REPLACE INTO guild_settings (guild_id, %s) VALUES (%s, %S)",
-        getDatabaseFields(settings), guild, getDatabaseValues(settings));
-    if (!result) Logging.debug(getClass(), null, null, "Saving guild settings failed!");
   }
 
   private String getDatabaseFields(GuildSettings guildSettings){

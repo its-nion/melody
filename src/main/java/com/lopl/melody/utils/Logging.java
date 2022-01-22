@@ -55,4 +55,16 @@ public class Logging {
     }
     LoggerFactory.getLogger(command).debug("[" + guild.getName() + "][" + member.getEffectiveName() + "]: " + message);
   }
+
+  public static void error(Class<?> command, @Nullable Guild guild, @Nullable Member member, String message) {
+    if (guild == null){
+      LoggerFactory.getLogger(command).error(message);
+      return;
+    }
+    if (member == null){
+      LoggerFactory.getLogger(command).error("[" + guild.getName() + "]: " + message);
+      return;
+    }
+    LoggerFactory.getLogger(command).error("[" + guild.getName() + "][" + member.getEffectiveName() + "]: " + message);
+  }
 }

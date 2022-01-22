@@ -2,12 +2,13 @@ package com.lopl.melody.settings.items;
 
 import com.lopl.melody.settings.Setting;
 import com.lopl.melody.settings.SettingValue;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class AutomaticRecording extends Setting<AutomaticRecording.Value> {
   @Override
-  protected Value getDefaultValue() {
+  protected @NotNull Value getDefaultValue() {
     return Value.off();
   }
 
@@ -57,23 +58,15 @@ public class AutomaticRecording extends Setting<AutomaticRecording.Value> {
       return data == OFF;
     }
 
-    public boolean isRecord(){
-      return data == RECORD;
-    }
-
-    public boolean isNoMessage(){
-      return data == RECORD_NO_MESSAGE;
-    }
-
-    public boolean isMessage(){
+    public boolean isWithMessage(){
       return data == RECORD;
     }
 
     @Override
     public String getValueRepresentation() {
-      if (isOff()) return "Off";
-      if (isRecord()) return "Record";
-      if (isNoMessage()) return "Record without message";
+      if (getData() == OFF) return "Off";
+      if (getData() == RECORD) return "Record";
+      if (getData() == RECORD_NO_MESSAGE) return "Record without message";
       return "Not set";
     }
 

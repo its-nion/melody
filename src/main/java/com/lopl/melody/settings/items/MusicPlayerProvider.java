@@ -2,12 +2,14 @@ package com.lopl.melody.settings.items;
 
 import com.lopl.melody.settings.Setting;
 import com.lopl.melody.settings.SettingValue;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class MusicPlayerProvider extends Setting<MusicPlayerProvider.Value> {
 
   @Override
-  protected Value getDefaultValue() {
+  protected @NotNull Value getDefaultValue() {
     return Value.spotify();
   }
 
