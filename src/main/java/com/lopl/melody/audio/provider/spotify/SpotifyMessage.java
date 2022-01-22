@@ -33,11 +33,11 @@ public class SpotifyMessage extends SavedMessage {
     return tracks;
   }
 
-  public Track getCurrentTrack(){
+  public Track getCurrentTrack() {
     return tracks[index];
   }
 
-  public PlaylistSimplified getCurrentPlaylist(){
+  public PlaylistSimplified getCurrentPlaylist() {
     return playlists[index];
   }
 
@@ -49,11 +49,11 @@ public class SpotifyMessage extends SavedMessage {
     return getMessage().getGuild();
   }
 
-  public void show(){
+  public void show() {
     new SpotifyMessageDisplayer(this).show();
   }
 
-  public int size(){
+  public int size() {
     if (playlists != null)
       return playlists.length;
     else if (tracks != null)
@@ -61,29 +61,29 @@ public class SpotifyMessage extends SavedMessage {
     return 0;
   }
 
-  public void previous(){
+  public void previous() {
     if (hasPrevious()) {
       index--;
       show();
     }
   }
 
-  public boolean hasPrevious(){
+  public boolean hasPrevious() {
     return index > 0;
   }
 
-  public void next(){
+  public void next() {
     if (hasNext()) {
       index++;
       show();
     }
   }
 
-  public boolean hasNext(){
+  public boolean hasNext() {
     if (tracks != null)
-      return index < tracks.length -1;
+      return index < tracks.length - 1;
     else if (playlists != null)
-      return index < playlists.length -1;
+      return index < playlists.length - 1;
     else
       return false;
   }

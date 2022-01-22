@@ -10,18 +10,21 @@ public class SettingsManager {
   private static SettingsManager INSTANCE = null;
   public final Map<Long, GuildSettings> settings;
 
-  public static SettingsManager getInstance(){
-    if (INSTANCE == null) return new SettingsManager();
-    return INSTANCE;
-  }
-
   private SettingsManager() {
     settings = new HashMap<>();
     INSTANCE = this;
   }
 
+  public static SettingsManager getInstance() {
+    if (INSTANCE == null) return new SettingsManager();
+    return INSTANCE;
+  }
 
-  public GuildSettings getGuildSettings(Guild guild){
+  public static GuildSettings settingsOf(Guild guild) {
+    return getInstance().getGuildSettings(guild);
+  }
+
+  public GuildSettings getGuildSettings(Guild guild) {
     long guildId = guild.getIdLong();
     GuildSettings setting = settings.get(guildId);
 

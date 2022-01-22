@@ -3,7 +3,8 @@ package com.lopl.melody.settings;
 import com.lopl.melody.testutils.GuildCreator;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * Test of {@link SettingsManager}

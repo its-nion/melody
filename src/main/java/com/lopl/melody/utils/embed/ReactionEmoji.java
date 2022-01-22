@@ -27,7 +27,7 @@ public class ReactionEmoji {
   public static final String NINE = "U+0039";
   public static final String TEN = "U+1F51F";
 
-  public static String getNumberAsEmoji(int number){
+  public static String getNumberAsEmoji(int number) {
     return switch (number) {
       case 1 -> ":one:";
       case 2 -> ":two:";

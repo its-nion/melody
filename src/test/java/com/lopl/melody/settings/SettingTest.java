@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Test of {@link Setting}
@@ -23,7 +24,7 @@ class SettingTest {
   }
 
   @Test
-  void getName(){
+  void getName() {
     DatabaseNameSettingTest setting = new DatabaseNameSettingTest();
     String name = setting.getName();
     DatabaseNameSettingTestAlternative settingAlternative = new DatabaseNameSettingTestAlternative();
@@ -33,7 +34,7 @@ class SettingTest {
   }
 
   @Test
-  void getValueRepresentation(){
+  void getValueRepresentation() {
     DatabaseNameSettingTest setting = new DatabaseNameSettingTest();
     String name = setting.getValueRepresentation();
     DatabaseNameSettingTestAlternative settingAlternative = new DatabaseNameSettingTestAlternative();
@@ -42,7 +43,7 @@ class SettingTest {
     assertEquals("TestValue", nameAlternative);
   }
 
-  private static class DatabaseNameSettingTest extends Setting<SettingValue>{
+  private static class DatabaseNameSettingTest extends Setting<SettingValue> {
     @Override
     protected @NotNull SettingValue getDefaultValue() {
       return new SettingValue(0) {
@@ -64,7 +65,7 @@ class SettingTest {
     }
   }
 
-  private static class DatabaseNameSettingTestAlternative extends Setting<SettingValue>{
+  private static class DatabaseNameSettingTestAlternative extends Setting<SettingValue> {
 
     public DatabaseNameSettingTestAlternative() {
       super.name = "Alternative";

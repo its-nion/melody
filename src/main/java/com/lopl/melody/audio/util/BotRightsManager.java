@@ -15,14 +15,14 @@ import java.util.HashMap;
 
 public class BotRightsManager extends ListenerAdapter {
 
-  private static BotRightsManager INSTANCE;
   private static final HashMap<Long, GuildRightsHolder> RIGHTS = new HashMap<>();
+  private static BotRightsManager INSTANCE;
 
   public BotRightsManager() {
     INSTANCE = this;
   }
 
-  public static BotRightsManager getInstance(){
+  public static BotRightsManager getInstance() {
     if (INSTANCE == null)
       INSTANCE = new BotRightsManager();
     return INSTANCE;
@@ -37,7 +37,7 @@ public class BotRightsManager extends ListenerAdapter {
     return grh;
   }
 
-  void removeData(Guild guild){
+  void removeData(Guild guild) {
     RIGHTS.remove(guild.getIdLong());
   }
 

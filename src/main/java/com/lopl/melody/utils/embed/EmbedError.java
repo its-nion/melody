@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class EmbedError {
 
-  public static MessageEmbed with(String message){
+  public static MessageEmbed with(String message) {
     Logging.debug(EmbedError.class, null, null, "Encountered user error: " + message);
     return new EmbedBuilder()
         .setColor(EmbedColor.RED)
@@ -14,14 +14,14 @@ public class EmbedError {
         .build();
   }
 
-  public static MessageEmbed friendly(String message){
+  public static MessageEmbed friendly(String message) {
     return new EmbedBuilder()
         .setColor(EmbedColor.RED)
         .setDescription(message)
         .build();
   }
 
-  public static MessageEmbed withFormat(String message, Object... args){
+  public static MessageEmbed withFormat(String message, Object... args) {
     Logging.debug(EmbedError.class, null, null, "Encountered user error: " + message);
     return new EmbedBuilder()
         .setColor(EmbedColor.RED)

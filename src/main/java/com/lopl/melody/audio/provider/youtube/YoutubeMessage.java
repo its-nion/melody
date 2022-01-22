@@ -1,11 +1,11 @@
 package com.lopl.melody.audio.provider.youtube;
 
+import com.lopl.melody.utils.annotation.NotYetImplemented;
 import com.lopl.melody.utils.message.SavedMessage;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import com.lopl.melody.utils.annotation.NotYetImplemented;
 
 public class YoutubeMessage extends SavedMessage {
 
@@ -35,12 +35,12 @@ public class YoutubeMessage extends SavedMessage {
     return tracks;
   }
 
-  public AudioTrack getCurrentTrack(){
+  public AudioTrack getCurrentTrack() {
     return tracks[index];
   }
 
   @NotYetImplemented
-  public PlaylistSimplified getCurrentPlaylist(){
+  public PlaylistSimplified getCurrentPlaylist() {
     return playlists[index];
   }
 
@@ -52,11 +52,11 @@ public class YoutubeMessage extends SavedMessage {
     return getMessage().getGuild();
   }
 
-  public void show(){
+  public void show() {
     new YoutubeMessageDisplayer(this).show();
   }
 
-  public int size(){
+  public int size() {
     if (playlists != null)
       return playlists.length;
     else if (tracks != null)
@@ -64,29 +64,29 @@ public class YoutubeMessage extends SavedMessage {
     return 0;
   }
 
-  public void previous(){
+  public void previous() {
     if (hasPrevious()) {
       index--;
       show();
     }
   }
 
-  public boolean hasPrevious(){
+  public boolean hasPrevious() {
     return index > 0;
   }
 
-  public void next(){
+  public void next() {
     if (hasNext()) {
       index++;
       show();
     }
   }
 
-  public boolean hasNext(){
+  public boolean hasNext() {
     if (tracks != null)
-      return index < tracks.length -1;
+      return index < tracks.length - 1;
     else if (playlists != null)
-      return index < playlists.length -1;
+      return index < playlists.length - 1;
     else
       return false;
   }

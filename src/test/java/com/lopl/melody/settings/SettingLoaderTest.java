@@ -4,7 +4,7 @@ import com.lopl.melody.testutils.GuildCreator;
 import net.dv8tion.jda.api.entities.Guild;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SettingLoaderTest {
 
@@ -20,7 +20,7 @@ class SettingLoaderTest {
   }
 
   @Test
-  void loadSettingsWithoutBeingInDatabase(){
+  void loadSettingsWithoutBeingInDatabase() {
     Guild guild = GuildCreator.create(123456789);
     SettingLoader settingLoader = new SettingLoader();
     GuildSettings loadedSettings = settingLoader.loadSettings(guild);

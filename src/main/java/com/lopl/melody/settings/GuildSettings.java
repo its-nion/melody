@@ -16,25 +16,25 @@ public class GuildSettings {
     this.guild = guild;
   }
 
-  public <T> void register(Class<T> tClass, Setting<?> setting){
+  public <T> void register(Class<T> tClass, Setting<?> setting) {
     settings.put(tClass, setting);
   }
 
-  public <T extends Setting<?>> T getSetting(Class<T> tClass){
+  public <T extends Setting<?>> T getSetting(Class<T> tClass) {
     Setting<?> setting = settings.get(tClass);
     if (setting == null) return null;
     if (tClass.equals(setting.getClass())) return (T) setting;
     return null;
   }
 
-  public Setting<SettingValue> getUnknownSetting(Class<?> tClass){
+  public Setting<SettingValue> getUnknownSetting(Class<?> tClass) {
     Setting<?> setting = settings.get(tClass);
     if (setting == null) return null;
     if (tClass.equals(setting.getClass())) return (Setting<SettingValue>) setting;
     return null;
   }
 
-  public List<Setting<?>> getSettings(){
+  public List<Setting<?>> getSettings() {
     return List.copyOf(settings.values());
   }
 

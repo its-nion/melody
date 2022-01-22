@@ -29,7 +29,7 @@ public class Join extends SlashCommand {
 
   /**
    * Constructor for a Join Command Object. This is instantiated when building the Command Handler or for temporary operations
-   *
+   * <p>
    * {@link #name} The name of the command. The string you have to type after the '/'. i.e. /join
    * {@link #category} The category of the command. Commands will be sorted by that
    * {@link #help} The help message, in case someone types /help [command]
@@ -46,6 +46,7 @@ public class Join extends SlashCommand {
   /**
    * This will fire whenever a user enters /join in a guild textchannel.
    * If the requesting member is in a vc and the command is correct, the bot will join you.
+   *
    * @param event all the event data
    */
   @Override
@@ -74,15 +75,13 @@ public class Join extends SlashCommand {
 
     GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(event.getGuild());
     AutomaticRecording.Value autoRecord = guildSettings.getSetting(AutomaticRecording.class).getValue();
-    if (autoRecord.isWithMessage()){
+    if (autoRecord.isWithMessage()) {
       MessageEmbed recEb = new Record().getRecordMessage(memberChannel);
       if (recEb != null) embeds.add(recEb);
     }
-    if (autoRecord.isOn()){
+    if (autoRecord.isOn()) {
       new Record().record(memberChannel);
     }
-
-    //TODO deafen
 
     event.replyEmbeds(embeds).queue();
     Logging.info(getClass(), event.getGuild(), null, "Joined channel " + memberChannel.getName());
@@ -91,6 +90,7 @@ public class Join extends SlashCommand {
   /**
    * This function can be call from other Slash Functions. It will connect the bot to your voicechannel and return
    * a fitting MessageEmbed.
+   *
    * @param event the calling SlashCommandEvent
    * @return a fitting MessageEmbed
    */
@@ -114,11 +114,11 @@ public class Join extends SlashCommand {
 
     GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(event.getGuild());
     AutomaticRecording.Value autoRecord = guildSettings.getSetting(AutomaticRecording.class).getValue();
-    if (autoRecord.isWithMessage()){
+    if (autoRecord.isWithMessage()) {
       MessageEmbed recEb = new Record().getRecordMessage(channel);
       if (recEb != null) return new ArrayList<>(List.of(joinMessageEmbed, recEb));
     }
-    if (autoRecord.isOn()){
+    if (autoRecord.isOn()) {
       new Record().record(channel);
     }
 
@@ -128,15 +128,17 @@ public class Join extends SlashCommand {
   /**
    * This function can be called from anywhere.
    * It will connect the bot to a voicechannel and send a fitting message to the provided TextChannel
-   * @param guild the current guild
-   * @param member the requester
+   *
+   * @param guild       the current guild
+   * @param member      the requester
    * @param textChannel the TextChannel for a Message. Can be null
    */
   public void connect(@Nonnull Guild guild, @Nullable Member member, @Nullable TextChannel textChannel) {
     AudioManager audio = guild.getAudioManager();
 
     if (member == null || member.getVoiceState() == null || member.getVoiceState().getChannel() == null) {
-      if (textChannel != null) textChannel.sendMessageEmbeds(EmbedError.with("This Command requires **you** to be **connected to a voice channel**")).queue();
+      if (textChannel != null)
+        textChannel.sendMessageEmbeds(EmbedError.with("This Command requires **you** to be **connected to a voice channel**")).queue();
       return;
     }
 
@@ -147,19 +149,18 @@ public class Join extends SlashCommand {
     if (textChannel != null && joinMessageEmbed != null)
       textChannel.sendMessageEmbeds(joinMessageEmbed).queue();
     audio.openAudioConnection(channel);
-    //TODO undeafen
-
   }
 
   /**
    * Returns a MessageEmbed with a descriptive content, how the bot behaved, while joining your VoiceChannel.
+   *
    * @param newChannel The joining Channel
    * @param oldChannel The previous channel, null if not connected
    * @return a fitting MessageEmbed
    */
   @Nullable
   private MessageEmbed getJoinMessageEmbed(@Nullable VoiceChannel oldChannel, @Nonnull VoiceChannel newChannel) {
-    if (oldChannel == null){
+    if (oldChannel == null) {
       return new EmbedBuilder()
           .setColor(EmbedColor.GREEN)
           .setDescription("**Joined** in <#" + newChannel.getId() + ">")
@@ -176,6 +177,7 @@ public class Join extends SlashCommand {
   /**
    * Returns a MessageEmbed with a descriptive content, how the bot behaved, while joining your VoiceChannel.
    * Also returns a embed when nothing happened
+   *
    * @param newChannel The joining Channel
    * @param oldChannel The previous channel, null if not connected
    * @return a fitting MessageEmbed

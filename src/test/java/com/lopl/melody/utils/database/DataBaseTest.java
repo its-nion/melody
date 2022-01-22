@@ -4,6 +4,8 @@ import com.lopl.melody.settings.GuildSettings;
 import com.lopl.melody.settings.SettingLoader;
 import com.lopl.melody.settings.SettingSaver;
 import com.lopl.melody.settings.items.DefaultMusicType;
+import com.lopl.melody.testutils.GuildCreator;
+import net.dv8tion.jda.api.entities.Guild;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,15 +32,21 @@ class DataBaseTest {
   @Test
   void settingDatabase() {
     //arrange
+    Guild guild = GuildCreator.create(1234567890);
 
     // act
-    GuildSettings guildSettings = new SettingLoader().loadSettings(1234567890);
+    GuildSettings guildSettings = new SettingLoader().loadSettings(guild);
     guildSettings.getSetting(DefaultMusicType.class).setValue(DefaultMusicType.Value.user());
-    new SettingSaver().saveSettings(1234567890, guildSettings);
-    guildSettings = new SettingLoader().loadSettings(1234567890);
+    new SettingSaver().saveSettings(guild, guildSettings);
+    guildSettings = new SettingLoader().loadSettings(guild);
 
     // assert
     assertEquals(DefaultMusicType.Value.user().getData(), guildSettings.getSetting(DefaultMusicType.class).getValue().getData());
+    //TODO: better checks for settings table setup
+    // - table update
+    // - setting added
+    // - setting removed
+    // - setting renamed
   }
 
   @AfterEach

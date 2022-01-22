@@ -14,29 +14,31 @@ public abstract class Setting<T extends SettingValue> {
 
   @Nonnull
   protected abstract T getDefaultValue();
+
   public abstract List<T> getPossibilities();
+
   public abstract void updateData(int data);
 
   public String getValueRepresentation() {
     return getValue().getValueRepresentation();
   }
 
-  public void setValue(T v){
-    value = v;
-  }
-
-  public T getValue(){
+  public T getValue() {
     return value;
   }
 
-  public String getDatabaseName(){
+  public void setValue(T v) {
+    value = v;
+  }
+
+  public String getDatabaseName() {
     String className = getClass().getSimpleName();
     StringBuilder lower_underscore = new StringBuilder();
     int index = 0;
-    for (char c : className.toCharArray()){
-      if (Character.isAlphabetic(c) && Character.isUpperCase(c) && index > 0){
+    for (char c : className.toCharArray()) {
+      if (Character.isAlphabetic(c) && Character.isUpperCase(c) && index > 0) {
         lower_underscore.append("_").append(Character.toLowerCase(c));
-      }else{
+      } else {
         lower_underscore.append(Character.toLowerCase(c));
       }
       index++;

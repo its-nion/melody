@@ -39,27 +39,27 @@ public class DefaultMusicType extends Setting<DefaultMusicType.Value> {
       super(player);
     }
 
-    public static Value track(){
+    public static Value track() {
       return new Value(TRACK);
     }
 
-    public static Value playlist(){
+    public static Value playlist() {
       return new Value(PLAYLIST);
     }
 
-    public static Value user(){
+    public static Value user() {
       return new Value(USER);
     }
 
-    public boolean isTrack(){
+    public boolean isTrack() {
       return data == TRACK;
     }
 
-    public boolean isPlaylist(){
+    public boolean isPlaylist() {
       return data == PLAYLIST;
     }
 
-    public boolean isUser(){
+    public boolean isUser() {
       return data == USER;
     }
 

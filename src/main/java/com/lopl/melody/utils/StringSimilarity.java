@@ -6,7 +6,7 @@ import com.wrapper.spotify.model_objects.specification.Track;
 
 public class StringSimilarity {
 
-  public static double similarity(AudioTrack loaded, Track requested){
+  public static double similarity(AudioTrack loaded, Track requested) {
     String l = loaded.getInfo().author + " - " + loaded.getInfo().title;
     String r = requested.getArtists()[0].getName() + " - " + requested.getName();
     return similarity(l, r);
@@ -18,10 +18,13 @@ public class StringSimilarity {
   public static double similarity(String s1, String s2) {
     String longer = s1, shorter = s2;
     if (s1.length() < s2.length()) { // longer should always have greater length
-      longer = s2; shorter = s1;
+      longer = s2;
+      shorter = s1;
     }
     int longerLength = longer.length();
-    if (longerLength == 0) { return 1.0; /* both strings are zero length */ }
+    if (longerLength == 0) {
+      return 1.0; /* both strings are zero length */
+    }
     return (longerLength - editDistance(longer, shorter)) / (double) longerLength;
 
   }

@@ -10,34 +10,35 @@ import net.dv8tion.jda.api.entities.Guild;
  */
 public class GuildAudioManager {
 
-    public final Guild guild;
+  public final Guild guild;
 
-    /**
-     * Audio player for the guild.
-     */
-    public final AudioPlayer player;
+  /**
+   * Audio player for the guild.
+   */
+  public final AudioPlayer player;
 
-    /**
-     * Track scheduler for the player.
-     */
-    public final TrackScheduler scheduler;
+  /**
+   * Track scheduler for the player.
+   */
+  public final TrackScheduler scheduler;
 
-    /**
-     * Creates a player and a track scheduler.
-     * @param manager Audio player manager to use for creating the player.
-     */
-    public GuildAudioManager(Guild guild, AudioPlayerManager manager) {
-        this.guild = guild;
-        this.player = manager.createPlayer();
-        this.scheduler = new TrackScheduler(this, player);
-        this.player.addListener(scheduler);
-        //this.ttsEngine = new TTSEngine();
-    }
+  /**
+   * Creates a player and a track scheduler.
+   *
+   * @param manager Audio player manager to use for creating the player.
+   */
+  public GuildAudioManager(Guild guild, AudioPlayerManager manager) {
+    this.guild = guild;
+    this.player = manager.createPlayer();
+    this.scheduler = new TrackScheduler(this, player);
+    this.player.addListener(scheduler);
+    //this.ttsEngine = new TTSEngine();
+  }
 
-    /**
-     * @return Wrapper around AudioPlayer to use it as an AudioSendHandler.
-     */
-    public AudioSendHandler getSendHandler() {
-        return new AudioSendMultiplexer(/*ttsEngine,*/ new MusicSendHandler(player));
-    }
+  /**
+   * @return Wrapper around AudioPlayer to use it as an AudioSendHandler.
+   */
+  public AudioSendHandler getSendHandler() {
+    return new AudioSendMultiplexer(/*ttsEngine,*/ new MusicSendHandler(player));
+  }
 }

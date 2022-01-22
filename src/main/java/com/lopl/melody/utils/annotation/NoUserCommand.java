@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value={CONSTRUCTOR, MODULE, TYPE})
+@Target(value = {CONSTRUCTOR, MODULE, TYPE})
 public @interface NoUserCommand {
 }

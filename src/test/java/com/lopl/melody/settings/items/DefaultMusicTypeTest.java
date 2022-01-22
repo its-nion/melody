@@ -41,7 +41,7 @@ class DefaultMusicTypeTest {
   }
 
   @Test
-  void stateTrack(){
+  void stateTrack() {
     DefaultMusicType.Value value = DefaultMusicType.Value.track();
     defaultMusicType.updateData(value.getData());
     assertTrue(defaultMusicType.getValue().isTrack());
@@ -51,7 +51,7 @@ class DefaultMusicTypeTest {
   }
 
   @Test
-  void statePlaylist(){
+  void statePlaylist() {
     DefaultMusicType.Value value = DefaultMusicType.Value.playlist();
     defaultMusicType.updateData(value.getData());
     assertFalse(defaultMusicType.getValue().isTrack());
@@ -61,13 +61,13 @@ class DefaultMusicTypeTest {
   }
 
   @Test
-  void stateUser(){
+  void stateUser() {
     //TODO provide user feature
 
   }
 
   @Test
-  void stateIllegal(){
+  void stateIllegal() {
     DefaultMusicType.Value value = new DefaultMusicType.Value(0);
     defaultMusicType.updateData(value.getData());
     assertSame(defaultMusicType.getDefaultValue().getData(), defaultMusicType.getValue().getData());

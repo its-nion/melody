@@ -33,11 +33,11 @@ public class Logging {
   }
 
   public static void info(Class<?> command, @Nullable Guild guild, @Nullable Member member, String message) {
-    if (guild == null){
+    if (guild == null) {
       LoggerFactory.getLogger(command).info(message);
       return;
     }
-    if (member == null){
+    if (member == null) {
       LoggerFactory.getLogger(command).info("[" + guild.getName() + "]: " + message);
       return;
     }
@@ -45,11 +45,11 @@ public class Logging {
   }
 
   public static void debug(Class<?> command, @Nullable Guild guild, @Nullable Member member, String message) {
-    if (guild == null){
+    if (guild == null) {
       LoggerFactory.getLogger(command).debug(message);
       return;
     }
-    if (member == null){
+    if (member == null) {
       LoggerFactory.getLogger(command).debug("[" + guild.getName() + "]: " + message);
       return;
     }
@@ -57,11 +57,11 @@ public class Logging {
   }
 
   public static void error(Class<?> command, @Nullable Guild guild, @Nullable Member member, String message) {
-    if (guild == null){
+    if (guild == null) {
       LoggerFactory.getLogger(command).error(message);
       return;
     }
-    if (member == null){
+    if (member == null) {
       LoggerFactory.getLogger(command).error("[" + guild.getName() + "]: " + message);
       return;
     }

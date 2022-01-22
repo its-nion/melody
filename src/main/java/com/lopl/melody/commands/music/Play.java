@@ -308,7 +308,7 @@ public class Play extends SlashCommand {
       new Join().connect(guild, event.getMember(), event.getTextChannel());
 
     if (youtubeMessage.tracks == null) {
-      throw  new UnsupportedOperationException();
+      throw new UnsupportedOperationException();
       //PLAYLIST
 //      List<String> queries = new ArrayList<>();
 //      PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(youtubeMessage.getCurrentPlaylist().getId());
@@ -330,20 +330,16 @@ public class Play extends SlashCommand {
     }
   }
 
+  private Player getPlayer(Guild guild) {
+    GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(guild);
+    MusicPlayerProvider.Value provider = guildSettings.getSetting(MusicPlayerProvider.class).getValue();
+    if (provider.isYoutube()) return Player.YOUTUBE;
+    if (provider.isSpotify()) return Player.SPOTIFY;
+    return Player.YOUTUBE; // <- default, this probably gets used never
+  }
+
   private enum Player {
     YOUTUBE, SPOTIFY;
-
-    public MusicDataSearcher getProvider() {
-      if (this == SPOTIFY) return new Spotify();
-      if (this == YOUTUBE) return new Youtube();
-      else return new Spotify(); // <- default
-    }
-
-
-    @Override
-    public String toString() {
-      return toCamelCase(super.name());
-    }
 
     private static String toCamelCase(final String init) {
       if (init == null)
@@ -362,14 +358,17 @@ public class Play extends SlashCommand {
 
       return ret.toString();
     }
-  }
 
-  private Player getPlayer(Guild guild) {
-    GuildSettings guildSettings = SettingsManager.getInstance().getGuildSettings(guild);
-    MusicPlayerProvider.Value provider = guildSettings.getSetting(MusicPlayerProvider.class).getValue();
-    if (provider.isYoutube()) return Player.YOUTUBE;
-    if (provider.isSpotify()) return Player.SPOTIFY;
-    return Player.YOUTUBE; // <- default, this probably gets used never
+    public MusicDataSearcher getProvider() {
+      if (this == SPOTIFY) return new Spotify();
+      if (this == YOUTUBE) return new Youtube();
+      else return new Spotify(); // <- default
+    }
+
+    @Override
+    public String toString() {
+      return toCamelCase(super.name());
+    }
   }
 
 }

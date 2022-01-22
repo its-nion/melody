@@ -30,7 +30,7 @@ public class MusicPlayerProvider extends Setting<MusicPlayerProvider.Value> {
     return "Music searcher";
   }
 
-  public static class Value extends SettingValue{
+  public static class Value extends SettingValue {
     public static final int YOUTUBE = 1;
     public static final int SPOTIFY = 2;
 
@@ -38,19 +38,19 @@ public class MusicPlayerProvider extends Setting<MusicPlayerProvider.Value> {
       super(player);
     }
 
-    public static Value youtube(){
+    public static Value youtube() {
       return new Value(YOUTUBE);
     }
 
-    public static Value spotify(){
+    public static Value spotify() {
       return new Value(SPOTIFY);
     }
 
-    public boolean isYoutube(){
+    public boolean isYoutube() {
       return data == YOUTUBE;
     }
 
-    public boolean isSpotify(){
+    public boolean isSpotify() {
       return data == SPOTIFY;
     }
 

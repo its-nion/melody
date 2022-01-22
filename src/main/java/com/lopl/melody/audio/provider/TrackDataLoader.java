@@ -13,20 +13,19 @@ public class TrackDataLoader {
   private static TrackDataLoader INSTANCE;
   private final AudioPlayerManager playerManager;
 
-  public static synchronized TrackDataLoader getInstance() {
-    if (INSTANCE == null)
-      INSTANCE = new TrackDataLoader();
-    return INSTANCE;
-  }
-
   private TrackDataLoader() {
     this.playerManager = new DefaultAudioPlayerManager();
     AudioSourceManagers.registerRemoteSources(playerManager);
     AudioSourceManagers.registerLocalSource(playerManager);
   }
 
+  public static synchronized TrackDataLoader getInstance() {
+    if (INSTANCE == null)
+      INSTANCE = new TrackDataLoader();
+    return INSTANCE;
+  }
 
-  public void retrieveTrackInfo(Guild guild, String trackUrl, OnTrackDataReceived callback){
+  public void retrieveTrackInfo(Guild guild, String trackUrl, OnTrackDataReceived callback) {
     playerManager.loadItemOrdered(guild, trackUrl, new AudioLoadResultHandler() {
       @Override
       public void trackLoaded(AudioTrack track) {
@@ -50,7 +49,7 @@ public class TrackDataLoader {
     });
   }
 
-  public interface OnTrackDataReceived{
+  public interface OnTrackDataReceived {
     void onTrackData(AudioTrack track);
   }
 }

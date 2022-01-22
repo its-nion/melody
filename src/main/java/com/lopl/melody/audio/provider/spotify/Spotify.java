@@ -1,6 +1,7 @@
 package com.lopl.melody.audio.provider.spotify;
 
 import com.lopl.melody.audio.provider.MusicDataSearcher;
+import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.message.MessageStore;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.enums.ModelObjectType;
@@ -13,7 +14,6 @@ import com.wrapper.spotify.requests.authorization.authorization_code.Authorizati
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.NotNull;
-import com.lopl.melody.utils.Logging;
 
 import java.io.IOException;
 
@@ -21,10 +21,8 @@ import static com.lopl.melody.Token.*;
 
 public class Spotify implements MusicDataSearcher {
 
-  @Override
-  public void search(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
-    searchSpotify(event, search, message);
-  }
+  public static final SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).setRefreshToken(refreshToken).build();
+  private static final AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
 
   public static void searchSpotify(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
     // refresh Spotify
@@ -84,7 +82,6 @@ public class Spotify implements MusicDataSearcher {
     return null;
   }
 
-
   private static PlaylistSimplified[] getUserPlaylists(String id) {
     try {
       return spotifyApi.getListOfUsersPlaylists(id).build().execute().getItems();
@@ -119,10 +116,6 @@ public class Spotify implements MusicDataSearcher {
     return word.strip();
   }
 
-
-  public static final SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).setRefreshToken(refreshToken).build();
-  private static final AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
-
   public static void authorizationCodeRefresh_Sync() {
     try {
       final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
@@ -134,6 +127,11 @@ public class Spotify implements MusicDataSearcher {
     } catch (IOException | SpotifyWebApiException e) {
       System.out.println("Error: " + e.getMessage());
     }
+  }
+
+  @Override
+  public void search(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
+    searchSpotify(event, search, message);
   }
 
 }

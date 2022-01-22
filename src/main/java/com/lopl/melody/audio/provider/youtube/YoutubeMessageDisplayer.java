@@ -72,7 +72,7 @@ public class YoutubeMessageDisplayer {
 //      PlaylistTrack track = tracks[i];
 //      eb.appendDescription(track.getTrack().getArtists()[0].getName() + " - " + track.getTrack().getName() + "\n");
     }
-    if (tracks.length >= 5){
+    if (tracks.length >= 5) {
       eb.appendDescription((tracks.length - 5) + " more");
     }
 
@@ -82,7 +82,7 @@ public class YoutubeMessageDisplayer {
     // show
     List<MessageEmbed> embeds = message.getEmbeds();
     ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
-    newEmbeds.set(embeds.size() -1, eb.build());
+    newEmbeds.set(embeds.size() - 1, eb.build());
     message.editMessageEmbeds(newEmbeds).queue();
   }
 
@@ -107,21 +107,21 @@ public class YoutubeMessageDisplayer {
     // page + duration
     eb.setFooter(
         "Duration: " + new SimpleDateFormat("mm:ss").format(new Date(track.getDuration())) + "\n" +
-            "Page: " + (index+1) + " / " + tracks.length,
+            "Page: " + (index + 1) + " / " + tracks.length,
 
-    // icon
+        // icon
         "https://cdn.discordapp.com/emojis/925827032485621791.png?size=96");
 
 
     // show
     List<MessageEmbed> embeds = message.getEmbeds();
     ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
-    newEmbeds.set(embeds.size() -1, eb.build());
+    newEmbeds.set(embeds.size() - 1, eb.build());
     message.editMessageEmbeds(newEmbeds).queue();
 
   }
 
-  private String getThumbnail(String uri){
+  private String getThumbnail(String uri) {
     // i.e. https://www.youtube.com/watch?v=dQw4w9WgXcQ
     uri = uri.replaceAll("//youtube", "//img.youtube");
     uri = uri.replaceAll("www", "img");

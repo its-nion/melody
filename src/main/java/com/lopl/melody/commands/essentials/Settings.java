@@ -1,16 +1,16 @@
 package com.lopl.melody.commands.essentials;
 
 import com.jagrosh.jdautilities.command.Command;
-import com.lopl.melody.settings.items.AutomaticRecording;
-import com.lopl.melody.slash.SlashCommand;
-import com.lopl.melody.utils.Logging;
-import com.lopl.melody.utils.embed.EmbedError;
 import com.lopl.melody.settings.GuildSettings;
 import com.lopl.melody.settings.Setting;
 import com.lopl.melody.settings.SettingValue;
 import com.lopl.melody.settings.SettingsManager;
+import com.lopl.melody.settings.items.AutomaticRecording;
 import com.lopl.melody.settings.items.DefaultMusicType;
 import com.lopl.melody.settings.items.MusicPlayerProvider;
+import com.lopl.melody.slash.SlashCommand;
+import com.lopl.melody.utils.Logging;
+import com.lopl.melody.utils.embed.EmbedError;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -96,7 +96,7 @@ public class Settings extends SlashCommand {
     event.editComponents(
         ActionRow.of(settingsDropdown),
         ActionRow.of(settingButtons)
-        ).queue();
+    ).queue();
     for (Button button : settingButtons)
       registerButton(button);
   }
@@ -105,12 +105,12 @@ public class Settings extends SlashCommand {
   protected void clicked(ButtonClickEvent event, boolean anonymous) {
     Logging.button(getClass(), event);
 
-    if (event.getGuild() == null){
+    if (event.getGuild() == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
     }
 
-    if (event.getButton() == null || event.getButton().getId() == null){
+    if (event.getButton() == null || event.getButton().getId() == null) {
       event.replyEmbeds(EmbedError.with("Something is wrong with this button...")).queue();
       return;
     }
@@ -142,13 +142,13 @@ public class Settings extends SlashCommand {
     event.editMessageEmbeds(embed).queue();
   }
 
-  private MessageEmbed getSettingsMessage(Guild guild){
+  private MessageEmbed getSettingsMessage(Guild guild) {
     SettingsManager settingsManager = SettingsManager.getInstance();
     GuildSettings guildSettings = settingsManager.getGuildSettings(guild);
 
     EmbedBuilder embedBuilder = new EmbedBuilder();
     embedBuilder.setAuthor("Melody's settings in " + guild.getName());
-    for (Setting<?> setting : guildSettings.getSettings()){
+    for (Setting<?> setting : guildSettings.getSettings()) {
       embedBuilder.addField(
           setting.getName(), // title
           "```" + setting.getValueRepresentation() + "```", // content
@@ -180,7 +180,7 @@ public class Settings extends SlashCommand {
   }
 
 
-  private List<Button> getSettingButtons(Setting<SettingValue> setting){
+  private List<Button> getSettingButtons(Setting<SettingValue> setting) {
     return setting.getPossibilities().stream().map(sv ->
         Button.secondary("setting_" + setting.getClass().getName() + "_" + sv.getData(), sv.getValueRepresentation())
     ).collect(Collectors.toList());

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.TestOnly;
 public class GuildCreator {
 
   @TestOnly
-  public static Guild create(long id){
+  public static Guild create(long id) {
     JDAImpl jda = new JDAImpl(new AuthorizationConfig(Token.BOT_TOKEN));
     return new GuildImpl(jda, id);
   }

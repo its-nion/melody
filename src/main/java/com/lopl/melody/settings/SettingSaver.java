@@ -15,11 +15,11 @@ public class SettingSaver {
     if (!result) Logging.debug(getClass(), guild, null, "Saving guild settings failed!");
   }
 
-  private String getDatabaseFields(GuildSettings guildSettings){
+  private String getDatabaseFields(GuildSettings guildSettings) {
     return guildSettings.getSettings().stream().map(Setting::getDatabaseName).collect(Collectors.joining(", "));
   }
 
-  private String getDatabaseValues(GuildSettings guildSettings){
+  private String getDatabaseValues(GuildSettings guildSettings) {
     return guildSettings.getSettings().stream().map(s -> String.valueOf(s.getValue().data)).collect(Collectors.joining(", "));
   }
 }

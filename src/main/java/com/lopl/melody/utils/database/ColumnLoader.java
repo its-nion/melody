@@ -15,19 +15,19 @@ public class ColumnLoader<O> {
     this.objects = new ArrayList<>();
   }
 
-  public List<O> every(RowExecutor<O> executor){
+  public List<O> every(RowExecutor<O> executor) {
     try {
       while (resultSet.next()) {
         O o = executor.row(resultSet);
         objects.add(o);
       }
       return objects;
-    } catch (SQLException ignored){
+    } catch (SQLException ignored) {
       return objects;
     }
   }
 
-  public interface RowExecutor<O>{
+  public interface RowExecutor<O> {
     O row(ResultSet resultSet) throws SQLException;
   }
 

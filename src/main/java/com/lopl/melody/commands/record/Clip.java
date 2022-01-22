@@ -38,6 +38,30 @@ public class Clip extends SlashCommand {
     super.description = "Creates a clip of the last seconds";
   }
 
+  private static String getPJSaltString() {
+    String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    StringBuilder salt = new StringBuilder();
+    Random rnd = new Random();
+    while (salt.length() < 13) {
+      int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+      salt.append(SALTCHARS.charAt(index));
+    }
+    String saltStr = salt.toString();
+
+    //check for a collision on the 1/2e62 chance that it matches another salt string (lulW)
+    File dir = new File("/var/www/html/");
+    if (!dir.exists())
+      dir = new File("recordings/");
+
+    if (dir.listFiles() != null) {
+      for (File f : dir.listFiles()) {
+        if (f.getName().equals(saltStr))
+          saltStr = getPJSaltString();
+      }
+    }
+    return saltStr;
+  }
+
   @Override
   protected CommandCreateAction onUpsert(CommandCreateAction cca) {
     return cca.addOptions(new OptionData(OptionType.INTEGER, DURATION, "the time in seconds back", true).setMaxValue(120).setMinValue(1))
@@ -123,7 +147,7 @@ public class Clip extends SlashCommand {
           Logging.debug(Clip.class, guild, null, "Interrupted deleting a temp file. Check this file: " + file.getName());
         }    //20 second life for files set to discord (no need to save)
 
-        if(file.delete())
+        if (file.delete())
           Logging.debug(Clip.class, guild, null, "\tDeleting file " + file.getName() + "...");
         else
           Logging.debug(Clip.class, guild, null, "\tDeleting file " + file.getName() + " failed");
@@ -142,29 +166,5 @@ public class Clip extends SlashCommand {
     if (file.length() / 1024 / 1024 < 8) {
       textChannel.sendFile(file).queue(null, (Throwable) -> textChannel.sendMessageEmbeds(EmbedError.with("I don't have permissions to send files in " + textChannel.getName() + "!")).queue());
     }
-  }
-
-  private static String getPJSaltString() {
-    String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-    StringBuilder salt = new StringBuilder();
-    Random rnd = new Random();
-    while (salt.length() < 13) {
-      int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-      salt.append(SALTCHARS.charAt(index));
-    }
-    String saltStr = salt.toString();
-
-    //check for a collision on the 1/2e62 chance that it matches another salt string (lulW)
-    File dir = new File("/var/www/html/");
-    if (!dir.exists())
-      dir = new File("recordings/");
-
-    if (dir.listFiles() != null) {
-      for (File f : dir.listFiles()) {
-        if (f.getName().equals(saltStr))
-          saltStr = getPJSaltString();
-      }
-    }
-    return saltStr;
   }
 }

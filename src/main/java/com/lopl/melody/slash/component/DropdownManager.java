@@ -14,11 +14,11 @@ public class DropdownManager {
     this.dropdownCache = new HashMap<>();
   }
 
-  public void cache(SelectionMenu dropdown, SlashCommand slashCommand){
+  public void cache(SelectionMenu dropdown, SlashCommand slashCommand) {
     dropdownCache.put(dropdown.getId(), slashCommand);
   }
 
-  public SlashCommand request(SelectionMenu dropdown){
+  public SlashCommand request(SelectionMenu dropdown) {
     return dropdownCache.getOrDefault(dropdown.getId(), null);
   }
 }

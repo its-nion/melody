@@ -1,8 +1,8 @@
 package com.lopl.melody.audio.handler;
 
 
-import com.lopl.melody.utils.Mp3Encoder;
 import com.lopl.melody.utils.Logging;
+import com.lopl.melody.utils.Mp3Encoder;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.CombinedAudio;
 import net.dv8tion.jda.api.audio.UserAudio;
@@ -16,10 +16,9 @@ public class AudioReceiveListener implements AudioReceiveHandler {
   public static final double STARTING_MB = 0.5;
   public static final int CAP_MB = 16;
   public static final double PCM_MINS = 2;
-  public boolean canReceive = true;
   private final double volume;
   private final VoiceChannel voiceChannel;
-
+  public boolean canReceive = true;
   public byte[] uncompVoiceData = new byte[(int) (3840 * 50 * 60 * PCM_MINS)]; //3840bytes/array * 50arrays/sec * 60sec = 1 mins
   public int uncompIndex = 0;
   public byte[] compVoiceData = new byte[(int) (1024 * 1024 * STARTING_MB)];    //start with 0.5 MB

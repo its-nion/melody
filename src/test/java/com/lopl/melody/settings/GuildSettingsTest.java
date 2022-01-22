@@ -93,7 +93,7 @@ class GuildSettingsTest {
     assertNotNull(result);
   }
 
-  private static class DatabaseNameSettingTest extends Setting<SettingValue>{
+  private static class DatabaseNameSettingTest extends Setting<SettingValue> {
     @Override
     protected @NotNull SettingValue getDefaultValue() {
       return new SettingValue(0) {
@@ -115,7 +115,7 @@ class GuildSettingsTest {
     }
   }
 
-  private static class DatabaseNameSettingTestAlternative extends Setting<SettingValue>{
+  private static class DatabaseNameSettingTestAlternative extends Setting<SettingValue> {
 
     public DatabaseNameSettingTestAlternative() {
       super.name = "Alternative";

@@ -17,28 +17,28 @@ public class SlashCommandClientBuilder {
     eventListenerCommands = new ArrayList<>();
   }
 
-  public void addCommand(SlashCommand command){
+  public void addCommand(SlashCommand command) {
     commands.add(command);
   }
 
-  public void addCommands(SlashCommand... command){
+  public void addCommands(SlashCommand... command) {
     commands.addAll(Arrays.asList(command));
   }
 
-  public void addEventListener(JDABuilder jda, SlashCommand command){
+  public void addEventListener(JDABuilder jda, SlashCommand command) {
     ListenerAdapter listenerAdapter = command.getCommandEventListener();
-    if (listenerAdapter != null){
+    if (listenerAdapter != null) {
       jda.addEventListeners(listenerAdapter);
       eventListenerCommands.add(command);
     }
   }
 
-  public void addEventListeners(JDABuilder jda, SlashCommand... commands){
+  public void addEventListeners(JDABuilder jda, SlashCommand... commands) {
     for (SlashCommand command : commands)
       addEventListener(jda, command);
   }
 
-  public SlashCommandClient build(){
+  public SlashCommandClient build() {
     return new SlashCommandClient(commands.toArray(SlashCommand[]::new));
   }
 

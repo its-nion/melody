@@ -38,7 +38,7 @@ class MusicPlayerProviderTest {
   }
 
   @Test
-  void stateSpotify(){
+  void stateSpotify() {
     MusicPlayerProvider.Value value = MusicPlayerProvider.Value.spotify();
     musicPlayerProvider.updateData(value.getData());
     assertTrue(musicPlayerProvider.getValue().isSpotify());
@@ -47,7 +47,7 @@ class MusicPlayerProviderTest {
   }
 
   @Test
-  void stateYoutube(){
+  void stateYoutube() {
     MusicPlayerProvider.Value value = MusicPlayerProvider.Value.youtube();
     musicPlayerProvider.updateData(value.getData());
     assertFalse(musicPlayerProvider.getValue().isSpotify());
@@ -56,7 +56,7 @@ class MusicPlayerProviderTest {
   }
 
   @Test
-  void stateIllegal(){
+  void stateIllegal() {
     MusicPlayerProvider.Value value = new MusicPlayerProvider.Value(0);
     musicPlayerProvider.updateData(value.getData());
     assertSame(musicPlayerProvider.getDefaultValue().getData(), musicPlayerProvider.getValue().getData());

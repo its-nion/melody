@@ -38,27 +38,27 @@ public class AutomaticRecording extends Setting<AutomaticRecording.Value> {
       super(player);
     }
 
-    public static Value off(){
+    public static Value off() {
       return new Value(OFF);
     }
 
-    public static Value record(){
+    public static Value record() {
       return new Value(RECORD);
     }
 
-    public static Value recordNoMessage(){
+    public static Value recordNoMessage() {
       return new Value(RECORD_NO_MESSAGE);
     }
 
-    public boolean isOn(){
+    public boolean isOn() {
       return data == RECORD || data == RECORD_NO_MESSAGE;
     }
 
-    public boolean isOff(){
+    public boolean isOff() {
       return data == OFF;
     }
 
-    public boolean isWithMessage(){
+    public boolean isWithMessage() {
       return data == RECORD;
     }
 

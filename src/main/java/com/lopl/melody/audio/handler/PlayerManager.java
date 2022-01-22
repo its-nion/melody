@@ -1,6 +1,5 @@
 package com.lopl.melody.audio.handler;
 
-import com.lopl.melody.audio.util.BotRightsManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -22,6 +21,13 @@ public class PlayerManager {
     AudioSourceManagers.registerLocalSource(playerManager);
   }
 
+  public static synchronized PlayerManager getInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new PlayerManager();
+    }
+    return INSTANCE;
+  }
+
   public synchronized GuildAudioManager getGuildAudioManager(Guild guild) {
     long guildId = guild.getIdLong();
     GuildAudioManager musicManager = musicManagers.get(guildId);
@@ -36,16 +42,5 @@ public class PlayerManager {
 
   public void play(GuildAudioManager musicManager, AudioTrack track) {
     musicManager.scheduler.queue(track);
-//    if (!musicManager.player.isPaused()){
-//      BotRightsManager.of(musicManager.guild).requestUnmute();
-//    }
-    // TODO remove
-  }
-
-  public static synchronized PlayerManager getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new PlayerManager();
-    }
-    return INSTANCE;
   }
 }

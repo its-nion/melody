@@ -12,39 +12,39 @@ import java.nio.ByteBuffer;
  * provide20MsAudio().
  */
 public class MusicSendHandler implements AudioSendHandler {
-    private final AudioPlayer audioPlayer;
-    private AudioFrame lastFrame;
+  private final AudioPlayer audioPlayer;
+  private AudioFrame lastFrame;
 
-    /**
-     * @param audioPlayer Audio player to wrap.
-     */
-    public MusicSendHandler(AudioPlayer audioPlayer) {
-        this.audioPlayer = audioPlayer;
+  /**
+   * @param audioPlayer Audio player to wrap.
+   */
+  public MusicSendHandler(AudioPlayer audioPlayer) {
+    this.audioPlayer = audioPlayer;
+  }
+
+  @Override
+  public boolean canProvide() {
+    if (lastFrame == null) {
+      lastFrame = audioPlayer.provide();
     }
 
-    @Override
-    public boolean canProvide() {
-        if (lastFrame == null) {
-            lastFrame = audioPlayer.provide();
-        }
+    return lastFrame != null;
+  }
 
-        return lastFrame != null;
+  @Override
+  public ByteBuffer provide20MsAudio() {
+    if (lastFrame == null) {
+      lastFrame = audioPlayer.provide();
     }
 
-    @Override
-    public ByteBuffer provide20MsAudio() {
-        if (lastFrame == null) {
-            lastFrame = audioPlayer.provide();
-        }
+    ByteBuffer data = lastFrame != null ? ByteBuffer.wrap(lastFrame.getData()) : null;
+    lastFrame = null;
 
-        ByteBuffer data = lastFrame != null ? ByteBuffer.wrap(lastFrame.getData()) : null;
-        lastFrame = null;
+    return data;
+  }
 
-        return data;
-    }
-
-    @Override
-    public boolean isOpus() {
-        return true;
-    }
+  @Override
+  public boolean isOpus() {
+    return true;
+  }
 }

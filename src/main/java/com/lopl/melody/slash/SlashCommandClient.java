@@ -1,10 +1,12 @@
 package com.lopl.melody.slash;
 
+import com.lopl.melody.Melody;
+import com.lopl.melody.Token;
 import com.lopl.melody.slash.component.AnonymousComponentManager;
 import com.lopl.melody.slash.component.ButtonManager;
 import com.lopl.melody.slash.component.DropdownManager;
-import com.lopl.melody.Melody;
-import com.lopl.melody.Token;
+import com.lopl.melody.utils.Logging;
+import com.lopl.melody.utils.annotation.NoUserCommand;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
@@ -12,8 +14,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
-import com.lopl.melody.utils.Logging;
-import com.lopl.melody.utils.annotation.NoUserCommand;
 
 import javax.security.auth.login.LoginException;
 import java.util.Arrays;
@@ -26,10 +26,6 @@ public class SlashCommandClient extends ListenerAdapter {
   public DropdownManager dropdownManager;
   public AnonymousComponentManager anonymousComponentManager;
 
-  public static SlashCommandClient getInstance() {
-    return INSTANCE;
-  }
-
   SlashCommandClient(SlashCommand[] slashCommands) {
     this.slashCommands = slashCommands;
     this.buttonManager = new ButtonManager();
@@ -38,21 +34,8 @@ public class SlashCommandClient extends ListenerAdapter {
     INSTANCE = this;
   }
 
-  public SlashCommand getCommandByKeyword(String keyword) {
-    for (SlashCommand slashCommand : slashCommands) {
-      if (slashCommand.name != null && slashCommand.name.equals(keyword)) {
-        return slashCommand;
-      }
-    }
-    return null;
-  }
-
-  public SlashCommand getCommandByButton(Button button) {
-    return buttonManager.request(button);
-  }
-
-  public SlashCommand getCommandByDropdown(SelectionMenu selectionMenu){
-    return dropdownManager.request(selectionMenu);
+  public static SlashCommandClient getInstance() {
+    return INSTANCE;
   }
 
   public static void main(String[] args) throws LoginException, InterruptedException {
@@ -85,7 +68,7 @@ public class SlashCommandClient extends ListenerAdapter {
       Logging.info(getInstance().getClass(), guild, null, "Loaded " + slashCommands.length + " commands");
       Logging.debug(getInstance().getClass(), guild, null, "Commands are: " + Arrays.toString(Arrays.stream(slashCommands).map(sc -> sc.name).toArray()));
       int newIndex = index + 1;
-      if (newIndex >= guilds.length){
+      if (newIndex >= guilds.length) {
         callback.onFinish(newIndex, slashCommands.length);
         return;
       }
@@ -94,13 +77,13 @@ public class SlashCommandClient extends ListenerAdapter {
 
   }
 
-  private static void upsertCommandsRecursive(Guild guild, SlashCommand[] commands, int index, GuildCommandReload callback){
+  private static void upsertCommandsRecursive(Guild guild, SlashCommand[] commands, int index, GuildCommandReload callback) {
     SlashCommand slashCommand = commands[index];
     CommandCreateAction cca = guild.upsertCommand(slashCommand.name, slashCommand.description);
     cca = slashCommand.onUpsert(cca);
     cca.queue(c -> {
       int newIndex = index + 1;
-      if (newIndex >= commands.length){
+      if (newIndex >= commands.length) {
         callback.onFinish(newIndex);
         return;
       }
@@ -108,11 +91,28 @@ public class SlashCommandClient extends ListenerAdapter {
     });
   }
 
-  private interface GuildCommandReload{
+  public SlashCommand getCommandByKeyword(String keyword) {
+    for (SlashCommand slashCommand : slashCommands) {
+      if (slashCommand.name != null && slashCommand.name.equals(keyword)) {
+        return slashCommand;
+      }
+    }
+    return null;
+  }
+
+  public SlashCommand getCommandByButton(Button button) {
+    return buttonManager.request(button);
+  }
+
+  public SlashCommand getCommandByDropdown(SelectionMenu selectionMenu) {
+    return dropdownManager.request(selectionMenu);
+  }
+
+  private interface GuildCommandReload {
     void onFinish(int amount);
   }
 
-  private interface CommandReload{
+  private interface CommandReload {
     void onFinish(int guilds, int commands);
   }
 

@@ -1,8 +1,9 @@
 package com.lopl.melody.utils.database;
 
+import com.lopl.melody.utils.Logging;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.lopl.melody.utils.Logging;
 
 public class SQL {
 

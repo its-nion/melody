@@ -7,10 +7,10 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 public class EditPerms extends SlashCommand {
 
 
-    @Override
-    protected void execute(SlashCommandEvent event) {
+  @Override
+  protected void execute(SlashCommandEvent event) {
 
-    }
+  }
 
 //    @Override
 //    public CommandData commandInfo() {

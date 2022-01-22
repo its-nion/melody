@@ -1,8 +1,10 @@
 package com.lopl.melody.commands.essentials;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.slash.SlashCommands;
-import com.jagrosh.jdautilities.command.Command;
+import com.lopl.melody.utils.Logging;
+import com.lopl.melody.utils.annotation.NoUserCommand;
 import com.lopl.melody.utils.embed.EmbedError;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -15,8 +17,6 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
-import com.lopl.melody.utils.Logging;
-import com.lopl.melody.utils.annotation.NoUserCommand;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

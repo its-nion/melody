@@ -1,11 +1,15 @@
 package com.lopl.melody.commands.music;
 
-import com.lopl.melody.audio.util.AudioStateChecks;
+import com.jagrosh.jdautilities.command.Command.Category;
 import com.lopl.melody.audio.handler.GuildAudioManager;
 import com.lopl.melody.audio.handler.PlayerManager;
 import com.lopl.melody.audio.handler.TrackScheduler;
+import com.lopl.melody.audio.util.AudioStateChecks;
 import com.lopl.melody.slash.SlashCommand;
-import com.jagrosh.jdautilities.command.Command.Category;
+import com.lopl.melody.utils.Logging;
+import com.lopl.melody.utils.embed.EmbedColor;
+import com.lopl.melody.utils.embed.EmbedError;
+import com.lopl.melody.utils.embed.ReactionEmoji;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
@@ -17,10 +21,6 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.lopl.melody.utils.Logging;
-import com.lopl.melody.utils.embed.EmbedColor;
-import com.lopl.melody.utils.embed.EmbedError;
-import com.lopl.melody.utils.embed.ReactionEmoji;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class Queue extends SlashCommand {
   }
 
   @NotNull
-  private ActionRow getActionRow(GuildAudioManager guildAudioManager){
+  private ActionRow getActionRow(GuildAudioManager guildAudioManager) {
     ArrayList<AudioTrack> queue = guildAudioManager.scheduler.getQueue();
 
     Button bPrevious = Button.danger(QueueSkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).asDisabled();
@@ -113,7 +113,7 @@ public class Queue extends SlashCommand {
         .setDescription(getQueue(guildAudioManager)).build();
   }
 
-  private String getThumbnail(String uri){
+  private String getThumbnail(String uri) {
     // i.e. https://www.youtube.com/watch?v=dQw4w9WgXcQ
     uri = uri.replaceAll("//youtube", "//img.youtube");
     uri = uri.replaceAll("www", "img");
@@ -129,7 +129,7 @@ public class Queue extends SlashCommand {
 
     StringBuilder desc = new StringBuilder();
     AudioTrack[] tracks = guildAudioManager.scheduler.getQueue().toArray(AudioTrack[]::new);
-    for (int i = 0; i < LIST_SIZE -1; i++) {
+    for (int i = 0; i < LIST_SIZE - 1; i++) {
       if (i >= tracks.length) break;
       AudioTrack track = tracks[i];
       desc.append(ReactionEmoji.getNumberAsEmoji(i + 1)).append(" ").append(track.getInfo().title).append("\n");
@@ -151,12 +151,12 @@ public class Queue extends SlashCommand {
   protected void clicked(ButtonClickEvent event, boolean anonymous) {
     Logging.button(getClass(), event);
 
-    if (event.getGuild() == null){
+    if (event.getGuild() == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
     }
 
-    if (!AudioStateChecks.isMelodyInVC(event)){
+    if (!AudioStateChecks.isMelodyInVC(event)) {
       event.replyEmbeds(EmbedError.with("This Command requires **Melody** to be **connected to a voice channel**")).queue();
       return;
     }
@@ -170,7 +170,7 @@ public class Queue extends SlashCommand {
       return;
     }
 
-    if (event.getButton() == null || event.getButton().getId() == null || event.getButton().getEmoji() == null){
+    if (event.getButton() == null || event.getButton().getId() == null || event.getButton().getEmoji() == null) {
       event.replyEmbeds(EmbedError.with("Something is wrong with this button...")).queue();
       return;
     }
@@ -179,12 +179,15 @@ public class Queue extends SlashCommand {
     GuildAudioManager guildAudioManager = manager.getGuildAudioManager(event.getGuild());
     TrackScheduler scheduler = guildAudioManager.scheduler;
 
-    switch (event.getButton().getId()){
+    switch (event.getButton().getId()) {
       case Shuffle -> scheduler.shuffle();
       case QueueSkipForward -> new Skip().skip(event.getGuild());
-      case QueueSkipBackwards -> {} // TODO Not implemented
+      case QueueSkipBackwards -> {
+      } // TODO Not implemented
       case DeleteQueue -> scheduler.clearQueue();
-      default -> {return;}
+      default -> {
+        return;
+      }
     }
 
     // reload Message

@@ -14,11 +14,11 @@ public class ButtonManager {
     this.buttonCache = new HashMap<>();
   }
 
-  public void cache(Button button, SlashCommand slashCommand){
+  public void cache(Button button, SlashCommand slashCommand) {
     buttonCache.put(button.getId(), slashCommand);
   }
 
-  public SlashCommand request(Button button){
+  public SlashCommand request(Button button) {
     return buttonCache.getOrDefault(button.getId(), null);
   }
 }

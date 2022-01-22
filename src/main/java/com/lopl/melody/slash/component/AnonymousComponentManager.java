@@ -21,23 +21,23 @@ public class AnonymousComponentManager {
     Logging.debug(getClass(), null, null, "Cached anonymous IDs:" + Arrays.toString(loggedIds.toArray()));
   }
 
-  private void cache(List<SlashCommand> commands){
-    for (SlashCommand command : commands){
+  private void cache(List<SlashCommand> commands) {
+    for (SlashCommand command : commands) {
       List<String> ids = command.allowAnonymousComponentCall();
       if (ids == null || ids.isEmpty()) continue;
-      for (String id : ids){
+      for (String id : ids) {
         cache(id, command);
       }
     }
   }
 
-  private void cache(String id, SlashCommand slashCommand){
+  private void cache(String id, SlashCommand slashCommand) {
     if (idCache.containsKey(id))
       throw new RuntimeException("No duplicate Component ID allowed: " + id);
     idCache.put(id, slashCommand);
   }
 
-  public SlashCommand request(String component){
+  public SlashCommand request(String component) {
     return idCache.getOrDefault(component, null);
   }
 }

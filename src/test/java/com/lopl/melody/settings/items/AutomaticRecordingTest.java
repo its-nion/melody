@@ -3,8 +3,6 @@ package com.lopl.melody.settings.items;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -43,7 +41,7 @@ class AutomaticRecordingTest {
   }
 
   @Test
-  void stateOff(){
+  void stateOff() {
     AutomaticRecording.Value value = AutomaticRecording.Value.off();
     automaticRecording.updateData(value.getData());
     assertTrue(automaticRecording.getValue().isOff());
@@ -52,7 +50,7 @@ class AutomaticRecordingTest {
   }
 
   @Test
-  void stateRecord(){
+  void stateRecord() {
     AutomaticRecording.Value value = AutomaticRecording.Value.record();
     automaticRecording.updateData(value.getData());
     assertFalse(automaticRecording.getValue().isOff());
@@ -62,7 +60,7 @@ class AutomaticRecordingTest {
   }
 
   @Test
-  void stateRecordWithoutMessage(){
+  void stateRecordWithoutMessage() {
     AutomaticRecording.Value value = AutomaticRecording.Value.recordNoMessage();
     automaticRecording.updateData(value.getData());
     assertFalse(automaticRecording.getValue().isOff());
@@ -72,7 +70,7 @@ class AutomaticRecordingTest {
   }
 
   @Test
-  void stateIllegal(){
+  void stateIllegal() {
     AutomaticRecording.Value value = new AutomaticRecording.Value(0);
     automaticRecording.updateData(value.getData());
     assertSame(automaticRecording.getDefaultValue().getData(), automaticRecording.getValue().getData());

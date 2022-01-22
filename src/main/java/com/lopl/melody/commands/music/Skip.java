@@ -1,11 +1,15 @@
 package com.lopl.melody.commands.music;
 
-import com.lopl.melody.audio.util.AudioStateChecks;
+import com.jagrosh.jdautilities.command.Command.Category;
 import com.lopl.melody.audio.handler.GuildAudioManager;
 import com.lopl.melody.audio.handler.PlayerManager;
 import com.lopl.melody.audio.handler.TrackScheduler;
+import com.lopl.melody.audio.util.AudioStateChecks;
 import com.lopl.melody.slash.SlashCommand;
-import com.jagrosh.jdautilities.command.Command.Category;
+import com.lopl.melody.utils.Logging;
+import com.lopl.melody.utils.embed.EmbedColor;
+import com.lopl.melody.utils.embed.EmbedError;
+import com.lopl.melody.utils.embed.ReactionEmoji;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
@@ -19,10 +23,6 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.lopl.melody.utils.Logging;
-import com.lopl.melody.utils.embed.EmbedColor;
-import com.lopl.melody.utils.embed.EmbedError;
-import com.lopl.melody.utils.embed.ReactionEmoji;
 
 import java.util.List;
 
@@ -92,11 +92,11 @@ public class Skip extends SlashCommand {
     int amount = option == null ? 1 : (int) option.getAsLong();
     skip(guild, amount);
     event.replyEmbeds(getSkipEmbed(audioPlayer.getPlayingTrack(), guildAudioManager))
-         .addActionRows(getActionRow(guild))
-         .queue();
+        .addActionRows(getActionRow(guild))
+        .queue();
   }
 
-  private MessageEmbed getSkipEmbed(AudioTrack audioTrack, GuildAudioManager guildAudioManager){
+  private MessageEmbed getSkipEmbed(AudioTrack audioTrack, GuildAudioManager guildAudioManager) {
     if (audioTrack == null)
       return new EmbedBuilder().setDescription("No track currently playing.").build();
 
@@ -110,7 +110,7 @@ public class Skip extends SlashCommand {
     return eb.build();
   }
 
-  private String getThumbnail(String uri){
+  private String getThumbnail(String uri) {
     // i.e. https://www.youtube.com/watch?v=dQw4w9WgXcQ
     uri = uri.replaceAll("//youtube", "//img.youtube");
     uri = uri.replaceAll("www", "img");
@@ -126,7 +126,7 @@ public class Skip extends SlashCommand {
 
     StringBuilder desc = new StringBuilder();
     AudioTrack[] tracks = guildAudioManager.scheduler.getQueue().toArray(AudioTrack[]::new);
-    for (int i = 0; i < LIST_SIZE -1; i++) {
+    for (int i = 0; i < LIST_SIZE - 1; i++) {
       if (i >= tracks.length) break;
       AudioTrack track = tracks[i];
       desc.append(ReactionEmoji.getNumberAsEmoji(i + 1)).append(" ").append(track.getInfo().title).append("\n");
@@ -144,7 +144,7 @@ public class Skip extends SlashCommand {
     return desc.toString();
   }
 
-  private ActionRow getActionRow(Guild guild){
+  private ActionRow getActionRow(Guild guild) {
     PlayerManager manager = PlayerManager.getInstance();
     TrackScheduler scheduler = manager.getGuildAudioManager(guild).scheduler;
     boolean hasNextTrack = !scheduler.getQueue().isEmpty();
@@ -159,12 +159,12 @@ public class Skip extends SlashCommand {
   protected void clicked(ButtonClickEvent event, boolean anonymous) {
     Logging.button(getClass(), event);
 
-    if (event.getGuild() == null){
+    if (event.getGuild() == null) {
       event.replyEmbeds(EmbedError.with("This command can only be executed in a server textchannel")).queue();
       return;
     }
 
-    if (!AudioStateChecks.isMelodyInVC(event)){
+    if (!AudioStateChecks.isMelodyInVC(event)) {
       event.replyEmbeds(EmbedError.with("This Command requires **Melody** to be **connected to a voice channel**")).queue();
       return;
     }
@@ -178,15 +178,18 @@ public class Skip extends SlashCommand {
       return;
     }
 
-    if (event.getButton() == null || event.getButton().getId() == null || event.getButton().getEmoji() == null){
+    if (event.getButton() == null || event.getButton().getId() == null || event.getButton().getEmoji() == null) {
       event.replyEmbeds(EmbedError.with("Something is wrong with this button...")).queue();
       return;
     }
 
-    switch (event.getButton().getId()){
+    switch (event.getButton().getId()) {
       case Forwards -> new Skip().skip(event.getGuild());
-      case Backwards -> {} // TODO Not implemented
-      default -> {return;}
+      case Backwards -> {
+      } // TODO Not implemented
+      default -> {
+        return;
+      }
     }
 
     // reload Message

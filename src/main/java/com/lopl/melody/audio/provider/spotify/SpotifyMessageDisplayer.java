@@ -1,14 +1,14 @@
 package com.lopl.melody.audio.provider.spotify;
 
 import com.lopl.melody.audio.provider.TrackDataLoader;
+import com.lopl.melody.utils.StringSimilarity;
+import com.lopl.melody.utils.embed.EmbedError;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.lopl.melody.utils.StringSimilarity;
-import com.lopl.melody.utils.embed.EmbedError;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,23 +68,23 @@ public class SpotifyMessageDisplayer {
       PlaylistTrack track = tracks[i];
       eb.appendDescription(track.getTrack().getArtists()[0].getName() + " - " + track.getTrack().getName() + "\n");
     }
-    if (tracks.length >= 5){
+    if (tracks.length >= 5) {
       eb.appendDescription((tracks.length - 5) + " more");
     }
 
     // length
     eb.setFooter(
         "Songs: " + tracks.length + "\n" +
-        "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(t -> t.getTrack().getDurationMs()).sum())) + "\n" +
-        "Page: " + (index+1) + " / " + tracks.length,
+            "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(t -> t.getTrack().getDurationMs()).sum())) + "\n" +
+            "Page: " + (index + 1) + " / " + tracks.length,
 
-    // player icon
-    "https://cdn.discordapp.com/emojis/925826109650665473.png?size=96");
+        // player icon
+        "https://cdn.discordapp.com/emojis/925826109650665473.png?size=96");
 
     // show
     List<MessageEmbed> embeds = message.getEmbeds();
     ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
-    newEmbeds.set(embeds.size() -1, eb.build());
+    newEmbeds.set(embeds.size() - 1, eb.build());
     message.editMessageEmbeds(newEmbeds).queue();
   }
 
@@ -107,9 +107,9 @@ public class SpotifyMessageDisplayer {
     // page + duration
     eb.setFooter(
         "Duration: " + new SimpleDateFormat("mm:ss").format(new Date(track.getDurationMs())) + "\n" +
-            "Page: " + (index+1) + " / " + tracks.length,
+            "Page: " + (index + 1) + " / " + tracks.length,
 
-    // player icon
+        // player icon
         "https://cdn.discordapp.com/emojis/925826109650665473.png?size=96");
 
     //album
@@ -127,14 +127,14 @@ public class SpotifyMessageDisplayer {
       eb.appendDescription("Public platform: Youtube");
       List<MessageEmbed> embeds = message.getEmbeds();
       ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
-      newEmbeds.set(embeds.size() -1, eb.build());
+      newEmbeds.set(embeds.size() - 1, eb.build());
       message.editMessageEmbeds(newEmbeds).queue();
     });
 
     // show
     List<MessageEmbed> embeds = message.getEmbeds();
     ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
-    newEmbeds.set(embeds.size() -1, eb.build());
+    newEmbeds.set(embeds.size() - 1, eb.build());
     message.editMessageEmbeds(newEmbeds).queue();
   }
 

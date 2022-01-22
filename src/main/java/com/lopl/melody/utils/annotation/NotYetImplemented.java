@@ -1,4 +1,4 @@
 package com.lopl.melody.utils.annotation;
 
-public @interface NotYetImplemented{
+public @interface NotYetImplemented {
 }

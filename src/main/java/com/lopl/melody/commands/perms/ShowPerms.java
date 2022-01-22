@@ -14,9 +14,9 @@ public class ShowPerms extends SlashCommand {
 //    }
 
 
-    @Override
-    protected void execute(SlashCommandEvent event) {
+  @Override
+  protected void execute(SlashCommandEvent event) {
 
-    }
+  }
 
 }
