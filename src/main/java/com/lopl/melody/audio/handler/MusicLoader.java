@@ -1,5 +1,6 @@
 package com.lopl.melody.audio.handler;
 
+import com.lopl.melody.commands.music.Mixer;
 import com.lopl.melody.utils.Logging;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -22,13 +23,14 @@ public class MusicLoader {
 
     GuildAudioManager musicManager = player.getGuildAudioManager(channel.getGuild());
 
-    player.playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+    player.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
       @Override
       public void trackLoaded(AudioTrack track) {
         Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + track.getInfo().title + " complete");
         channel.sendMessageEmbeds(getMessage(track, musicManager)).queue();
         // Play the song
         player.play(musicManager, track);
+        new Mixer().apply(musicManager.guild);
       }
 
       @Override
@@ -88,11 +90,12 @@ public class MusicLoader {
     // load tracks
     final int[] iLoaded = {0};
     for (String trackUrl : trackUrls)
-      player.playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+      player.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
         @Override
         public void trackLoaded(AudioTrack track) {
           Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + track.getInfo().title + " in playlist " + (iLoaded[0] + 1) + "/" + trackUrls.length);
           player.play(musicManager, track);
+          new Mixer().apply(musicManager.guild);
           iLoaded[0] += 1;
 
           // update embed
@@ -130,12 +133,13 @@ public class MusicLoader {
     GuildAudioManager musicManager = player.getGuildAudioManager(channel.getGuild());
 
     // load track(s)
-    player.playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+    player.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
       @Override
       public void trackLoaded(AudioTrack track) {
         Logging.debug(getClass(), channel.getGuild(), null, "Loading of song: " + track.getInfo().title + " complete");
         channel.sendMessageEmbeds(getMessage(track, musicManager)).queue();
         player.play(musicManager, track);
+        new Mixer().apply(musicManager.guild);
       }
 
       @Override

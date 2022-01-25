@@ -28,6 +28,7 @@ public class SlashCommands {
       new Skip(),
       new Volume(),
       new Queue(),
+      new Mixer(),
 
       new Record(),
       new Clip(),

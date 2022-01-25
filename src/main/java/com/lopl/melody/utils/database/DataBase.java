@@ -32,6 +32,7 @@ public class DataBase {
   public static void createTables() {
     try (final Statement statement = getConnection().createStatement()) {
       createSettingsTable(statement);
+      createMixerTable(statement);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -53,6 +54,10 @@ public class DataBase {
     for (String necessary : wantedColumns) {
       new SQL().execute("ALTER TABLE guild_settings ADD %s TINYINT", necessary);
     }
+  }
+
+  private static void createMixerTable(Statement statement) throws SQLException{
+    statement.execute("CREATE TABLE IF NOT EXISTS guild_music_mixer(guild_id VARCHAR(20) PRIMARY KEY, lows TINYINT, mids TINYINT, highs TINYINT);");
   }
 
   @Deprecated

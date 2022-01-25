@@ -11,14 +11,14 @@ import java.util.Map;
 
 public class PlayerManager {
   private static PlayerManager INSTANCE;
-  public final AudioPlayerManager playerManager;
-  public final Map<Long, GuildAudioManager> musicManagers;
+  public final AudioPlayerManager audioPlayerManager;
+  public final Map<Long, GuildAudioManager> guildAudioManagerMap;
 
   private PlayerManager() {
-    this.musicManagers = new HashMap<>();
-    this.playerManager = new DefaultAudioPlayerManager();
-    AudioSourceManagers.registerRemoteSources(playerManager);
-    AudioSourceManagers.registerLocalSource(playerManager);
+    this.guildAudioManagerMap = new HashMap<>();
+    this.audioPlayerManager = new DefaultAudioPlayerManager();
+    AudioSourceManagers.registerRemoteSources(audioPlayerManager);
+    AudioSourceManagers.registerLocalSource(audioPlayerManager);
   }
 
   public static synchronized PlayerManager getInstance() {
@@ -30,11 +30,11 @@ public class PlayerManager {
 
   public synchronized GuildAudioManager getGuildAudioManager(Guild guild) {
     long guildId = guild.getIdLong();
-    GuildAudioManager musicManager = musicManagers.get(guildId);
+    GuildAudioManager musicManager = guildAudioManagerMap.get(guildId);
 
     if (musicManager == null) {
-      musicManager = new GuildAudioManager(guild, playerManager);
-      musicManagers.put(guildId, musicManager);
+      musicManager = new GuildAudioManager(guild, audioPlayerManager);
+      guildAudioManagerMap.put(guildId, musicManager);
     }
     guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
     return musicManager;
