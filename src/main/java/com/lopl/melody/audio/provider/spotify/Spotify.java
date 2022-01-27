@@ -1,6 +1,8 @@
 package com.lopl.melody.audio.provider.spotify;
 
 import com.lopl.melody.audio.provider.MusicDataSearcher;
+import com.lopl.melody.settings.SettingsManager;
+import com.lopl.melody.settings.items.DefaultMusicType;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.message.MessageStore;
 import com.wrapper.spotify.SpotifyApi;
@@ -32,31 +34,32 @@ public class Spotify implements MusicDataSearcher {
     String[] args = search.split(" ");
     if (args.length == 0 || args[0] == null || args[0].isEmpty()) return;
 
-    SpotifyMessage spotifyMessage = null;
-    if (checkType(args[0], "playlist", "pl", "list")) {
-      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Playlists with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
-      PlaylistSimplified[] playlists = getPlaylists(search, new String[]{"playlist", "pl", "list"});
+    SpotifyMessage spotifyMessage;
+    if (checkType(args[0], "playlist", "pl", "list", "playlists")) {
+      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Playlists with: " + removeAll(search, "playlist", "pl", "list", "playlists", "ytsearch:"));
+      PlaylistSimplified[] playlists = getPlaylists(search, "playlist", "pl", "list", "playlists");
       spotifyMessage = new SpotifyMessage(message, playlists);
-    } else if (args[0].equals("user") || args[0].equals("account")) {
-//      // USER
-//      SpotifyMessage spotifyMessage =
-//          new SpotifyMessage(message, getUserPlaylists(search.replaceAll("user ", "").replaceAll("account ", "")));
+//    } else if (args[0].equals("user") || args[0].equals("account")) {
     } else if (checkType(args[0], "tracks", "track", "song")) {
       Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
-      Track[] tracks = getTracks(search, new String[]{"tracks", "track", "song"});
+      Track[] tracks = getTracks(search, "tracks", "track", "song");
       spotifyMessage = new SpotifyMessage(message, tracks);
     } else {
-      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Tracks with: " + removeAll(search, "ytsearch:"));
-      Track[] tracks = getTracks(search, new String[0]);
-      spotifyMessage = new SpotifyMessage(message, tracks);
+      if (event.getGuild() == null) return;
+      DefaultMusicType defaultMusicType = SettingsManager.getInstance().getGuildSettings(event.getGuild()).getSetting(DefaultMusicType.class);
+      switch (defaultMusicType.getValue().getData()){
+        case DefaultMusicType.Value.PLAYLIST -> searchSpotify(event, "playlist " + search, message);
+        case DefaultMusicType.Value.TRACK -> searchSpotify(event, "track " + search, message);
+//        case DefaultMusicType.Value.USER: searchSpotify(event, "user " + search, message);
+      }
+      return;
     }
+
     MessageStore.saveMessage(spotifyMessage);
-    // show data
-    if (spotifyMessage != null)
-      spotifyMessage.show();
+    spotifyMessage.show();
   }
 
-  private static PlaylistSimplified[] getPlaylists(String name, String[] ignores) {
+  private static PlaylistSimplified[] getPlaylists(String name, String... ignores) {
     for (String ignored : ignores)
       name = name.replaceAll(ignored, "");
     try {
@@ -70,7 +73,7 @@ public class Spotify implements MusicDataSearcher {
     return null;
   }
 
-  private static Track[] getTracks(String name, String[] ignores) {
+  private static Track[] getTracks(String name, String... ignores) {
     name = removeAll(name, ignores);
     try {
       return spotifyApi.searchItem(name, ModelObjectType.TRACK.getType())

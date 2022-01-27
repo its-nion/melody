@@ -2,13 +2,12 @@ package com.lopl.melody.audio.provider.youtube;
 
 import com.lopl.melody.audio.provider.MusicDataSearcher;
 import com.lopl.melody.audio.provider.spotify.Spotify;
-import com.lopl.melody.audio.provider.spotify.SpotifyMessage;
+import com.lopl.melody.settings.SettingsManager;
+import com.lopl.melody.settings.items.DefaultMusicType;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.message.MessageStore;
 import com.sedmelluq.discord.lavaplayer.source.youtube.*;
 import com.sedmelluq.discord.lavaplayer.track.*;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
-import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.NotNull;
@@ -24,31 +23,32 @@ public class Youtube implements MusicDataSearcher {
     String[] args = search.split(" ");
     if (args.length == 0 || args[0] == null || args[0].isEmpty()) return;
 
-    YoutubeMessage youtubeMessage = null;
-    if (checkType(args[0], "playlist", "pl", "list")) {
-      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Youtube for Playlists with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
-      AudioPlaylist[] playlists = getPlaylists(search, new String[]{"playlist", "pl", "list"});
+    YoutubeMessage youtubeMessage;
+    if (checkType(args[0], "playlist", "pl", "list", "playlists")) {
+      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Youtube for Playlists with: " + removeAll(search, "playlist", "pl", "list", "playlists", "ytsearch:"));
+      AudioPlaylist[] playlists = getPlaylists(search, "playlist", "pl", "list", "playlists");
       youtubeMessage = new YoutubeMessage(message, playlists);
-    } else if (args[0].equals("user") || args[0].equals("account")) {
-//      // USER
-//      SpotifyMessage spotifyMessage =
-//          new SpotifyMessage(message, getUserPlaylists(search.replaceAll("user ", "").replaceAll("account ", "")));
+//    } else if (args[0].equals("user") || args[0].equals("account")) {
     } else if (checkType(args[0], "tracks", "track", "song")) {
       Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Youtube for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
-      AudioTrack[] tracks = getTracks(search, new String[]{"tracks", "track", "song"});
+      AudioTrack[] tracks = getTracks(search, "tracks", "track", "song");
       youtubeMessage = new YoutubeMessage(message, tracks);
     } else {
-      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Youtube for Tracks with: " + removeAll(search, "ytsearch:"));
-      AudioTrack[] tracks = getTracks(search, new String[0]);
-      youtubeMessage = new YoutubeMessage(message, tracks);
+      if (event.getGuild() == null) return;
+      DefaultMusicType defaultMusicType = SettingsManager.getInstance().getGuildSettings(event.getGuild()).getSetting(DefaultMusicType.class);
+      switch (defaultMusicType.getValue().getData()){
+        case DefaultMusicType.Value.PLAYLIST -> searchYoutube(event, "playlist " + search, message);
+        case DefaultMusicType.Value.TRACK -> searchYoutube(event, "track " + search, message);
+//        case DefaultMusicType.Value.USER: searchYoutube(event, "user " + search, message);
+      }
+      return;
     }
 
     MessageStore.saveMessage(youtubeMessage);
-    if (youtubeMessage != null)
-      youtubeMessage.show();
+    youtubeMessage.show();
   }
 
-  private static AudioTrack[] getTracks(String name, String[] ignores) {
+  private static AudioTrack[] getTracks(String name, String... ignores) {
     for (String ignored : ignores)
       name = name.replaceAll(ignored, "");
 
@@ -61,7 +61,7 @@ public class Youtube implements MusicDataSearcher {
     return null;
   }
 
-  public static AudioPlaylist[] getPlaylists(String name, String[] ignores){
+  public static AudioPlaylist[] getPlaylists(String name, String... ignores){
     for (String ignored : ignores)
       name = name.replaceAll(ignored, "");
 
