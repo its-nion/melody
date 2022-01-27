@@ -15,6 +15,8 @@ public class ReactionEmoji {
   public static final String CHECKMARK = "U+2705";
   public static final String YOUTUBE = "<:youtube:925827032485621791>";
   public static final String SPOTIFY = "<:spotify:925826109650665473>";
+  public static final String YOUTUBE_LINK = "https://cdn.discordapp.com/emojis/925827032485621791.png?size=96";
+  public static final String SPOTIFY_LINK = "https://cdn.discordapp.com/emojis/925826109650665473.png?size=96";
 
   public static final String ONE = "U+0031";
   public static final String TWO = "U+0032";

@@ -292,7 +292,7 @@ public class Play extends SlashCommand {
         queries.add(search);
       }
       Logging.info(getClass(), event.getGuild(), event.getMember(), "Finding " + queries.size() + " Tracks on Youtube");
-      new MusicLoader().loadMultiple(event.getTextChannel(), spotifyMessage.getCurrentPlaylist(), queries.toArray(String[]::new));
+      new MusicLoader().loadMultiple(event.getTextChannel(), spotifyMessage.getCurrentPlaylist().getName(), queries.toArray(String[]::new));
     } else {
       //SINGLE
       Track track = spotifyMessage.getCurrentTrack();
@@ -308,19 +308,16 @@ public class Play extends SlashCommand {
       new Join().connect(guild, event.getMember(), event.getTextChannel());
 
     if (youtubeMessage.tracks == null) {
-      throw new UnsupportedOperationException();
       //PLAYLIST
-//      List<String> queries = new ArrayList<>();
-//      PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(youtubeMessage.getCurrentPlaylist().getId());
-//      int maxLoadCount = 100;
-//      for (int i = 0; i < tracks.length && i < maxLoadCount; i++) {
-//        String artist = tracks[i].getTrack().getArtists()[0].getName();
-//        String title = tracks[i].getTrack().getName();
-//        String search = "ytsearch:" + artist + "-" + title;
-//        queries.add(search);
-//      }
-//      Logging.info(getClass(), event.getGuild(), event.getMember(),  "Finding " + queries.size() + " Tracks on Youtube");
-//      new MusicLoader().loadMultiple(event.getTextChannel(), youtubeMessage.getCurrentPlaylist(), queries.toArray(String[]::new));
+      List<String> queries = new ArrayList<>();
+      AudioTrack[] tracks = youtubeMessage.getCurrentPlaylist().getTracks().toArray(new AudioTrack[0]);
+      int maxLoadCount = 100;
+      for (int i = 0; i < tracks.length && i < maxLoadCount; i++) {
+        String search = tracks[i].getInfo().uri;
+        queries.add(search);
+      }
+      Logging.info(getClass(), event.getGuild(), event.getMember(),  "Finding " + queries.size() + " Tracks on Youtube");
+      new MusicLoader().loadMultiple(event.getTextChannel(), youtubeMessage.getCurrentPlaylist().getName(), queries.toArray(String[]::new));
     } else {
       //SINGLE
       AudioTrack track = youtubeMessage.getCurrentTrack();

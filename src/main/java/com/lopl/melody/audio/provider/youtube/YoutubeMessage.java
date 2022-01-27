@@ -1,22 +1,21 @@
 package com.lopl.melody.audio.provider.youtube;
 
-import com.lopl.melody.utils.annotation.NotYetImplemented;
 import com.lopl.melody.utils.message.SavedMessage;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 
 public class YoutubeMessage extends SavedMessage {
 
-  public PlaylistSimplified[] playlists;
+  public AudioPlaylist[] playlists;
   public AudioTrack[] tracks;
 
   protected int index;
 
-  @NotYetImplemented
-  public YoutubeMessage(Message message, PlaylistSimplified[] playlists) {
+  public YoutubeMessage(Message message, AudioPlaylist[] playlists) {
     super(message);
+    this.playlists = playlists;
     this.index = 0;
   }
 
@@ -26,8 +25,7 @@ public class YoutubeMessage extends SavedMessage {
     this.index = 0;
   }
 
-  @NotYetImplemented
-  public PlaylistSimplified[] getPlaylists() {
+  public AudioPlaylist[] getPlaylists() {
     return playlists;
   }
 
@@ -39,8 +37,7 @@ public class YoutubeMessage extends SavedMessage {
     return tracks[index];
   }
 
-  @NotYetImplemented
-  public PlaylistSimplified getCurrentPlaylist() {
+  public AudioPlaylist getCurrentPlaylist() {
     return playlists[index];
   }
 

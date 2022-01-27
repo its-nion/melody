@@ -3,6 +3,7 @@ package com.lopl.melody.audio.provider.spotify;
 import com.lopl.melody.audio.provider.TrackDataLoader;
 import com.lopl.melody.utils.StringSimilarity;
 import com.lopl.melody.utils.embed.EmbedError;
+import com.lopl.melody.utils.embed.ReactionEmoji;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
@@ -76,10 +77,10 @@ public class SpotifyMessageDisplayer {
     eb.setFooter(
         "Songs: " + tracks.length + "\n" +
             "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(t -> t.getTrack().getDurationMs()).sum())) + "\n" +
-            "Page: " + (index + 1) + " / " + tracks.length,
+            "Page: " + (index + 1) + " / " + playlists.length,
 
         // player icon
-        "https://cdn.discordapp.com/emojis/925826109650665473.png?size=96");
+        ReactionEmoji.SPOTIFY_LINK);
 
     // show
     List<MessageEmbed> embeds = message.getEmbeds();
@@ -110,7 +111,7 @@ public class SpotifyMessageDisplayer {
             "Page: " + (index + 1) + " / " + tracks.length,
 
         // player icon
-        "https://cdn.discordapp.com/emojis/925826109650665473.png?size=96");
+        ReactionEmoji.SPOTIFY_LINK);
 
     //album
     eb.appendDescription("Album: " + track.getAlbum().getName() + "\n");

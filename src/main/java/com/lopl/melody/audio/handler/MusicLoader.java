@@ -65,7 +65,7 @@ public class MusicLoader {
     });
   }
 
-  public void loadMultiple(TextChannel channel, PlaylistSimplified playlist, String... trackUrls) {
+  public void loadMultiple(TextChannel channel, String name, String... trackUrls) {
     // capture data
     PlayerManager player = PlayerManager.getInstance();
     GuildAudioManager musicManager = player.getGuildAudioManager(channel.getGuild());
@@ -80,7 +80,7 @@ public class MusicLoader {
     // build embed
     EmbedBuilder embedBuilder = new EmbedBuilder()
         .setAuthor("Playlist added to queue!")
-        .setTitle(playlist.getName())
+        .setTitle(name)
         .setDescription(
             "0 / " + trackUrls.length + " tracks loaded\n" +
                 "Position in queue: " + positionInQueue + " \n" +

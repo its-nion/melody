@@ -34,7 +34,7 @@ public class Spotify implements MusicDataSearcher {
 
     SpotifyMessage spotifyMessage = null;
     if (checkType(args[0], "playlist", "pl", "list")) {
-      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
+      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Playlists with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
       PlaylistSimplified[] playlists = getPlaylists(search, new String[]{"playlist", "pl", "list"});
       spotifyMessage = new SpotifyMessage(message, playlists);
     } else if (args[0].equals("user") || args[0].equals("account")) {

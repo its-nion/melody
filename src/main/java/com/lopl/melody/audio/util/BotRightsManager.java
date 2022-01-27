@@ -82,7 +82,7 @@ public class BotRightsManager extends ListenerAdapter {
   public void onGuildVoiceMute(@NotNull GuildVoiceMuteEvent event) {
     if (event.getMember().getIdLong() == event.getGuild().getSelfMember().getIdLong()) {
       boolean nowMuted = event.isMuted();
-      Logging.debug(getClass(), event.getGuild(), null, nowMuted ? "I am now muted" : "I am now longer muted!");
+      Logging.debug(getClass(), event.getGuild(), null, nowMuted ? "I am now muted" : "I am no longer muted!");
     }
   }
 
@@ -90,7 +90,7 @@ public class BotRightsManager extends ListenerAdapter {
   public void onGuildVoiceDeafen(@NotNull GuildVoiceDeafenEvent event) {
     if (event.getMember().getIdLong() == event.getGuild().getSelfMember().getIdLong()) {
       boolean nowMuted = event.isDeafened();
-      Logging.debug(getClass(), event.getGuild(), null, nowMuted ? "I am now deafened" : "I am now longer deafened!");
+      Logging.debug(getClass(), event.getGuild(), null, nowMuted ? "I am now deafened" : "I am no longer deafened!");
     }
   }
 
@@ -132,6 +132,7 @@ public class BotRightsManager extends ListenerAdapter {
       AudioPlayer player = PlayerManager.getInstance().getGuildAudioManager(guild).player;
       if (!player.isPaused() || player.getPlayingTrack() != null)
         Logging.debug(getClass(), guild, null, "Muted bot while it should play music. This is not good.");
+      //TODO: this message is send when it should not
 
       // execute
       return setMute(true);
