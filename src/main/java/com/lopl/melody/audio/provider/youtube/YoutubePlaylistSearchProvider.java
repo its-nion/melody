@@ -16,7 +16,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +24,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -52,7 +50,7 @@ public class YoutubePlaylistSearchProvider implements YoutubeSearchResultLoader 
       HttpInterface httpInterface = this.httpInterfaceManager.getInterface();
       Throwable var4 = null;
 
-      AudioItem var9;
+      AudioItem audioItem;
       try {
         URI url = new URIBuilder("https://www.youtube.com/results")
             .addParameter("search_query", query)
@@ -66,7 +64,7 @@ public class YoutubePlaylistSearchProvider implements YoutubeSearchResultLoader 
         try {
           HttpClientTools.assertSuccessWithContent(response, "search response");
           Document document = Jsoup.parse(response.getEntity().getContent(), StandardCharsets.UTF_8.name(), "");
-          var9 = this.extractSearchResults(document, query, trackFactory);
+          audioItem = this.extractSearchResults(document, query, trackFactory);
         } catch (Throwable var34) {
           var7 = var34;
           throw var34;
@@ -101,54 +99,20 @@ public class YoutubePlaylistSearchProvider implements YoutubeSearchResultLoader 
         }
 
       }
-
-      return var9;
+      return audioItem;
     } catch (Exception var38) {
       throw ExceptionTools.wrapUnfriendlyExceptions(var38);
     }
   }
 
   private AudioItem extractSearchResults(Document document, String query, Function<AudioTrackInfo, AudioTrack> trackFactory) {
-    List<AudioTrack> tracks = new ArrayList();
-    Elements resultsSelection = document.select("#page > #content #results");
-    if (!resultsSelection.isEmpty()) {
-      Iterator var6 = resultsSelection.iterator();
-
-      while (var6.hasNext()) {
-        Element results = (Element) var6.next();
-        Iterator var8 = results.select(".yt-lockup-video").iterator();
-
-        while (var8.hasNext()) {
-          Element result = (Element) var8.next();
-          if (!result.hasAttr("data-ad-impressions") && result.select(".standalone-ypc-badge-renderer-label").isEmpty()) {
-            this.extractTrackFromResultEntry((List) tracks, result, trackFactory);
-          }
-        }
-      }
-    } else {
-      log.debug("Attempting to parse results page as polymer");
-
-      try {
-        tracks = this.polymerExtractTracks(document, trackFactory);
-      } catch (IOException var10) {
-        throw new RuntimeException(var10);
-      }
+    List<AudioTrack> tracks;
+    try {
+      tracks = this.polymerExtractTracks(document, trackFactory);
+    } catch (IOException var10) {
+      return null;
     }
-
     return tracks.isEmpty() ? AudioReference.NO_TRACK : new BasicAudioPlaylist("Search results for: " + query, tracks, null, true);
-  }
-
-  private void extractTrackFromResultEntry(List<AudioTrack> tracks, Element element, Function<AudioTrackInfo, AudioTrack> trackFactory) {
-    Element durationElement = element.select("[class^=video-time]").first();
-    Element contentElement = element.select(".yt-lockup-content").first();
-    String videoId = element.attr("data-context-item-id");
-    if (durationElement != null && contentElement != null && !videoId.isEmpty()) {
-      long duration = DataFormatTools.durationTextToMillis(durationElement.text());
-      String title = contentElement.select(".yt-lockup-title > a").text();
-      String author = contentElement.select(".yt-lockup-byline > a").text();
-      AudioTrackInfo info = new AudioTrackInfo(title, author, duration, videoId, false, "https://www.youtube.com/watch?v=" + videoId);
-      tracks.add(trackFactory.apply(info));
-    }
   }
 
   private List<AudioTrack> polymerExtractTracks(Document document, Function<AudioTrackInfo, AudioTrack> trackFactory) throws IOException {
@@ -158,14 +122,13 @@ public class YoutubePlaylistSearchProvider implements YoutubeSearchResultLoader 
       return Collections.emptyList();
     } else {
       JsonBrowser jsonBrowser = JsonBrowser.parse(matcher.group(2));
-      ArrayList<AudioTrack> list = new ArrayList();
+      ArrayList<AudioTrack> list = new ArrayList<>();
       List<JsonBrowser> contents = jsonBrowser.get("contents").get("twoColumnSearchResultsRenderer").get("primaryContents").get("sectionListRenderer").get("contents").index(0).get("itemSectionRenderer").get("contents").values();
       contents.forEach((json) -> {
         AudioTrack track = this.extractPolymerData(json, trackFactory);
         if (track != null) {
           list.add(track);
         }
-
       });
       return list;
     }
@@ -182,7 +145,7 @@ public class YoutubePlaylistSearchProvider implements YoutubeSearchResultLoader 
       int songs = Integer.parseInt(songCount);
       String plId = renderer.get("playlistId").text();
       String videoId = renderer.get("navigationEndpoint").get("watchEndpoint").get("videoId").text();
-      AudioTrackInfo info = new AudioTrackInfo(title, author, songs, plId, false, "https://www.youtube.com/watch?v=" + videoId + "&list=" + plId);
+      AudioTrackInfo info = new AudioTrackInfo(title, author, songs, plId, false, WATCH_URL_PREFIX + videoId + "&list=" + plId);
       return trackFactory.apply(info);
     }
   }

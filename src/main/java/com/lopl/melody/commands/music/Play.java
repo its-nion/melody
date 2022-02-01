@@ -307,7 +307,7 @@ public class Play extends SlashCommand {
     if (!audio.isConnected())
       new Join().connect(guild, event.getMember(), event.getTextChannel());
 
-    if (youtubeMessage.tracks == null) {
+    if (youtubeMessage.getTracks() == null) {
       //PLAYLIST
       List<String> queries = new ArrayList<>();
       AudioTrack[] tracks = youtubeMessage.getCurrentPlaylist().getTracks().toArray(new AudioTrack[0]);

@@ -8,14 +8,22 @@ import net.dv8tion.jda.api.entities.Message;
 
 public class YoutubeMessage extends SavedMessage {
 
-  public AudioPlaylist[] playlists;
-  public AudioTrack[] tracks;
+  protected AudioPlaylist[] playlists;
+  protected AudioTrack[] tracks;
+  protected String userName;
 
   protected int index;
 
   public YoutubeMessage(Message message, AudioPlaylist[] playlists) {
     super(message);
     this.playlists = playlists;
+    this.index = 0;
+  }
+
+  public YoutubeMessage(Message message, AudioPlaylist[] playlists, String userName) {
+    super(message);
+    this.playlists = playlists;
+    this.userName = userName;
     this.index = 0;
   }
 
@@ -39,6 +47,10 @@ public class YoutubeMessage extends SavedMessage {
 
   public AudioPlaylist getCurrentPlaylist() {
     return playlists[index];
+  }
+
+  public String getUserName() {
+    return userName;
   }
 
   public int getIndex() {

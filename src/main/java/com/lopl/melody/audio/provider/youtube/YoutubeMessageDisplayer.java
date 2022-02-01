@@ -22,10 +22,10 @@ public class YoutubeMessageDisplayer {
   private final AudioTrack[] tracks;
   private final AudioPlaylist[] playlists;
 
-  public YoutubeMessageDisplayer(YoutubeMessage spotifyMessage) {
-    this.youtubeMessage = spotifyMessage;
-    this.tracks = spotifyMessage.tracks;
-    this.playlists = spotifyMessage.playlists;
+  public YoutubeMessageDisplayer(YoutubeMessage youtubeMessage) {
+    this.youtubeMessage = youtubeMessage;
+    this.tracks = youtubeMessage.tracks;
+    this.playlists = youtubeMessage.playlists;
   }
 
   private Message getMessage() {
@@ -55,7 +55,7 @@ public class YoutubeMessageDisplayer {
     EmbedBuilder eb = new EmbedBuilder();
 
     // author
-//    eb.setAuthor(playlists[index].().getDisplayName());
+    if (youtubeMessage.getUserName() != null) eb.setAuthor("Playlist from " + youtubeMessage.getUserName());
 
     // title
     eb.setTitle(playlist.getName());
@@ -77,7 +77,7 @@ public class YoutubeMessageDisplayer {
 
     // footer
     eb.setFooter(
-        "Songs: " + playlists.length + "\n" +
+        "Songs: " + playlist.getTracks().size() + "\n" +
             "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(t -> (int) t.getDuration()).sum())) + "\n" +
             "Page: " + (index + 1) + " / " + playlists.length,
 

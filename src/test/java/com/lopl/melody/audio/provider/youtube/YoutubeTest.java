@@ -9,7 +9,16 @@ class YoutubeTest {
 
   @Test
   void testPlaylistSearcher(){
-    AudioPlaylist[] playlists = Youtube.getPlaylists("Songs 2018", new String[0]);
+    AudioPlaylist[] playlists = new Youtube().searchPlaylists("Songs 2018");
+    assertNotNull(playlists);
+    assertNotEquals(playlists.length, 0);
+  }
+
+  @Test
+  void testUserSearcher(){
+    AudioPlaylist[] playlists = new Youtube().searchUser("Daft Punk");
+    String user = new Youtube().searchUserName("Daft Punk");
+    assertNotNull(user);
     assertNotNull(playlists);
     assertNotEquals(playlists.length, 0);
   }
