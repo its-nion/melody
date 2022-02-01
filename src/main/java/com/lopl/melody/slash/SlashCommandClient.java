@@ -22,10 +22,10 @@ import java.util.Arrays;
 public class SlashCommandClient extends ListenerAdapter {
   public static SlashCommandClient INSTANCE;
 
-  public SlashCommand[] slashCommands;
-  public ButtonManager buttonManager;
-  public DropdownManager dropdownManager;
-  public AnonymousComponentManager anonymousComponentManager;
+  public final SlashCommand[] slashCommands;
+  public final ButtonManager buttonManager;
+  public final DropdownManager dropdownManager;
+  public final AnonymousComponentManager anonymousComponentManager;
 
   SlashCommandClient(SlashCommand[] slashCommands) {
     this.slashCommands = slashCommands;
@@ -38,21 +38,6 @@ public class SlashCommandClient extends ListenerAdapter {
   public static SlashCommandClient getInstance() {
     return INSTANCE;
   }
-
-  public void start(){
-    Arrays.stream(slashCommands).forEach(SlashCommand::onBotStart);
-  }
-
-  public void ready(JDA jda){
-    Arrays.stream(slashCommands).forEach(sc -> sc.onJDAReady(jda));
-  }
-
-
-  /////////////////////////////////////////////////////////////
-  //                       UPSERTER                          //
-  /////////////////////////////////////////////////////////////
-
-
 
   public static void main(String[] args) throws LoginException, InterruptedException {
     JDABuilder builder = JDABuilder.createDefault(Token.BOT_TOKEN);
@@ -75,6 +60,11 @@ public class SlashCommandClient extends ListenerAdapter {
       Logging.info(getInstance().getClass(), null, null, "Reloading " + g + " guilds finished");
     });
   }
+
+
+  /////////////////////////////////////////////////////////////
+  //                       UPSERTER                          //
+  /////////////////////////////////////////////////////////////
 
   public static void upsertGuildRecursive(Guild[] guilds, SlashCommand[] slashCommands, int index, CommandReload callback) {
     Guild guild = guilds[index];
@@ -105,6 +95,14 @@ public class SlashCommandClient extends ListenerAdapter {
       }
       upsertCommandsRecursive(guild, commands, newIndex, callback);
     });
+  }
+
+  public void start() {
+    Arrays.stream(slashCommands).forEach(SlashCommand::onBotStart);
+  }
+
+  public void ready(JDA jda) {
+    Arrays.stream(slashCommands).forEach(sc -> sc.onJDAReady(jda));
   }
 
   public SlashCommand getCommandByKeyword(String keyword) {

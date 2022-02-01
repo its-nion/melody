@@ -130,9 +130,8 @@ public class BotRightsManager extends ListenerAdapter {
     public GuildRightsHolder requestMute() {
       // detect bad request
       AudioPlayer player = PlayerManager.getInstance().getGuildAudioManager(guild).player;
-      if (!player.isPaused() || player.getPlayingTrack() != null)
+      if (!player.isPaused() && player.getPlayingTrack() != null)
         Logging.debug(getClass(), guild, null, "Muted bot while it should play music. This is not good.");
-      //TODO: this message is send when it should not
 
       // execute
       return setMute(true);

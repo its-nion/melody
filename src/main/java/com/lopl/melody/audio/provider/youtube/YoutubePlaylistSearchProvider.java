@@ -2,7 +2,6 @@ package com.lopl.melody.audio.provider.youtube;
 
 import com.sedmelluq.discord.lavaplayer.source.youtube.BaseYoutubeHttpContextFilter;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchResultLoader;
-import com.sedmelluq.discord.lavaplayer.tools.DataFormatTools;
 import com.sedmelluq.discord.lavaplayer.tools.ExceptionTools;
 import com.sedmelluq.discord.lavaplayer.tools.JsonBrowser;
 import com.sedmelluq.discord.lavaplayer.tools.http.ExtendedHttpConfigurable;
@@ -15,7 +14,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

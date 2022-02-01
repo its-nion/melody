@@ -31,7 +31,6 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
-import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
 import javax.annotation.Nonnull;
@@ -316,7 +315,7 @@ public class Play extends SlashCommand {
         String search = tracks[i].getInfo().uri;
         queries.add(search);
       }
-      Logging.info(getClass(), event.getGuild(), event.getMember(),  "Finding " + queries.size() + " Tracks on Youtube");
+      Logging.info(getClass(), event.getGuild(), event.getMember(), "Finding " + queries.size() + " Tracks on Youtube");
       new MusicLoader().loadMultiple(event.getTextChannel(), youtubeMessage.getCurrentPlaylist().getName(), queries.toArray(String[]::new));
     } else {
       //SINGLE
@@ -356,7 +355,7 @@ public class Play extends SlashCommand {
       return ret.toString();
     }
 
-    public MusicDataSearcher getProvider() {
+    public MusicDataSearcher<?,?,?,?> getProvider() {
       if (this == SPOTIFY) return new Spotify();
       if (this == YOUTUBE) return new Youtube();
       else return new Spotify(); // <- default

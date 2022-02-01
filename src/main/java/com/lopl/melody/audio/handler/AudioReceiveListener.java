@@ -19,13 +19,13 @@ public class AudioReceiveListener implements AudioReceiveHandler {
   private final double volume;
   private final VoiceChannel voiceChannel;
   public boolean canReceive = true;
-  public byte[] uncompVoiceData = new byte[(int) (3840 * 50 * 60 * PCM_MINS)]; //3840bytes/array * 50arrays/sec * 60sec = 1 mins
+  public final byte[] uncompVoiceData = new byte[(int) (3840 * 50 * 60 * PCM_MINS)]; //3840bytes/array * 50arrays/sec * 60sec = 1 mins
   public int uncompIndex = 0;
   public byte[] compVoiceData = new byte[(int) (1024 * 1024 * STARTING_MB)];    //start with 0.5 MB
   public int compIndex = 0;
   public boolean overwriting = false;
 
-  public byte[] uncompUserVoiceData = new byte[(int) (3840 * 50 * 60 * PCM_MINS)]; //3840bytes/array * 50arrays/sec * 60sec = 1 mins
+  public final byte[] uncompUserVoiceData = new byte[(int) (3840 * 50 * 60 * PCM_MINS)]; //3840bytes/array * 50arrays/sec * 60sec = 1 mins
   public int uncompUserIndex = 0;
   public byte[] compUserVoiceData = new byte[(int) (1024 * 1024 * STARTING_MB)];    //start with 0.5 MB
   public int compUserIndex = 0;

@@ -44,6 +44,7 @@ public class AudioSendMultiplexer implements AudioSendHandler {
     public MultiplexMode mode = MultiplexMode.None;
     public AudioSendHandler[] handlers;
     float blendBalance;
+
     private SendMultiplex() {
     }
 

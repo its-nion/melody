@@ -3,8 +3,6 @@ package com.lopl.melody.slash;
 
 import com.lopl.melody.commands.essentials.*;
 import com.lopl.melody.commands.music.*;
-import com.lopl.melody.commands.perms.EditPerms;
-import com.lopl.melody.commands.perms.ShowPerms;
 import com.lopl.melody.commands.record.Clip;
 import com.lopl.melody.commands.record.Record;
 
@@ -31,11 +29,7 @@ public class SlashCommands {
       new Mixer(),
 
       new Record(),
-      new Clip(),
-
-      new ShowPerms(),
-      new EditPerms()
-
+      new Clip()
   );
 
   public static Collection<SlashCommand> getCommands() {

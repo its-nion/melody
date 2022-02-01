@@ -1,7 +1,5 @@
 package com.lopl.melody.audio.handler;
 
-import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
-import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
@@ -47,7 +45,7 @@ public class GuildAudioManager {
     return new AudioSendMultiplexer(/*ttsEngine,*/ new MusicSendHandler(player));
   }
 
-  public MixerEqualizer getMixer(){
+  public MixerEqualizer getMixer() {
     if (!mixer.isSetup()) {
       mixer.setup(player);
       mixer.load(guild);

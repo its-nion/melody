@@ -9,8 +9,8 @@ import java.util.List;
 
 public class SlashCommandClientBuilder {
 
-  public List<SlashCommand> commands;
-  public List<SlashCommand> eventListenerCommands;
+  public final List<SlashCommand> commands;
+  public final List<SlashCommand> eventListenerCommands;
 
   public SlashCommandClientBuilder() {
     commands = new ArrayList<>();

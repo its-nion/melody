@@ -101,7 +101,10 @@ public class Queue extends SlashCommand {
   private MessageEmbed getQueueEmbed(GuildAudioManager guildAudioManager) {
     TrackScheduler scheduler = guildAudioManager.scheduler;
     AudioPlayer player = guildAudioManager.player;
-    AudioTrackInfo trackInfo = player.getPlayingTrack().getInfo();
+    AudioTrack audioTrack = player.getPlayingTrack();
+    if (audioTrack == null)
+      return EmbedError.with("There is **nothing playing**. Use /play to add songs");
+    AudioTrackInfo trackInfo = audioTrack.getInfo();
     if (scheduler.getQueue().isEmpty())
       return EmbedError.with("There is **no queue**. Use /play to add songs");
     return new EmbedBuilder()

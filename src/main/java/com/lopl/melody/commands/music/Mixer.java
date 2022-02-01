@@ -97,11 +97,12 @@ public class Mixer extends SlashCommand {
     String band = selectedS.split("_")[0];
     String valueS = selectedS.split("_")[1];
     int value = Integer.parseInt(valueS);
-    switch (band){
+    switch (band) {
       case "low" -> mixer.setLows(value);
       case "mid" -> mixer.setMids(value);
       case "high" -> mixer.setHighs(value);
-      default -> {}
+      default -> {
+      }
     }
     mixer.save(event.getGuild());
     Logging.info(getClass(), event.getGuild(), null, "Set mixer to " + mixer.toString());
@@ -110,7 +111,7 @@ public class Mixer extends SlashCommand {
     event.editComponents(getMixerDropdowns(mixer)).queue();
   }
 
-  private MessageEmbed getMixerEmbed(MixerEqualizer mixer){
+  private MessageEmbed getMixerEmbed(MixerEqualizer mixer) {
     EmbedBuilder builder = new EmbedBuilder();
     builder.setAuthor("Mixer:");
     builder.addField("Lows", "```" + mixer.getLows() + "```", true);
@@ -120,7 +121,7 @@ public class Mixer extends SlashCommand {
     return builder.build();
   }
 
-  private List<ActionRow> getMixerDropdowns(MixerEqualizer mixer){
+  private List<ActionRow> getMixerDropdowns(MixerEqualizer mixer) {
     SelectionMenu lowMenu = SelectionMenu.create(DROPDOWN_LOW).setPlaceholder("LOWS")
         .addOptions(mixer.getRange().stream().map(v ->
             SelectOption.of((v > 0 ? "+" : "") + v, "low_" + v)
@@ -139,13 +140,13 @@ public class Mixer extends SlashCommand {
     return List.of(ActionRow.of(lowMenu), ActionRow.of(midMenu), ActionRow.of(highMenu));
   }
 
-  private void reset(MixerEqualizer mixer){
+  private void reset(MixerEqualizer mixer) {
     mixer.setLows(0);
     mixer.setMids(0);
     mixer.setHighs(0);
   }
 
-  public void apply(Guild guild){
+  public void apply(Guild guild) {
     PlayerManager playerManager = PlayerManager.getInstance();
     GuildAudioManager guildAudioManager = playerManager.getGuildAudioManager(guild);
     MixerEqualizer mixer = guildAudioManager.getMixer();

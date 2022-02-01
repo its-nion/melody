@@ -31,15 +31,15 @@ import java.util.regex.Pattern;
 public class YoutubeUserSearchProvider implements YoutubeSearchResultLoader {
   private static final Logger log = LoggerFactory.getLogger(com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider.class);
   private static final String WATCH_URL_PREFIX = "https://www.youtube.com/watch?v=";
+  private static final HashMap<String, String> channelNames = new HashMap<>();
   private final HttpInterfaceManager httpInterfaceManager = HttpClientTools.createCookielessThreadLocalManager();
   private final Pattern polymerInitialDataRegex = Pattern.compile("(window\\[\"ytInitialData\"]|var ytInitialData)\\s*=\\s*(.*);");
-  private static final HashMap<String, String> channelNames = new HashMap<>();
 
   public YoutubeUserSearchProvider() {
     this.httpInterfaceManager.setHttpContextFilter(new BaseYoutubeHttpContextFilter());
   }
 
-  public static String getChannelName(String query){
+  public static String getChannelName(String query) {
     if (channelNames.containsKey(query)) return channelNames.get(query);
     new Youtube().searchUser(query);
     return channelNames.get(query);

@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 
 
 public class Info extends SlashCommand {
@@ -39,7 +38,7 @@ public class Info extends SlashCommand {
 
   }
 
-  public String getInviteLink(JDA jda){
+  public String getInviteLink(JDA jda) {
     return jda.getInviteUrl(
         Permission.MESSAGE_READ,
         Permission.VIEW_CHANNEL,

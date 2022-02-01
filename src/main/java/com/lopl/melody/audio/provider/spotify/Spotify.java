@@ -23,6 +23,46 @@ public class Spotify implements MusicDataSearcher<Track, PlaylistSimplified, Alb
   public static final SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).setRefreshToken(refreshToken).build();
   private static final AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
 
+  public static Track[] getPlaylistsTracks(String simpleTrackID) {
+    try {
+      PlaylistTrack[] tracks = spotifyApi.getPlaylistsItems(simpleTrackID).build().execute().getItems();
+      List<Track> ret = new ArrayList<>();
+      for (PlaylistTrack pt : tracks) {
+        ret.add(spotifyApi.getTrack(pt.getTrack().getId()).build().execute());
+      }
+      return ret.toArray(Track[]::new);
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public static Track[] getAlbumTracks(String simpleTrackID) {
+    try {
+      TrackSimplified[] tracks = spotifyApi.getAlbumsTracks(simpleTrackID).build().execute().getItems();
+      List<Track> ret = new ArrayList<>();
+      for (TrackSimplified pt : tracks) {
+        ret.add(spotifyApi.getTrack(pt.getId()).build().execute());
+      }
+      return ret.toArray(Track[]::new);
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public static void authorizationCodeRefresh_Sync() {
+    try {
+      final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
+
+      // Set access and refresh token for further "spotifyApi" object usage
+      spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+      spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
+
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Override
   public PlaylistSimplified[] searchPlaylists(@NotNull String name) {
@@ -60,7 +100,7 @@ public class Spotify implements MusicDataSearcher<Track, PlaylistSimplified, Alb
       // refresh Spotify
       authorizationCodeRefresh_Sync();
 
-      Paging<Artist> artistResult =  spotifyApi.searchArtists(search).build().execute();
+      Paging<Artist> artistResult = spotifyApi.searchArtists(search).build().execute();
       Artist artist = artistResult.getItems()[0];
       return spotifyApi.getArtistsAlbums(artist.getId()).build().execute().getItems();
     } catch (IOException | SpotifyWebApiException | ParseException e) {
@@ -102,47 +142,6 @@ public class Spotify implements MusicDataSearcher<Track, PlaylistSimplified, Alb
     SpotifyMessage spotifyMessage = new SpotifyMessage(message, tracks);
     MessageStore.saveMessage(spotifyMessage);
     spotifyMessage.show();
-  }
-
-  public static Track[] getPlaylistsTracks(String simpleTrackID) {
-    try {
-      PlaylistTrack[] tracks = spotifyApi.getPlaylistsItems(simpleTrackID).build().execute().getItems();
-      List<Track> ret = new ArrayList<>();
-      for (PlaylistTrack pt : tracks){
-        ret.add(spotifyApi.getTrack(pt.getTrack().getId()).build().execute());
-      }
-      return ret.toArray(Track[]::new);
-    } catch (IOException | SpotifyWebApiException | ParseException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  public static Track[] getAlbumTracks(String simpleTrackID) {
-    try {
-      TrackSimplified[] tracks = spotifyApi.getAlbumsTracks(simpleTrackID).build().execute().getItems();
-      List<Track> ret = new ArrayList<>();
-      for (TrackSimplified pt : tracks){
-        ret.add(spotifyApi.getTrack(pt.getId()).build().execute());
-      }
-      return ret.toArray(Track[]::new);
-    } catch (IOException | SpotifyWebApiException | ParseException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  public static void authorizationCodeRefresh_Sync() {
-    try {
-      final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
-
-      // Set access and refresh token for further "spotifyApi" object usage
-      spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-      spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
-
-    } catch (IOException | SpotifyWebApiException | ParseException e) {
-      e.printStackTrace();
-    }
   }
 
 }

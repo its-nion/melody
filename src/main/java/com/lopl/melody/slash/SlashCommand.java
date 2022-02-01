@@ -35,11 +35,11 @@ public abstract class SlashCommand {
     return cca;
   }
 
-  protected void onBotStart(){
+  protected void onBotStart() {
 
   }
 
-  protected void onJDAReady(JDA jda){
+  protected void onJDAReady(JDA jda) {
 
   }
 

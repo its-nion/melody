@@ -3,7 +3,9 @@ package com.lopl.melody.audio.provider.spotify;
 import com.lopl.melody.utils.message.SavedMessage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import se.michaelthelin.spotify.model_objects.specification.*;
+import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
+import se.michaelthelin.spotify.model_objects.specification.PlaylistSimplified;
+import se.michaelthelin.spotify.model_objects.specification.Track;
 
 public class SpotifyMessage extends SavedMessage {
 
@@ -51,7 +53,7 @@ public class SpotifyMessage extends SavedMessage {
     return playlists[index];
   }
 
-  public AlbumSimplified getCurrentAlbum(){
+  public AlbumSimplified getCurrentAlbum() {
     return albums[index];
   }
 

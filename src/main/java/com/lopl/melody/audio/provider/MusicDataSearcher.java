@@ -1,17 +1,27 @@
 package com.lopl.melody.audio.provider;
 
 import com.lopl.melody.audio.provider.spotify.Spotify;
-import com.lopl.melody.audio.provider.youtube.YoutubeMessage;
 import com.lopl.melody.settings.SettingsManager;
 import com.lopl.melody.settings.items.DefaultMusicType;
 import com.lopl.melody.utils.Logging;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.NotNull;
 
 public interface MusicDataSearcher<T, P, A, U> {
+
+  private static boolean checkType(String check, String... keywords) {
+    for (String key : keywords) {
+      if (check.equals(key)) return true;
+    }
+    return false;
+  }
+
+  private static String removeAll(String word, String... ignores) {
+    for (String ignored : ignores)
+      word = word.replaceAll(ignored, "");
+    return word.strip();
+  }
 
   default void search(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
     String[] args = search.split(" ");
@@ -25,7 +35,7 @@ public interface MusicDataSearcher<T, P, A, U> {
       Logging.debug(Spotify.class, event.getGuild(), null, "Searching on " + getClass().getSimpleName() + " for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
       T[] tracks = searchTracks(removeAll(search, "tracks", "track", "song"));
       onTrackSearch(tracks, message);
-    } else if (checkType(args[0], "user", "artist", "interpret", "account")){
+    } else if (checkType(args[0], "user", "artist", "interpret", "account")) {
       Logging.debug(Spotify.class, event.getGuild(), null, "Searching on " + getClass().getSimpleName() + " for Users with: " + removeAll(search, "user", "artist", "interpret", "account", "ytsearch:"));
       A[] playlists = searchUser(removeAll(search, "user", "artist", "interpret", "account"));
       U userName = searchUserName(removeAll(search, "user", "artist", "interpret", "account"));
@@ -39,19 +49,6 @@ public interface MusicDataSearcher<T, P, A, U> {
         case DefaultMusicType.Value.USER -> search(event, "user " + search, message);
       }
     }
-  }
-
-  private static boolean checkType(String check, String... keywords) {
-    for (String key : keywords) {
-      if (check.equals(key)) return true;
-    }
-    return false;
-  }
-
-  private static String removeAll(String word, String... ignores) {
-    for (String ignored : ignores)
-      word = word.replaceAll(ignored, "");
-    return word.strip();
   }
 
   T[] searchTracks(@NotNull String search);

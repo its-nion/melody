@@ -56,7 +56,7 @@ public class DataBase {
     }
   }
 
-  private static void createMixerTable(Statement statement) throws SQLException{
+  private static void createMixerTable(Statement statement) throws SQLException {
     statement.execute("CREATE TABLE IF NOT EXISTS guild_music_mixer(guild_id VARCHAR(20) PRIMARY KEY, lows TINYINT, mids TINYINT, highs TINYINT);");
   }
 

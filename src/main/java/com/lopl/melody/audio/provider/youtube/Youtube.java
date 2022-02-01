@@ -24,16 +24,16 @@ public class Youtube implements MusicDataSearcher<AudioTrack, AudioPlaylist, Aud
   }
 
   @Override
-  public AudioPlaylist[] searchPlaylists(@NotNull String name){
+  public AudioPlaylist[] searchPlaylists(@NotNull String name) {
     YoutubeAudioSourceManager yasm = new YoutubeAudioSourceManager(true, new DefaultYoutubeTrackDetailsLoader(), new YoutubePlaylistSearchProvider(), new YoutubeSearchMusicProvider(), new YoutubeSignatureCipherManager(), new DefaultYoutubePlaylistLoader(), new DefaultYoutubeLinkRouter(), new YoutubeMixProvider());
     AudioItem result = yasm.loadItem(null, new AudioReference("ytsearch:" + name, null));
     if (result instanceof AudioPlaylist) {
       BasicAudioPlaylist resultPlaylist = (BasicAudioPlaylist) result;
       List<AudioTrack> pls = resultPlaylist.getTracks();
       List<AudioPlaylist> playlists = new ArrayList<>();
-      for (AudioTrack audioTrack : pls){
+      for (AudioTrack audioTrack : pls) {
         AudioItem pl = yasm.loadItem(null, new AudioReference(audioTrack.getInfo().uri, null));
-        if (pl instanceof AudioPlaylist){
+        if (pl instanceof AudioPlaylist) {
           AudioPlaylist apl = (AudioPlaylist) pl;
           playlists.add(apl);
         }
@@ -44,16 +44,16 @@ public class Youtube implements MusicDataSearcher<AudioTrack, AudioPlaylist, Aud
   }
 
   @Override
-  public AudioPlaylist[] searchUser(@NotNull String name){
+  public AudioPlaylist[] searchUser(@NotNull String name) {
     YoutubeAudioSourceManager yasm = new YoutubeAudioSourceManager(true, new DefaultYoutubeTrackDetailsLoader(), new YoutubeUserSearchProvider(), new YoutubeSearchMusicProvider(), new YoutubeSignatureCipherManager(), new DefaultYoutubePlaylistLoader(), new DefaultYoutubeLinkRouter(), new YoutubeMixProvider());
     AudioItem result = yasm.loadItem(null, new AudioReference("ytsearch:" + name, null));
     if (result instanceof AudioPlaylist) {
       BasicAudioPlaylist resultPlaylist = (BasicAudioPlaylist) result;
       List<AudioTrack> pls = resultPlaylist.getTracks();
       List<AudioPlaylist> playlists = new ArrayList<>();
-      for (AudioTrack audioTrack : pls){
+      for (AudioTrack audioTrack : pls) {
         AudioItem pl = yasm.loadItem(null, new AudioReference(audioTrack.getInfo().uri, null));
-        if (pl instanceof AudioPlaylist){
+        if (pl instanceof AudioPlaylist) {
           AudioPlaylist apl = (AudioPlaylist) pl;
           playlists.add(apl);
         }
@@ -65,6 +65,7 @@ public class Youtube implements MusicDataSearcher<AudioTrack, AudioPlaylist, Aud
 
   /**
    * It is way more efficient to call searchUser before calling searchUserName
+   *
    * @param search the search term
    * @return cached userName or a new request
    */

@@ -62,7 +62,12 @@ class DefaultMusicTypeTest {
 
   @Test
   void stateUser() {
-    //TODO provide user feature
+    DefaultMusicType.Value value = DefaultMusicType.Value.user();
+    defaultMusicType.updateData(value.getData());
+    assertFalse(defaultMusicType.getValue().isTrack());
+    assertFalse(defaultMusicType.getValue().isPlaylist());
+    assertTrue(defaultMusicType.getValue().isUser());
+    assertEquals(value.getValueRepresentation(), defaultMusicType.getValue().getValueRepresentation());
 
   }
 
