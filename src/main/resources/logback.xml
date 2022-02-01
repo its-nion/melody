@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!--Disable the next lines to re-activate all logs-->
-    <logger name="net.dv8tion.jda" level="ERROR"/>
-    <logger name="com.sedmelluq" level="ERROR"/>
-    <logger name="com.zaxxer.hikari" level="ERROR"/>
+    <logger name="net.dv8tion.jda" level="ERROR" />
+    <logger name="com.sedmelluq" level="WARN" />
+    <logger name="org.apache" level="WARN" />
+    <logger name="se.michaelthelin" level="WARN" />
+    <logger name="com.zaxxer.hikari" level="ERROR" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

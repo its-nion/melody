@@ -1,11 +1,9 @@
 package com.lopl.melody.audio.provider.youtube;
 
-import com.lopl.melody.utils.annotation.NotYetImplemented;
 import com.lopl.melody.utils.embed.EmbedError;
 import com.lopl.melody.utils.embed.ReactionEmoji;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;

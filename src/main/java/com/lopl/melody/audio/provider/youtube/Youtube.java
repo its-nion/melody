@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Youtube implements MusicDataSearcher<AudioTrack, AudioPlaylist, String> {
+public class Youtube implements MusicDataSearcher<AudioTrack, AudioPlaylist, AudioPlaylist, String> {
 
   @Override
   public AudioTrack[] searchTracks(@NotNull String name) {

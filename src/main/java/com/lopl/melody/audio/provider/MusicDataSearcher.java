@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.NotNull;
 
-public interface MusicDataSearcher<T, P, U> {
+public interface MusicDataSearcher<T, P, A, U> {
 
   default void search(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
     String[] args = search.split(" ");
@@ -27,7 +27,7 @@ public interface MusicDataSearcher<T, P, U> {
       onTrackSearch(tracks, message);
     } else if (checkType(args[0], "user", "artist", "interpret", "account")){
       Logging.debug(Spotify.class, event.getGuild(), null, "Searching on " + getClass().getSimpleName() + " for Users with: " + removeAll(search, "user", "artist", "interpret", "account", "ytsearch:"));
-      P[] playlists = searchUser(removeAll(search, "user", "artist", "interpret", "account"));
+      A[] playlists = searchUser(removeAll(search, "user", "artist", "interpret", "account"));
       U userName = searchUserName(removeAll(search, "user", "artist", "interpret", "account"));
       onUserSearch(playlists, userName, message);
     } else {
@@ -58,11 +58,11 @@ public interface MusicDataSearcher<T, P, U> {
 
   P[] searchPlaylists(@NotNull String search);
 
-  P[] searchUser(@NotNull String search);
+  A[] searchUser(@NotNull String search);
 
   U searchUserName(@NotNull String search);
 
-  void onUserSearch(P[] playlists, U userName, Message message);
+  void onUserSearch(A[] playlists, U userName, Message message);
 
   void onPlaylistSearch(P[] playlists, Message message);
 

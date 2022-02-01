@@ -18,8 +18,6 @@ import com.lopl.melody.utils.embed.ReactionEmoji;
 import com.lopl.melody.utils.message.MessageStore;
 import com.lopl.melody.utils.message.SavedMessage;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
-import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
@@ -33,6 +31,8 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
+import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
+import se.michaelthelin.spotify.model_objects.specification.Track;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
@@ -283,11 +283,11 @@ public class Play extends SlashCommand {
     if (spotifyMessage.tracks == null) {
       //PLAYLIST
       List<String> queries = new ArrayList<>();
-      PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(spotifyMessage.getCurrentPlaylist().getId());
+      Track[] tracks = Spotify.getPlaylistsTracks(spotifyMessage.getCurrentPlaylist().getId());
       int maxLoadCount = 100;
       for (int i = 0; i < tracks.length && i < maxLoadCount; i++) {
-        String artist = tracks[i].getTrack().getArtists()[0].getName();
-        String title = tracks[i].getTrack().getName();
+        String artist = tracks[i].getArtists()[0].getName();
+        String title = tracks[i].getName();
         String search = "ytsearch:" + artist + "-" + title;
         queries.add(search);
       }

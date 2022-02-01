@@ -4,12 +4,13 @@ import com.lopl.melody.audio.provider.TrackDataLoader;
 import com.lopl.melody.utils.StringSimilarity;
 import com.lopl.melody.utils.embed.EmbedError;
 import com.lopl.melody.utils.embed.ReactionEmoji;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
-import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
-import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
+import se.michaelthelin.spotify.model_objects.specification.Playlist;
+import se.michaelthelin.spotify.model_objects.specification.PlaylistSimplified;
+import se.michaelthelin.spotify.model_objects.specification.Track;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,13 +21,9 @@ import java.util.List;
 public class SpotifyMessageDisplayer {
 
   private final SpotifyMessage spotifyMessage;
-  private final Track[] tracks;
-  private final PlaylistSimplified[] playlists;
 
   public SpotifyMessageDisplayer(SpotifyMessage spotifyMessage) {
     this.spotifyMessage = spotifyMessage;
-    this.tracks = spotifyMessage.tracks;
-    this.playlists = spotifyMessage.playlists;
   }
 
   private Message getMessage() {
@@ -35,11 +32,14 @@ public class SpotifyMessageDisplayer {
 
   public void show() {
     int index = spotifyMessage.index;
-    if (tracks != null) {
-      if (tracks.length != 0) showTrack(index);
+    if (spotifyMessage.tracks != null) {
+      if (spotifyMessage.tracks.length != 0) showTrack(index);
       else showNoResults();
-    } else if (playlists != null) {
-      if (playlists.length != 0) showPlaylist(index);
+    } else if (spotifyMessage.playlists != null) {
+      if (spotifyMessage.playlists.length != 0) showPlaylist(index);
+      else showNoResults();
+    } else if (spotifyMessage.albums != null) {
+      if (spotifyMessage.albums.length != 0) showAlbum(index);
       else showNoResults();
     }
   }
@@ -47,27 +47,27 @@ public class SpotifyMessageDisplayer {
 
   private void showPlaylist(int index) {
     Message message = getMessage();
-    PlaylistSimplified playlist = playlists[index];
+    PlaylistSimplified playlist = spotifyMessage.playlists[index];
     message.clearReactions().queue();
     EmbedBuilder eb = new EmbedBuilder();
 
     // author
-    eb.setAuthor(playlists[index].getOwner().getDisplayName());
+    eb.setAuthor(playlist.getOwner().getDisplayName());
 
     // title
-    eb.setTitle(playlists[index].getName());
+    eb.setTitle(playlist.getName());
 
     // image
-    if (playlists[index].getImages().length != 0)
-      eb.setThumbnail(playlists[index].getImages()[0].getUrl());
+    if (playlist.getImages().length != 0)
+      eb.setThumbnail(playlist.getImages()[0].getUrl());
 
     // content
     eb.appendDescription("**Tracks:**\n");
-    PlaylistTrack[] tracks = Spotify.getPlaylistsTracks(playlist.getId());
+    Track[] tracks = Spotify.getPlaylistsTracks(playlist.getId());
     for (int i = 0; i < 5; i++) {
       if (i >= tracks.length) break;
-      PlaylistTrack track = tracks[i];
-      eb.appendDescription(track.getTrack().getArtists()[0].getName() + " - " + track.getTrack().getName() + "\n");
+      Track track = tracks[i];
+      eb.appendDescription(track.getArtists()[0].getName() + " - " + track.getName() + "\n");
     }
     if (tracks.length >= 5) {
       eb.appendDescription((tracks.length - 5) + " more");
@@ -76,8 +76,8 @@ public class SpotifyMessageDisplayer {
     // length
     eb.setFooter(
         "Songs: " + tracks.length + "\n" +
-            "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(t -> t.getTrack().getDurationMs()).sum())) + "\n" +
-            "Page: " + (index + 1) + " / " + playlists.length,
+            "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(Track::getDurationMs).sum())) + "\n" +
+            "Page: " + (index + 1) + " / " + spotifyMessage.playlists.length,
 
         // player icon
         ReactionEmoji.SPOTIFY_LINK);
@@ -91,7 +91,7 @@ public class SpotifyMessageDisplayer {
 
   private void showTrack(int index) {
     Message message = getMessage();
-    Track track = tracks[index];
+    Track track = spotifyMessage.tracks[index];
     message.clearReactions().queue();
     EmbedBuilder eb = new EmbedBuilder();
 
@@ -108,7 +108,7 @@ public class SpotifyMessageDisplayer {
     // page + duration
     eb.setFooter(
         "Duration: " + new SimpleDateFormat("mm:ss").format(new Date(track.getDurationMs())) + "\n" +
-            "Page: " + (index + 1) + " / " + tracks.length,
+            "Page: " + (index + 1) + " / " + spotifyMessage.tracks.length,
 
         // player icon
         ReactionEmoji.SPOTIFY_LINK);
@@ -131,6 +131,50 @@ public class SpotifyMessageDisplayer {
       newEmbeds.set(embeds.size() - 1, eb.build());
       message.editMessageEmbeds(newEmbeds).queue();
     });
+
+    // show
+    List<MessageEmbed> embeds = message.getEmbeds();
+    ArrayList<MessageEmbed> newEmbeds = newArrayList(embeds);
+    newEmbeds.set(embeds.size() - 1, eb.build());
+    message.editMessageEmbeds(newEmbeds).queue();
+  }
+
+  private void showAlbum(int index) {
+    Message message = getMessage();
+    AlbumSimplified album = spotifyMessage.albums[index];
+    message.clearReactions().queue();
+    EmbedBuilder eb = new EmbedBuilder();
+
+    // author
+    eb.setAuthor("Playlist from " + album.getArtists()[0].getName());
+
+    // title
+    eb.setTitle(album.getName());
+
+    // image
+    if (album.getImages().length != 0)
+      eb.setThumbnail(album.getImages()[0].getUrl());
+
+    // content
+    eb.appendDescription("**Tracks:**\n");
+    Track[] tracks = Spotify.getAlbumTracks(album.getId());
+    for (int i = 0; i < 5; i++) {
+      if (i >= tracks.length) break;
+      Track track = tracks[i];
+      eb.appendDescription(track.getArtists()[0].getName() + " - " + track.getName() + "\n");
+    }
+    if (tracks.length >= 5) {
+      eb.appendDescription((tracks.length - 5) + " more");
+    }
+
+    // length
+    eb.setFooter(
+        "Songs: " + tracks.length + "\n" +
+            "Duration: " + new SimpleDateFormat("hh:mm:ss").format(new Date(Arrays.stream(tracks).mapToInt(Track::getDurationMs).sum())) + "\n" +
+            "Page: " + (index + 1) + " / " + spotifyMessage.albums.length,
+
+        // player icon
+        ReactionEmoji.SPOTIFY_LINK);
 
     // show
     List<MessageEmbed> embeds = message.getEmbeds();

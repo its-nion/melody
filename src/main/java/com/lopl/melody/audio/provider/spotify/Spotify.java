@@ -1,122 +1,135 @@
 package com.lopl.melody.audio.provider.spotify;
 
 import com.lopl.melody.audio.provider.MusicDataSearcher;
-import com.lopl.melody.settings.SettingsManager;
-import com.lopl.melody.settings.items.DefaultMusicType;
-import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.message.MessageStore;
-import com.wrapper.spotify.SpotifyApi;
-import com.wrapper.spotify.enums.ModelObjectType;
-import com.wrapper.spotify.exceptions.SpotifyWebApiException;
-import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
-import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
-import com.wrapper.spotify.model_objects.specification.Track;
-import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.apache.hc.core5.http.ParseException;
 import org.jetbrains.annotations.NotNull;
+import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.enums.ModelObjectType;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
+import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.model_objects.specification.*;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.lopl.melody.Token.*;
 
-public class Spotify implements MusicDataSearcher {
+public class Spotify implements MusicDataSearcher<Track, PlaylistSimplified, AlbumSimplified, String> {
 
   public static final SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).setRefreshToken(refreshToken).build();
   private static final AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
 
-  public static void searchSpotify(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
-    // refresh Spotify
-    authorizationCodeRefresh_Sync();
-    Logging.debug(Spotify.class, event.getGuild(), null, "Spotify Re-Loaded");
 
-    String[] args = search.split(" ");
-    if (args.length == 0 || args[0] == null || args[0].isEmpty()) return;
+  @Override
+  public PlaylistSimplified[] searchPlaylists(@NotNull String name) {
+    try {
+      // refresh Spotify
+      authorizationCodeRefresh_Sync();
 
-    SpotifyMessage spotifyMessage;
-    if (checkType(args[0], "playlist", "pl", "list", "playlists")) {
-      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Playlists with: " + removeAll(search, "playlist", "pl", "list", "playlists", "ytsearch:"));
-      PlaylistSimplified[] playlists = getPlaylists(search, "playlist", "pl", "list", "playlists");
-      spotifyMessage = new SpotifyMessage(message, playlists);
-//    } else if (args[0].equals("user") || args[0].equals("account")) {
-    } else if (checkType(args[0], "tracks", "track", "song")) {
-      Logging.debug(Spotify.class, event.getGuild(), null, "Searching on Spotify for Tracks with: " + removeAll(search, "tracks", "track", "song", "ytsearch:"));
-      Track[] tracks = getTracks(search, "tracks", "track", "song");
-      spotifyMessage = new SpotifyMessage(message, tracks);
-    } else {
-      if (event.getGuild() == null) return;
-      DefaultMusicType defaultMusicType = SettingsManager.getInstance().getGuildSettings(event.getGuild()).getSetting(DefaultMusicType.class);
-      switch (defaultMusicType.getValue().getData()){
-        case DefaultMusicType.Value.PLAYLIST -> searchSpotify(event, "playlist " + search, message);
-        case DefaultMusicType.Value.TRACK -> searchSpotify(event, "track " + search, message);
-//        case DefaultMusicType.Value.USER: searchSpotify(event, "user " + search, message);
-      }
-      return;
+      return spotifyApi.searchItem(name, ModelObjectType.PLAYLIST.getType())
+          .build().execute()
+          .getPlaylists().getItems();
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
+      e.printStackTrace();
     }
+    return null;
+  }
 
+  @Override
+  public Track[] searchTracks(@NotNull String name) {
+    try {
+      // refresh Spotify
+      authorizationCodeRefresh_Sync();
+
+      return spotifyApi.searchItem(name, ModelObjectType.TRACK.getType())
+          .build().execute()
+          .getTracks().getItems();
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  @Override
+  public AlbumSimplified[] searchUser(@NotNull String search) {
+    try {
+      // refresh Spotify
+      authorizationCodeRefresh_Sync();
+
+      Paging<Artist> artistResult =  spotifyApi.searchArtists(search).build().execute();
+      Artist artist = artistResult.getItems()[0];
+      return spotifyApi.getArtistsAlbums(artist.getId()).build().execute().getItems();
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  @Override
+  public String searchUserName(@NotNull String search) {
+    try {
+      // refresh Spotify
+      authorizationCodeRefresh_Sync();
+
+      Paging<Artist> artistResult = spotifyApi.searchArtists(search).build().execute();
+      return artistResult.getItems()[0].getName();
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  @Override
+  public void onUserSearch(AlbumSimplified[] playlists, String userName, Message message) {
+    SpotifyMessage spotifyMessage = new SpotifyMessage(message, playlists);
     MessageStore.saveMessage(spotifyMessage);
     spotifyMessage.show();
   }
 
-  private static PlaylistSimplified[] getPlaylists(String name, String... ignores) {
-    for (String ignored : ignores)
-      name = name.replaceAll(ignored, "");
-    try {
-      return spotifyApi.searchItem(name, ModelObjectType.PLAYLIST.getType())
-          .build().execute()
-          .getPlaylists().getItems();
+  @Override
+  public void onPlaylistSearch(PlaylistSimplified[] playlists, Message message) {
+    SpotifyMessage spotifyMessage = new SpotifyMessage(message, playlists);
+    MessageStore.saveMessage(spotifyMessage);
+    spotifyMessage.show();
+  }
 
-    } catch (IOException | SpotifyWebApiException e) {
+  @Override
+  public void onTrackSearch(Track[] tracks, Message message) {
+    SpotifyMessage spotifyMessage = new SpotifyMessage(message, tracks);
+    MessageStore.saveMessage(spotifyMessage);
+    spotifyMessage.show();
+  }
+
+  public static Track[] getPlaylistsTracks(String simpleTrackID) {
+    try {
+      PlaylistTrack[] tracks = spotifyApi.getPlaylistsItems(simpleTrackID).build().execute().getItems();
+      List<Track> ret = new ArrayList<>();
+      for (PlaylistTrack pt : tracks){
+        ret.add(spotifyApi.getTrack(pt.getTrack().getId()).build().execute());
+      }
+      return ret.toArray(Track[]::new);
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
       e.printStackTrace();
     }
     return null;
   }
 
-  private static Track[] getTracks(String name, String... ignores) {
-    name = removeAll(name, ignores);
+  public static Track[] getAlbumTracks(String simpleTrackID) {
     try {
-      return spotifyApi.searchItem(name, ModelObjectType.TRACK.getType())
-          .build().execute()
-          .getTracks().getItems();
-    } catch (IOException | SpotifyWebApiException e) {
+      TrackSimplified[] tracks = spotifyApi.getAlbumsTracks(simpleTrackID).build().execute().getItems();
+      List<Track> ret = new ArrayList<>();
+      for (TrackSimplified pt : tracks){
+        ret.add(spotifyApi.getTrack(pt.getId()).build().execute());
+      }
+      return ret.toArray(Track[]::new);
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
       e.printStackTrace();
     }
     return null;
-  }
-
-  private static PlaylistSimplified[] getUserPlaylists(String id) {
-    try {
-      return spotifyApi.getListOfUsersPlaylists(id).build().execute().getItems();
-
-    } catch (IOException | SpotifyWebApiException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  public static PlaylistTrack[] getPlaylistsTracks(String simpleTrackID) {
-    try {
-      return spotifyApi.getPlaylistsTracks(simpleTrackID)
-          .build().execute()
-          .getItems();
-    } catch (IOException | SpotifyWebApiException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  private static boolean checkType(String check, String... keywords) {
-    for (String key : keywords) {
-      if (check.equals(key)) return true;
-    }
-    return false;
-  }
-
-  private static String removeAll(String word, String... ignores) {
-    for (String ignored : ignores)
-      word = word.replaceAll(ignored, "");
-    return word.strip();
   }
 
   public static void authorizationCodeRefresh_Sync() {
@@ -127,14 +140,9 @@ public class Spotify implements MusicDataSearcher {
       spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
       spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
-    } catch (IOException | SpotifyWebApiException e) {
-      System.out.println("Error: " + e.getMessage());
+    } catch (IOException | SpotifyWebApiException | ParseException e) {
+      e.printStackTrace();
     }
-  }
-
-  @Override
-  public void search(@NotNull SlashCommandEvent event, @NotNull String search, Message message) {
-    searchSpotify(event, search, message);
   }
 
 }

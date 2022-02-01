@@ -1,15 +1,15 @@
 package com.lopl.melody.audio.provider.spotify;
 
 import com.lopl.melody.utils.message.SavedMessage;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
-import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import se.michaelthelin.spotify.model_objects.specification.*;
 
 public class SpotifyMessage extends SavedMessage {
 
   public PlaylistSimplified[] playlists;
   public Track[] tracks;
+  public AlbumSimplified[] albums;
 
   protected int index;
 
@@ -25,6 +25,12 @@ public class SpotifyMessage extends SavedMessage {
     this.index = 0;
   }
 
+  public SpotifyMessage(Message message, AlbumSimplified[] albums) {
+    super(message);
+    this.albums = albums;
+    this.index = 0;
+  }
+
   public PlaylistSimplified[] getPlaylists() {
     return playlists;
   }
@@ -33,12 +39,20 @@ public class SpotifyMessage extends SavedMessage {
     return tracks;
   }
 
+  public AlbumSimplified[] getAlbums() {
+    return albums;
+  }
+
   public Track getCurrentTrack() {
     return tracks[index];
   }
 
   public PlaylistSimplified getCurrentPlaylist() {
     return playlists[index];
+  }
+
+  public AlbumSimplified getCurrentAlbum(){
+    return albums[index];
   }
 
   public int getIndex() {
@@ -58,6 +72,8 @@ public class SpotifyMessage extends SavedMessage {
       return playlists.length;
     else if (tracks != null)
       return tracks.length;
+    else if (albums != null)
+      return albums.length;
     return 0;
   }
 
@@ -84,6 +100,8 @@ public class SpotifyMessage extends SavedMessage {
       return index < tracks.length - 1;
     else if (playlists != null)
       return index < playlists.length - 1;
+    else if (albums != null)
+      return index < albums.length - 1;
     else
       return false;
   }
