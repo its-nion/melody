@@ -7,6 +7,7 @@ import com.lopl.melody.slash.component.ButtonManager;
 import com.lopl.melody.slash.component.DropdownManager;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.annotation.NoUserCommand;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
@@ -37,6 +38,21 @@ public class SlashCommandClient extends ListenerAdapter {
   public static SlashCommandClient getInstance() {
     return INSTANCE;
   }
+
+  public void start(){
+    Arrays.stream(slashCommands).forEach(SlashCommand::onBotStart);
+  }
+
+  public void ready(JDA jda){
+    Arrays.stream(slashCommands).forEach(sc -> sc.onJDAReady(jda));
+  }
+
+
+  /////////////////////////////////////////////////////////////
+  //                       UPSERTER                          //
+  /////////////////////////////////////////////////////////////
+
+
 
   public static void main(String[] args) throws LoginException, InterruptedException {
     JDABuilder builder = JDABuilder.createDefault(Token.BOT_TOKEN);

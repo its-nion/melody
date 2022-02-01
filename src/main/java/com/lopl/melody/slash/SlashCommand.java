@@ -1,6 +1,7 @@
 package com.lopl.melody.slash;
 
 import com.jagrosh.jdautilities.command.Command.Category;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -33,6 +34,15 @@ public abstract class SlashCommand {
   protected CommandCreateAction onUpsert(CommandCreateAction cca) {
     return cca;
   }
+
+  protected void onBotStart(){
+
+  }
+
+  protected void onJDAReady(JDA jda){
+
+  }
+
 
   /**
    * This will fire whenever a user enters a slash command in a guild textchannel.

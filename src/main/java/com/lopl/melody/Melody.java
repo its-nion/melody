@@ -39,10 +39,13 @@ public class Melody {
     slashCommandClientBuilder.addCommands(SlashCommands.getCommands().toArray(SlashCommand[]::new));
     slashCommandClientBuilder.addEventListeners(builder, SlashCommands.getCommands().toArray(SlashCommand[]::new));
     SlashCommandClient slashCommandClient = slashCommandClientBuilder.build();
+    slashCommandClient.start();
+
     builder.addEventListeners(new SlashCommandHandler(), slashCommandClient);
     builder.addEventListeners(new BotRightsManager());
 
     Melody.manager = builder.build();
+    slashCommandClient.ready(Melody.manager);
     Melody.manager.awaitReady();
   }
 }
