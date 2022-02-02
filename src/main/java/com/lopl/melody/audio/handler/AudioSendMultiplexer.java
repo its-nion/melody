@@ -31,7 +31,7 @@ public class AudioSendMultiplexer implements AudioSendHandler {
   @Nullable
   @Override
   public ByteBuffer provide20MsAudio() {
-    return currentProvider.provide20MsAudio();
+    return currentProvider.provide20MsAudio(); //TODO: NPE
   }
 
   @Override

@@ -148,8 +148,9 @@ public class Skip extends SlashCommand {
     PlayerManager manager = PlayerManager.getInstance();
     TrackScheduler scheduler = manager.getGuildAudioManager(guild).scheduler;
     boolean hasNextTrack = !scheduler.getQueue().isEmpty();
+    boolean hasPrevTrack = !scheduler.getHistory().isEmpty();
 
-    Button bPrevious = Button.danger(Backwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).asDisabled();
+    Button bPrevious = Button.secondary(Backwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(!hasPrevTrack);
     Button bSkip = Button.secondary(Forwards, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
 
     return ActionRow.of(bPrevious, bSkip);
@@ -185,8 +186,7 @@ public class Skip extends SlashCommand {
 
     switch (event.getButton().getId()) {
       case Forwards -> new Skip().skip(event.getGuild());
-      case Backwards -> {
-      } // TODO Not implemented
+      case Backwards -> new Skip().skipBackwards(event.getGuild());
       default -> {
         return;
       }
@@ -216,5 +216,11 @@ public class Skip extends SlashCommand {
     if (amountLeft == 0) return true;
     if (!skip(guild)) return false;
     return skip(guild, amountLeft - 1);
+  }
+
+  public boolean skipBackwards(Guild guild) {
+    PlayerManager manager = PlayerManager.getInstance();
+    TrackScheduler scheduler = manager.getGuildAudioManager(guild).scheduler;
+    return scheduler.previousTrack();
   }
 }

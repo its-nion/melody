@@ -100,10 +100,11 @@ public class Player extends SlashCommand {
     if (playing != null) isPlaying = playing;
     boolean hasTrack = player.getPlayingTrack() != null;
     boolean hasNextTrack = !scheduler.getQueue().isEmpty();
+    boolean hasPrevTrack = !scheduler.getHistory().isEmpty();
 
     Button bPlayPause = Button.primary(PlayPause, Emoji.fromMarkdown(isPlaying ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME)).withDisabled(!hasTrack);
     Button bSkip = Button.secondary(SkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
-    Button bPrevious = Button.danger(SkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).asDisabled();
+    Button bPrevious = Button.secondary(SkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(!hasPrevTrack);
     Button bStop = Button.secondary(Stop, Emoji.fromMarkdown(ReactionEmoji.STOP)).withDisabled(!hasTrack);
 
     return ActionRow.of(bPrevious, bPlayPause, bSkip, bStop);
@@ -178,7 +179,7 @@ public class Player extends SlashCommand {
         new Skip().skip(event.getGuild());
         break;
       case SkipBackwards:
-        // TODO Not implemented
+        new Skip().skipBackwards(event.getGuild());
         break;
       case Stop:
         new Stop().stop(event.getGuild());

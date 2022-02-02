@@ -25,10 +25,10 @@ public class Spotify implements MusicDataSearcher<Track, PlaylistSimplified, Alb
 
   public static Track[] getPlaylistsTracks(String simpleTrackID) {
     try {
-      PlaylistTrack[] tracks = spotifyApi.getPlaylistsItems(simpleTrackID).build().execute().getItems();
+      PlaylistTrack[] tracks = spotifyApi.getPlaylistsItems(simpleTrackID).build().execute().getItems(); //TODO: TooManyRequestsException
       List<Track> ret = new ArrayList<>();
       for (PlaylistTrack pt : tracks) {
-        ret.add(spotifyApi.getTrack(pt.getTrack().getId()).build().execute());
+        ret.add(spotifyApi.getTrack(pt.getTrack().getId()).build().execute()); //TODO: TooManyRequestsException
       }
       return ret.toArray(Track[]::new);
     } catch (IOException | SpotifyWebApiException | ParseException e) {

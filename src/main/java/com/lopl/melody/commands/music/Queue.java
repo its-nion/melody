@@ -88,8 +88,9 @@ public class Queue extends SlashCommand {
   @NotNull
   private ActionRow getActionRow(GuildAudioManager guildAudioManager) {
     ArrayList<AudioTrack> queue = guildAudioManager.scheduler.getQueue();
+    ArrayList<AudioTrack> history = guildAudioManager.scheduler.getHistory();
 
-    Button bPrevious = Button.danger(QueueSkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).asDisabled();
+    Button bPrevious = Button.secondary(QueueSkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(history.isEmpty());
     Button bSkip = Button.secondary(QueueSkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(queue.isEmpty());
     Button bShuffle = Button.secondary(Shuffle, Emoji.fromMarkdown(ReactionEmoji.SHUFFLE)).withDisabled(queue.isEmpty());
     Button bStop = Button.secondary(DeleteQueue, Emoji.fromMarkdown(ReactionEmoji.STOP)).withDisabled(queue.isEmpty());
@@ -185,8 +186,7 @@ public class Queue extends SlashCommand {
     switch (event.getButton().getId()) {
       case Shuffle -> scheduler.shuffle();
       case QueueSkipForward -> new Skip().skip(event.getGuild());
-      case QueueSkipBackwards -> {
-      } // TODO Not implemented
+      case QueueSkipBackwards -> new Skip().skipBackwards(event.getGuild());
       case DeleteQueue -> scheduler.clearQueue();
       default -> {
         return;
