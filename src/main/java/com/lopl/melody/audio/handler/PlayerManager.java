@@ -41,6 +41,6 @@ public class PlayerManager {
   }
 
   public void play(GuildAudioManager musicManager, AudioTrack track) {
-    musicManager.scheduler.queue(track);
+    musicManager.queue.queue(track);
   }
 }

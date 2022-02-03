@@ -6,13 +6,16 @@ public class ReactionEmoji {
   public static final String PAUSE = "<:pause:925180399678791761>";
   public static final String RESUME = "<:play:925180400077267024>";
   public static final String SHUFFLE = "<:shuffle:925181120482541618>";
+  public static final String SHUFFLE_ACTIVE = "U+1F7E6";
   public static final String PLUS = "U+2795";
   public static final String MUSIC = "U+1F3B5";
   public static final String SKIP = "<:skip_right:925180400156938330>";
   public static final String BACKWARDS = "<:skip_left:925180400144371762>";
   public static final String STOP = "<:stop:925181120159571970>";
-
   public static final String CHECKMARK = "U+2705";
+  public static final String REPEAT = "U+1F501";
+  public static final String REPEAT_ACTIVE = "U+1F7E6";
+
   public static final String YOUTUBE = "<:youtube:925827032485621791>";
   public static final String SPOTIFY = "<:spotify:925826109650665473>";
   public static final String YOUTUBE_LINK = "https://cdn.discordapp.com/emojis/925827032485621791.png?size=96";

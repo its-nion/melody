@@ -50,7 +50,7 @@ public class MusicLoader {
 
       private MessageEmbed getMessage(AudioTrack track, GuildAudioManager musicManager) {
         AudioTrack playing = musicManager.player.getPlayingTrack();
-        ArrayList<AudioTrack> queue = musicManager.scheduler.getQueue();
+        ArrayList<AudioTrack> queue = musicManager.queue.getQueue();
         return new EmbedBuilder()
             .setAuthor("Track added to queue!")
             .setTitle(track.getInfo().title)
@@ -69,7 +69,7 @@ public class MusicLoader {
     PlayerManager player = PlayerManager.getInstance();
     GuildAudioManager musicManager = player.getGuildAudioManager(channel.getGuild());
     AudioTrack playing = musicManager.player.getPlayingTrack();
-    ArrayList<AudioTrack> queue = musicManager.scheduler.getQueue();
+    ArrayList<AudioTrack> queue = musicManager.queue.getQueue();
 
     // calculate values
     String positionInQueue = (playing == null ? "Now playing" : "" + (queue.size() + 1));
@@ -161,7 +161,7 @@ public class MusicLoader {
 
       private MessageEmbed getMessage(AudioTrack track, GuildAudioManager musicManager) {
         AudioTrack playing = musicManager.player.getPlayingTrack();
-        ArrayList<AudioTrack> queue = musicManager.scheduler.getQueue();
+        ArrayList<AudioTrack> queue = musicManager.queue.getQueue();
         return new EmbedBuilder()
             .setAuthor("Track added to queue!")
             .setTitle(track.getInfo().title)
@@ -175,7 +175,7 @@ public class MusicLoader {
 
       private MessageEmbed getMessage(AudioPlaylist playlist, GuildAudioManager musicManager) {
         AudioTrack playing = musicManager.player.getPlayingTrack();
-        ArrayList<AudioTrack> queue = musicManager.scheduler.getQueue();
+        ArrayList<AudioTrack> queue = musicManager.queue.getQueue();
         return new EmbedBuilder()
             .setAuthor("Playlist added to queue!")
             .setTitle(playlist.getName())

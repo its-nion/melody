@@ -2,8 +2,11 @@ package com.lopl.melody.commands.music;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.lopl.melody.audio.handler.PlayerManager;
-import com.lopl.melody.audio.handler.TrackScheduler;
+import com.lopl.melody.audio.handler.TrackHistory;
+import com.lopl.melody.audio.handler.TrackQueue;
 import com.lopl.melody.audio.util.AudioStateChecks;
+import com.lopl.melody.audio.util.AutomaticRequeue;
+import com.lopl.melody.audio.util.AutomaticShuffle;
 import com.lopl.melody.commands.essentials.Disconnect;
 import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.utils.Logging;
@@ -31,6 +34,8 @@ public class Player extends SlashCommand {
   public static final String SkipForward = "skip";
   public static final String SkipBackwards = "skip_reverse";
   public static final String Stop = "stop";
+  public static final String Loop = "loop_songs";
+  public static final String Shuffle = "shuffle_songs";
 
   public Player() {
     super.name = "player";
@@ -94,20 +99,25 @@ public class Player extends SlashCommand {
   private ActionRow getActionRow(Guild guild, @Nullable Boolean playing) {
     PlayerManager manager = PlayerManager.getInstance();
     AudioPlayer player = manager.getGuildAudioManager(guild).player;
-    TrackScheduler scheduler = manager.getGuildAudioManager(guild).scheduler;
+    TrackQueue queue = manager.getGuildAudioManager(guild).queue;
+    TrackHistory history = manager.getGuildAudioManager(guild).history;
+    AutomaticRequeue requeue = manager.getGuildAudioManager(guild).requeuer;
+    AutomaticShuffle shuffler = manager.getGuildAudioManager(guild).shuffler;
 
     boolean isPlaying = !player.isPaused() && player.getPlayingTrack() != null;
     if (playing != null) isPlaying = playing;
     boolean hasTrack = player.getPlayingTrack() != null;
-    boolean hasNextTrack = !scheduler.getQueue().isEmpty();
-    boolean hasPrevTrack = !scheduler.getHistory().isEmpty();
+    boolean hasNextTrack = !queue.getQueue().isEmpty();
+    boolean hasPrevTrack = !history.getHistory().isEmpty();
 
     Button bPlayPause = Button.primary(PlayPause, Emoji.fromMarkdown(isPlaying ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME)).withDisabled(!hasTrack);
     Button bSkip = Button.secondary(SkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
     Button bPrevious = Button.secondary(SkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(!hasPrevTrack);
-    Button bStop = Button.secondary(Stop, Emoji.fromMarkdown(ReactionEmoji.STOP)).withDisabled(!hasTrack);
+    Button bStop = Button.danger(Stop, Emoji.fromMarkdown(ReactionEmoji.STOP)).withDisabled(!hasTrack);
+    Button bLoop = Button.secondary(Loop, Emoji.fromMarkdown(requeue.isActive() ? ReactionEmoji.REPEAT_ACTIVE : ReactionEmoji.REPEAT)).withDisabled(!hasTrack);
+    Button bShuffle = Button.secondary(Shuffle, Emoji.fromMarkdown(shuffler.isActive() ? ReactionEmoji.SHUFFLE_ACTIVE : ReactionEmoji.SHUFFLE)).withDisabled(!hasTrack);
 
-    return ActionRow.of(bPrevious, bPlayPause, bSkip, bStop);
+    return ActionRow.of(bShuffle, bPrevious, bPlayPause, bSkip, bLoop, bStop);
   }
 
   private MessageEmbed getSongEmbed(AudioTrack audioTrack) {
@@ -167,6 +177,8 @@ public class Player extends SlashCommand {
     PlayerManager manager = PlayerManager.getInstance();
     AudioPlayer player = manager.getGuildAudioManager(event.getGuild()).player;
     boolean paused = player.isPaused();
+    AutomaticRequeue requeue = manager.getGuildAudioManager(event.getGuild()).requeuer;
+    AutomaticShuffle shuffle = manager.getGuildAudioManager(event.getGuild()).shuffler;
 
     switch (event.getButton().getId()) {
       case PlayPause:
@@ -184,6 +196,16 @@ public class Player extends SlashCommand {
       case Stop:
         new Stop().stop(event.getGuild());
         new Disconnect().disconnect(event.getGuild());
+        break;
+      case Loop:
+        if (requeue.isActive())
+          requeue.deactivate();
+        else requeue.activate();
+        break;
+      case Shuffle:
+        if (shuffle.isActive())
+          shuffle.deactivate();
+        else shuffle.activate();
         break;
       default:
         return;

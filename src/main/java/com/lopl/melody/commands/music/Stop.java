@@ -57,7 +57,7 @@ public class Stop extends SlashCommand {
   public void stop(Guild guild) {
     PlayerManager manager = PlayerManager.getInstance();
     GuildAudioManager guildAudioManager = manager.getGuildAudioManager(guild);
-    guildAudioManager.scheduler.clearQueue();
+    guildAudioManager.queue.clearQueue();
     guildAudioManager.player.stopTrack();
     guildAudioManager.player.destroy();
     Logging.debug(getClass(), guild, null, "Stopped the player");

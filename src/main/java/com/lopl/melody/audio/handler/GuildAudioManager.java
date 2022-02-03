@@ -1,5 +1,8 @@
 package com.lopl.melody.audio.handler;
 
+import com.lopl.melody.audio.util.AutomaticRequeue;
+import com.lopl.melody.audio.util.AutomaticShuffle;
+import com.lopl.melody.settings.items.AutomaticRecording;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
@@ -21,8 +24,16 @@ public class GuildAudioManager {
    * Track scheduler for the player.
    */
   public final TrackScheduler scheduler;
+  public final TrackHistory history;
+  public final TrackQueue queue;
 
+  /**
+   * Mixer to boost channels
+   */
   private final MixerEqualizer mixer;
+
+  public final AutomaticRequeue requeuer;
+  public final AutomaticShuffle shuffler;
 
   /**
    * Creates a player and a track scheduler.
@@ -32,9 +43,16 @@ public class GuildAudioManager {
   public GuildAudioManager(Guild guild, AudioPlayerManager manager) {
     this.guild = guild;
     this.player = manager.createPlayer();
-    this.scheduler = new TrackScheduler(this, player);
-    this.player.addListener(scheduler);
+    this.queue = new TrackQueue(this);
+    this.history = new TrackHistory();
+    this.scheduler = new TrackScheduler(this);
     this.mixer = new MixerEqualizer();
+    this.requeuer = new AutomaticRequeue(this);
+    this.shuffler = new AutomaticShuffle(this);
+    this.player.addListener(scheduler);
+    this.scheduler.addListener(history);
+    this.scheduler.addListener(queue);
+    this.scheduler.addListener(requeuer);
     //this.ttsEngine = new TTSEngine();
   }
 

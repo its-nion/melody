@@ -1,9 +1,7 @@
 package com.lopl.melody.commands.music;
 
 import com.jagrosh.jdautilities.command.Command.Category;
-import com.lopl.melody.audio.handler.GuildAudioManager;
-import com.lopl.melody.audio.handler.PlayerManager;
-import com.lopl.melody.audio.handler.TrackScheduler;
+import com.lopl.melody.audio.handler.*;
 import com.lopl.melody.audio.util.AudioStateChecks;
 import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.utils.Logging;
@@ -125,7 +123,7 @@ public class Skip extends SlashCommand {
     final int LIST_SIZE = 6;
 
     StringBuilder desc = new StringBuilder();
-    AudioTrack[] tracks = guildAudioManager.scheduler.getQueue().toArray(AudioTrack[]::new);
+    AudioTrack[] tracks = guildAudioManager.queue.getQueue().toArray(AudioTrack[]::new);
     for (int i = 0; i < LIST_SIZE - 1; i++) {
       if (i >= tracks.length) break;
       AudioTrack track = tracks[i];
@@ -146,9 +144,10 @@ public class Skip extends SlashCommand {
 
   private ActionRow getActionRow(Guild guild) {
     PlayerManager manager = PlayerManager.getInstance();
-    TrackScheduler scheduler = manager.getGuildAudioManager(guild).scheduler;
-    boolean hasNextTrack = !scheduler.getQueue().isEmpty();
-    boolean hasPrevTrack = !scheduler.getHistory().isEmpty();
+    TrackQueue queue = manager.getGuildAudioManager(guild).queue;
+    TrackHistory history = manager.getGuildAudioManager(guild).history;
+    boolean hasNextTrack = !queue.getQueue().isEmpty();
+    boolean hasPrevTrack = !history.getHistory().isEmpty();
 
     Button bPrevious = Button.secondary(Backwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(!hasPrevTrack);
     Button bSkip = Button.secondary(Forwards, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);

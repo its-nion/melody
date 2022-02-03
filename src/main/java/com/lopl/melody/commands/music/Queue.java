@@ -3,7 +3,7 @@ package com.lopl.melody.commands.music;
 import com.jagrosh.jdautilities.command.Command.Category;
 import com.lopl.melody.audio.handler.GuildAudioManager;
 import com.lopl.melody.audio.handler.PlayerManager;
-import com.lopl.melody.audio.handler.TrackScheduler;
+import com.lopl.melody.audio.handler.TrackQueue;
 import com.lopl.melody.audio.util.AudioStateChecks;
 import com.lopl.melody.slash.SlashCommand;
 import com.lopl.melody.utils.Logging;
@@ -73,7 +73,7 @@ public class Queue extends SlashCommand {
 
     GuildAudioManager guildAudioManager = manager.getGuildAudioManager(guild);
 
-    if (guildAudioManager.scheduler.getQueue().isEmpty()) {
+    if (guildAudioManager.queue.getQueue().isEmpty()) {
       event.replyEmbeds(getQueueEmbed(guildAudioManager)).queue();
       return;
     }
@@ -87,8 +87,8 @@ public class Queue extends SlashCommand {
 
   @NotNull
   private ActionRow getActionRow(GuildAudioManager guildAudioManager) {
-    ArrayList<AudioTrack> queue = guildAudioManager.scheduler.getQueue();
-    ArrayList<AudioTrack> history = guildAudioManager.scheduler.getHistory();
+    ArrayList<AudioTrack> queue = guildAudioManager.queue.getQueue();
+    List<AudioTrack> history = guildAudioManager.history.getHistory();
 
     Button bPrevious = Button.secondary(QueueSkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(history.isEmpty());
     Button bSkip = Button.secondary(QueueSkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(queue.isEmpty());
@@ -100,7 +100,7 @@ public class Queue extends SlashCommand {
 
   @NotNull
   private MessageEmbed getQueueEmbed(GuildAudioManager guildAudioManager) {
-    TrackScheduler scheduler = guildAudioManager.scheduler;
+    TrackQueue scheduler = guildAudioManager.queue;
     AudioPlayer player = guildAudioManager.player;
     AudioTrack audioTrack = player.getPlayingTrack();
     if (audioTrack == null)
@@ -132,7 +132,7 @@ public class Queue extends SlashCommand {
     final int LIST_SIZE = 10;
 
     StringBuilder desc = new StringBuilder();
-    AudioTrack[] tracks = guildAudioManager.scheduler.getQueue().toArray(AudioTrack[]::new);
+    AudioTrack[] tracks = guildAudioManager.queue.getQueue().toArray(AudioTrack[]::new);
     for (int i = 0; i < LIST_SIZE - 1; i++) {
       if (i >= tracks.length) break;
       AudioTrack track = tracks[i];
@@ -181,7 +181,7 @@ public class Queue extends SlashCommand {
 
     PlayerManager manager = PlayerManager.getInstance();
     GuildAudioManager guildAudioManager = manager.getGuildAudioManager(event.getGuild());
-    TrackScheduler scheduler = guildAudioManager.scheduler;
+    TrackQueue scheduler = guildAudioManager.queue;
 
     switch (event.getButton().getId()) {
       case Shuffle -> scheduler.shuffle();
