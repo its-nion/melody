@@ -59,7 +59,7 @@ public class Player extends SlashCommand {
   @Nullable
   @Override
   public List<String> allowAnonymousComponentCall() {
-    return List.of(PlayPause, SkipBackwards, SkipForward, Stop);
+    return List.of(PlayPause, SkipBackwards, SkipForward, Stop, Loop, Shuffle);
   }
 
   @Override

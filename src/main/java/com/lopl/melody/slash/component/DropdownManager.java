@@ -15,10 +15,12 @@ public class DropdownManager {
   }
 
   public void cache(SelectionMenu dropdown, SlashCommand slashCommand) {
+    if (dropdown == null || slashCommand == null) return;
     dropdownCache.put(dropdown.getId(), slashCommand);
   }
 
   public SlashCommand request(SelectionMenu dropdown) {
+    if (dropdown == null) return null;
     return dropdownCache.getOrDefault(dropdown.getId(), null);
   }
 }

@@ -15,10 +15,12 @@ public class ButtonManager {
   }
 
   public void cache(Button button, SlashCommand slashCommand) {
+    if (button == null || slashCommand == null) return;
     buttonCache.put(button.getId(), slashCommand);
   }
 
   public SlashCommand request(Button button) {
+    if (button == null) return null;
     return buttonCache.getOrDefault(button.getId(), null);
   }
 }

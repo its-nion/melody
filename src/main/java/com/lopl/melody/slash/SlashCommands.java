@@ -6,11 +6,10 @@ import com.lopl.melody.commands.music.*;
 import com.lopl.melody.commands.record.Clip;
 import com.lopl.melody.commands.record.Record;
 
-import java.util.Collection;
 import java.util.List;
 
 public class SlashCommands {
-  private static final Collection<SlashCommand> commands = List.of(
+  private static final List<SlashCommand> commands = List.of(
       new Ping(),
       new Info(),
       new Help(),
@@ -32,7 +31,7 @@ public class SlashCommands {
       new Clip()
   );
 
-  public static Collection<SlashCommand> getCommands() {
+  public static List<SlashCommand> getCommands() {
     return commands;
   }
 
