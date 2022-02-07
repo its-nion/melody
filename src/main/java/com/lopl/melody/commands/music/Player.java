@@ -44,18 +44,6 @@ public class Player extends SlashCommand {
     super.description = "Shows some clickable buttons to control the best of all music bots.";
   }
 
-//    @Override
-//    public void action(SlashCommandEvent event) {
-//        event.replyEmbeds(new EmbedBuilder()
-//                .setDescription("[Song Name](https://www.youtube.com/watch?v=dQw4w9WgXcQ)" + "   4:12")
-//                .build())
-//        .addActionRow(Button.secondary("0", "⏮"), Button.secondary("0", "▶️"), Button.secondary("0", "⏹"), Button.secondary("0", "⏭"), Button.secondary("0", "\uD83D\uDD00"))//▶⏹
-//                .addActionRow(Button.secondary("0", "back"), Button.secondary("0", "pause"), Button.secondary("0", "stop"), Button.secondary("0", "skip"), Button.secondary("0", "shuffle"))
-//                .addActionRow(Button.secondary("0", "ᐅ"), Button.secondary("0", "□"), Button.secondary("0", "»"), Button.secondary("0", "↝"))
-//        .queue();
-//    }
-
-
   @Nullable
   @Override
   public List<String> allowAnonymousComponentCall() {
