@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--Disable the next lines to re-activate all logs-->
+    <logger name="net.dv8tion.jda" level="ERROR" />
+    <logger name="com.sedmelluq" level="WARN" />
+    <logger name="org.apache" level="WARN" />
+    <logger name="se.michaelthelin" level="WARN" />
+    <logger name="com.zaxxer.hikari" level="ERROR" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{dd.MM.YYYY HH:mm:ss}] <!--%boldCyan(%-34.-34thread) %red(%10.10X{jda.shard}) --> %highlight(%-6level) <!--%class -->%boldGreen(%-15.-15logger{0}) %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

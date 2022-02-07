@@ -16,7 +16,7 @@ target/**
 # Editor-based HTTP Client requests
 /httpRequests/
 
-# Server database
+# Server com.lopl.melody.utils.database
 database.db
 
 # Secret bot stuff
