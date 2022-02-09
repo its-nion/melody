@@ -10,6 +10,17 @@ import java.sql.SQLException;
 
 public class SettingLoader {
 
+  /**
+   * This loads a given GuildSetting for the given Guild from the database.
+   * The database table is "guild_settings".
+   * if the database does not contain settings for the guild yet, a new setting is created and stored afterwards.
+   * <p>
+   * Example:
+   * <pre>
+   * new SettingLoader().loadSettings(guild, settings);
+   * </pre>
+   * @param guild the settings guild
+   */
   public GuildSettings loadSettings(Guild guild) {
     try {
       ResultSet resultSet = new SQL().query("SELECT * FROM guild_settings WHERE guild_id=%s", guild.getId());
