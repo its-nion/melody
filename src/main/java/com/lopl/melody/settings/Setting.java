@@ -130,6 +130,7 @@ public abstract class Setting<T extends SettingValue> {
   /**
    * Returns the displayed Setting name.
    * Can be set in the constructor with {@link #name}.
+   * Or you can override this method.
    * @return Display name of the Setting
    */
   public String getName() {
