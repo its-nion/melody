@@ -109,6 +109,16 @@ public class SlashCommandClient extends ListenerAdapter {
   //                       UPSERTER                          //
   /////////////////////////////////////////////////////////////
 
+  /**
+   * Execute this method to reload all commands and their arguments.
+   * This method will upsert every guild after another.
+   * This takes some time to finish, depending on how many guilds the bot is in.
+   * You could upsert the commands globally, but this can take up to 24 hours till discord manages the request.
+   * All following methods work recursive with finished callbacks to avoid await statements.
+   * @param args should be an empty array
+   * @throws LoginException if the discord api is not available
+   * @throws InterruptedException if the user cancels the program or the manager doesn't finish
+   */
   public static void main(String[] args) throws LoginException, InterruptedException {
     JDABuilder builder = JDABuilder.createDefault(Token.BOT_TOKEN);
     builder.setActivity(Activity.of(Activity.ActivityType.DEFAULT, "Updating Commands"));
