@@ -2,6 +2,11 @@ package com.lopl.melody.utils.message;
 
 import net.dv8tion.jda.api.entities.Message;
 
+/**
+ * This is a dataclass object that is used to cache messages.
+ * Pass a discord {@link Message} in the constructor to create such a saved message.
+ * Store the saved message afterwards with the {@link MessageStore}.
+ */
 public class SavedMessage {
   private final Message message;
   private final long messageID;

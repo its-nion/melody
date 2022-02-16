@@ -1,5 +1,8 @@
 package com.lopl.melody.utils.embed;
 
+/**
+ * This class contains all static references to all emojis
+ */
 public class ReactionEmoji {
   public static final String LEFT = "<:arrow_left:925172462172373063>";
   public static final String RIGHT = "<:arrow_right:925175845683855360>";
@@ -32,6 +35,12 @@ public class ReactionEmoji {
   public static final String NINE = "U+0039";
   public static final String TEN = "U+1F51F";
 
+  /**
+   * This returns the number emoji from a passed int.
+   * supported are [1, 10] everything else returns the square emoji
+   * @param number any int
+   * @return a Number emoji
+   */
   public static String getNumberAsEmoji(int number) {
     return switch (number) {
       case 1 -> ":one:";

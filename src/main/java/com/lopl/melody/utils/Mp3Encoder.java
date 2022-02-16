@@ -9,6 +9,12 @@ import java.io.ByteArrayOutputStream;
 
 public class Mp3Encoder {
 
+  /**
+   * This will encode raw pcm audio data to mp3.
+   * This mp3 data can then be stored to a file.
+   * @param pcm raw pcm audio data
+   * @return encoded mp3 audio data
+   */
   public static byte[] encodePcmToMp3(byte[] pcm) {
     LameEncoder encoder = new LameEncoder(new AudioFormat(48000.0f, 16, 2, true, true), 128, MPEGMode.STEREO, Lame.QUALITY_HIGHEST, false);
     ByteArrayOutputStream mp3 = new ByteArrayOutputStream();
