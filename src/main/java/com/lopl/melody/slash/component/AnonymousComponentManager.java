@@ -19,11 +19,12 @@ public class AnonymousComponentManager {
 
   private final HashMap<String, SlashCommand> idCache;
 
+
   /**
-   * Override constructor with the registered SlashCommandClientCommands.
+   * Override empty constructor
    */
   public AnonymousComponentManager() {
-    this(Arrays.asList(SlashCommandClient.getInstance().slashCommands));
+    this.idCache = new HashMap<>();
   }
 
   /**
@@ -34,9 +35,6 @@ public class AnonymousComponentManager {
   public AnonymousComponentManager(List<SlashCommand> commands) {
     this.idCache = new HashMap<>();
     this.cache(commands);
-    List<String> loggedIds = idCache.keySet().stream().filter(c -> !c.contains("volume")).collect(Collectors.toList());
-    if (idCache.containsKey("volume")) loggedIds.add("volume_1-100");
-    Logging.debug(getClass(), null, null, "Cached anonymous IDs:" + Arrays.toString(loggedIds.toArray()));
   }
 
   /**
@@ -51,6 +49,9 @@ public class AnonymousComponentManager {
         cache(id, command);
       }
     }
+    List<String> loggedIds = idCache.keySet().stream().filter(c -> !c.contains("volume")).collect(Collectors.toList());
+    if (idCache.containsKey("volume")) loggedIds.add("volume_1-100");
+    Logging.debug(getClass(), null, null, "Cached anonymous IDs:" + Arrays.toString(loggedIds.toArray()));
   }
 
   /**

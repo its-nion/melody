@@ -4,6 +4,7 @@ import com.lopl.melody.commands.record.Record;
 import com.lopl.melody.settings.Setting;
 import com.lopl.melody.settings.SettingValue;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import com.lopl.melody.utils.json.JsonProperties;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -37,6 +38,8 @@ public class MusicPlayerProvider extends Setting<MusicPlayerProvider.Value> {
    */
   @Override
   public List<Value> getPossibilities() {
+    if (JsonProperties.getProperties().getSpotifyApi() == null)
+      return List.of(Value.youtube());
     return List.of(Value.youtube(), Value.spotify());
   }
 

@@ -101,14 +101,14 @@ public class Record extends SlashCommand {
     AudioReceiveHandler ah = channel.getGuild().getAudioManager().getReceivingHandler();
     if (ah instanceof AudioReceiveListener) return null;
     return new EmbedBuilder()
-        .setColor(EmbedColor.GREEN)
+        .setColor(EmbedColor.JOIN)
         .setDescription("**Now recording** in <#" + channel.getId() + ">")
         .build();
   }
 
   public MessageEmbed createRecordMessage(VoiceChannel channel) {
     return new EmbedBuilder()
-        .setColor(EmbedColor.GREEN)
+        .setColor(EmbedColor.JOIN)
         .setDescription("**Now recording** in <#" + channel.getId() + ">")
         .build();
   }

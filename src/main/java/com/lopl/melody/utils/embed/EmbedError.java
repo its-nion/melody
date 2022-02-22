@@ -18,7 +18,7 @@ public class EmbedError {
   public static MessageEmbed with(String message) {
     Logging.debug(EmbedError.class, null, null, "Encountered user error: " + message);
     return new EmbedBuilder()
-        .setColor(EmbedColor.RED)
+        .setColor(EmbedColor.ERROR)
         .setDescription(message)
         .build();
   }
@@ -31,7 +31,7 @@ public class EmbedError {
    */
   public static MessageEmbed friendly(String message) {
     return new EmbedBuilder()
-        .setColor(EmbedColor.RED)
+        .setColor(EmbedColor.ERROR)
         .setDescription(message)
         .build();
   }
@@ -46,7 +46,7 @@ public class EmbedError {
   public static MessageEmbed withFormat(String message, Object... args) {
     Logging.debug(EmbedError.class, null, null, "Encountered user error: " + message);
     return new EmbedBuilder()
-        .setColor(EmbedColor.RED)
+        .setColor(EmbedColor.ERROR)
         .setDescription(String.format(message, args))
         .build();
   }

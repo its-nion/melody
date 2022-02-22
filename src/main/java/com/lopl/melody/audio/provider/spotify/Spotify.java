@@ -1,6 +1,8 @@
 package com.lopl.melody.audio.provider.spotify;
 
+import com.google.gson.JsonArray;
 import com.lopl.melody.audio.provider.MusicDataSearcher;
+import com.lopl.melody.utils.json.JsonProperties;
 import com.lopl.melody.utils.message.MessageStore;
 import net.dv8tion.jda.api.entities.Message;
 import org.apache.hc.core5.http.ParseException;
@@ -20,8 +22,8 @@ import static com.lopl.melody.Token.*;
 
 public class Spotify implements MusicDataSearcher<Track, PlaylistSimplified, AlbumSimplified, String> {
 
-  public static final SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).setRefreshToken(refreshToken).build();
-  private static final AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
+  public static final SpotifyApi spotifyApi = JsonProperties.getProperties().getSpotifyApi();
+  private static final AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build(); //TODO: cancel everything if spotify not available
 
   public static Track[] getPlaylistsTracks(String simpleTrackID) {
     try {

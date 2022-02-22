@@ -66,6 +66,7 @@ public class SlashCommandClient extends ListenerAdapter {
    */
   public void ready(JDA jda) {
     Arrays.stream(slashCommands).forEach(sc -> sc.onJDAReady(jda));
+    anonymousComponentManager.cache(Arrays.asList(slashCommands));
   }
 
   /**
