@@ -17,11 +17,11 @@ public class AnonymousComponentManager {
     this.idCache = new HashMap<>();
     this.cache(commands);
     List<String> loggedIds = idCache.keySet().stream().filter(c -> !c.contains("volume")).collect(Collectors.toList());
-    loggedIds.add("volume_1-100");
+    if (idCache.containsKey("volume")) loggedIds.add("volume_1-100");
     Logging.debug(getClass(), null, null, "Cached anonymous IDs:" + Arrays.toString(loggedIds.toArray()));
   }
 
-  private void cache(List<SlashCommand> commands) {
+  public void cache(List<SlashCommand> commands) {
     for (SlashCommand command : commands) {
       List<String> ids = command.allowAnonymousComponentCall();
       if (ids == null || ids.isEmpty()) continue;
@@ -31,7 +31,7 @@ public class AnonymousComponentManager {
     }
   }
 
-  private void cache(String id, SlashCommand slashCommand) {
+  public void cache(String id, SlashCommand slashCommand) {
     if (idCache.containsKey(id))
       throw new RuntimeException("No duplicate Component ID allowed: " + id);
     idCache.put(id, slashCommand);
@@ -39,5 +39,9 @@ public class AnonymousComponentManager {
 
   public SlashCommand request(String component) {
     return idCache.getOrDefault(component, null);
+  }
+
+  public boolean contains(String id){
+    return idCache.containsKey(id);
   }
 }
