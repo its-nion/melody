@@ -22,6 +22,9 @@ public class MusicSendHandler implements AudioSendHandler {
     this.audioPlayer = audioPlayer;
   }
 
+  /**
+   * @return true if the MusicSendHandler can provide data else false
+   */
   @Override
   public boolean canProvide() {
     if (lastFrame == null) {
@@ -31,6 +34,11 @@ public class MusicSendHandler implements AudioSendHandler {
     return lastFrame != null;
   }
 
+  /**
+   * this method requests 20ms of audio.
+   * The current provider should provide this.
+   * @return 20ms of audio in a ByteBuffer.
+   */
   @Override
   public ByteBuffer provide20MsAudio() {
     if (lastFrame == null) {

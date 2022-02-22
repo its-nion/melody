@@ -63,6 +63,11 @@ public class GuildAudioManager {
     return new AudioSendMultiplexer(/*ttsEngine,*/ new MusicSendHandler(player));
   }
 
+  /**
+   * Getter method for the mixer.
+   * This is necessary cause there is a setup required for the mixer
+   * @return the {@link #mixer}
+   */
   public MixerEqualizer getMixer() {
     if (!mixer.isSetup()) {
       mixer.setup(player);

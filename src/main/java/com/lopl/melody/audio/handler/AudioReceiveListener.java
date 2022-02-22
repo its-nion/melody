@@ -11,7 +11,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-
+/**
+ * This class extends the AudioReceiveHandler.
+ * It is able to receive the audio data of a connected Voicechannel.
+ * All this data is then stored to an array and encoded when there is enough.
+ * The AudioReceiveListener can be set like this:
+ * <p>
+ * Example:
+ * <pre>
+ * AudioManager audioManager = voiceChannel.getGuild().getAudioManager();
+ * if (audioManager.getReceivingHandler() == null || !(audioManager.getReceivingHandler() instanceof AudioReceiveListener))
+ *   audioManager.setReceivingHandler(new AudioReceiveListener(1, vc));
+ * </pre>
+ * Currently every user in the channel is recorded.
+ * It is possible to record every user separately and add selected ones together.
+ */
 public class AudioReceiveListener implements AudioReceiveHandler {
   public static final double STARTING_MB = 0.5;
   public static final int CAP_MB = 16;
