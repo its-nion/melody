@@ -1,9 +1,11 @@
 # Intellij stuff:
 /.idea/
+/.gradle/
 *.iml
 *.ipr
 *.iws
 target/**
+gradle/**
 
 # Default ignored files
 /shelf/
@@ -16,8 +18,3 @@ target/**
 # Editor-based HTTP Client requests
 /httpRequests/
 
-# Server com.lopl.melody.utils.database
-database.db
-
-# Secret bot stuff
-*Config.java
