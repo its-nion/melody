@@ -6,6 +6,7 @@
 *.iws
 target/**
 gradle/**
+build/**
 
 # Default ignored files
 /shelf/
