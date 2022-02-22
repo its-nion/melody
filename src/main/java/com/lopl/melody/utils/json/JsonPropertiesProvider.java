@@ -8,6 +8,9 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * This class provides some useful methods to access the data of the properties.json.
+ */
 public class JsonPropertiesProvider {
 
   private final PropertiesData data;
@@ -16,22 +19,38 @@ public class JsonPropertiesProvider {
     this.data = data;
   }
 
+  /**
+   * @return the discord bot key for this melody
+   */
   public String getBotKey(){
     return data.botKey;
   }
 
+  /**
+   * @return a color instance that is stored in the json as a float array.
+   */
   public Color getErrorColor(){
     return new Color(data.colorError[0], data.colorError[1], data.colorError[2], data.colorError[3]);
   }
 
+  /**
+   * @return a color instance that is stored in the json as a float array.
+   */
   public Color getJoinColor(){
     return new Color(data.colorJoin[0], data.colorJoin[1], data.colorJoin[2], data.colorJoin[3]);
   }
 
+  /**
+   * @return a color instance that is stored in the json as a float array.
+   */
   public Color getMoveColor(){
     return new Color(data.colorMove[0], data.colorMove[1], data.colorMove[2], data.colorMove[3]);
   }
 
+  /**
+   * @return a fully built instance of SpotifyApi if the api key values are correct.
+   * else null
+   */
   public SpotifyApi getSpotifyApi(){
     SpotifyApi spotifyApi = new SpotifyApi.Builder()
         .setClientId(data.spotifyClientID)

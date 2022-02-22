@@ -3,6 +3,7 @@ package com.lopl.melody.utils.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lopl.melody.utils.database.DataBase;
+import com.lopl.melody.utils.database.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,11 +12,23 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * This class is the accessor to the properties file.
+ * The file is managed here.
+ * Change this class only if you want to make changes to the general behaviour of the properties.
+ * If you want to add or remove a field in the properties look into the {@link PropertiesData} class.
+ * If you want to change the way data is handled, look into the {@link JsonPropertiesProvider} class.
+ */
 public class JsonProperties {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DataBase.class);
   private static PropertiesData data;
 
+  /*
+   * These static calls are executed before the first call of anything else in this class.
+   * The properties file is created if needed. Then the file is loaded.
+   * Afterwards all necessary data is processed.
+   */
   static {
     createSettingsFile();
     loadSettingsFile();
@@ -23,6 +36,10 @@ public class JsonProperties {
       loadSecretSettingsFile();
   }
 
+  /**
+   * This will check if the properties.json file exists.
+   * If not a new one is created.
+   */
   private static void createSettingsFile() {
     try {
       final File settingsFile = new File("properties.json");
@@ -38,6 +55,13 @@ public class JsonProperties {
     }
   }
 
+  /**
+   * This will generate the json from the passed PropertiesData.
+   * The json is then written to the File
+   * @param file a existing file
+   * @param data the object to create json for the file
+   * @throws IOException if the file can not be written
+   */
   private static void storeSettingsFile(File file, PropertiesData data) throws IOException {
     FileWriter fileWriter = new FileWriter(file);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -80,6 +104,12 @@ public class JsonProperties {
 */
   }
 
+  /**
+   * This reads the properties file content as json.
+   * The json string is the parsed to a PropertiesData object.
+   * This object will update itself and write the updated version to the file.
+   * The object is then stored in the static data variable.
+   */
   private static void loadSettingsFile() {
     try {
       final File settingsFile = new File("properties.json");
@@ -97,6 +127,10 @@ public class JsonProperties {
     }
   }
 
+  /**
+   * If the loaded PropertiesData object has a valid entry of a {@link PropertiesData#secretPropertiesLocation} field,
+   * The location is parsed here to load values for all secret keys.
+   */
   private static void loadSecretSettingsFile() {
     try {
       final File settingsFile = new File(data.secretPropertiesLocation);
@@ -118,6 +152,15 @@ public class JsonProperties {
     return data;
   }
 
+  /**
+   * Use this to access all the data of the Properties file.
+   * <p>
+   * Example:
+   * <pre>
+   * String botKey = JsonProperties.getProperties().getBotKey();
+   * </pre>
+   * @return a handler object to access al the properties data
+   */
   public static JsonPropertiesProvider getProperties(){
     return new JsonPropertiesProvider(data);
   }
