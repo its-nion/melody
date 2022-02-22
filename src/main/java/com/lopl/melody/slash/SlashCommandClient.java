@@ -31,7 +31,7 @@ public class SlashCommandClient extends ListenerAdapter {
     this.slashCommands = slashCommands;
     this.buttonManager = new ButtonManager();
     this.dropdownManager = new DropdownManager();
-    this.anonymousComponentManager = new AnonymousComponentManager(Arrays.asList(slashCommands));
+    this.anonymousComponentManager = new AnonymousComponentManager();
     INSTANCE = this;
   }
 
@@ -46,6 +46,7 @@ public class SlashCommandClient extends ListenerAdapter {
 
   public void ready(JDA jda) {
     Arrays.stream(slashCommands).forEach(sc -> sc.onJDAReady(jda));
+    anonymousComponentManager.cache(Arrays.asList(slashCommands));
   }
 
   public SlashCommand getCommandByKeyword(String keyword) {
