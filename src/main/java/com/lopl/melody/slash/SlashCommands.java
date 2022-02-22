@@ -8,6 +8,10 @@ import com.lopl.melody.commands.record.Record;
 
 import java.util.List;
 
+/**
+ * All registered Commands are listed here.
+ * A command needs to be in this List to work.
+ */
 public class SlashCommands {
   private static final List<SlashCommand> commands = List.of(
       new Ping(),
@@ -31,6 +35,10 @@ public class SlashCommands {
       new Clip()
   );
 
+  /**
+   * Getter for all commands
+   * @return a List of all commands
+   */
   public static List<SlashCommand> getCommands() {
     return commands;
   }

@@ -5,16 +5,38 @@ import net.dv8tion.jda.api.audio.AudioSendHandler;
 import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 
-// Used for multiplex mode Switch and Blend
+/**
+ * This class multiplexes multiple AudioSendHandler.
+ * There is currently only one for the music player. But there might be more
+ * for i.e. a Soundboard, a TTS player etc.
+ * The active SendHandler is determined by a static mode.
+ * Only one currently is the switch mode, which determines the provider with a priority.
+ */
 public class AudioSendMultiplexer implements AudioSendHandler {
 
+  /**
+   * The multiplex mode
+   */
   private final SendMultiplex sendMultiplex;
+
+  /**
+   * The active provider or the last one if no one is providing
+   */
   private AudioSendHandler currentProvider;
 
+  /**
+   * Constructor with multiple provider
+   * @param provider a set of AudioSendHandler
+   */
   public AudioSendMultiplexer(AudioSendHandler... provider) {
     this.sendMultiplex = SendMultiplex.Switch(provider);
   }
 
+  /**
+   * This method is called from the superclass.
+   * It determines the active provider
+   * @return a boolean that indicates if any of the providers want to provide
+   */
   @Override
   public boolean canProvide() {
     if (sendMultiplex.mode == SendMultiplex.MultiplexMode.Switch) {
@@ -28,6 +50,11 @@ public class AudioSendMultiplexer implements AudioSendHandler {
     return false;
   }
 
+  /**
+   * this method requests 20ms of audio.
+   * The current provider should provide this.
+   * @return 20ms of audio in a ByteBuffer.
+   */
   @Nullable
   @Override
   public ByteBuffer provide20MsAudio() {
@@ -40,6 +67,10 @@ public class AudioSendMultiplexer implements AudioSendHandler {
   }
 
 
+  /**
+   * This class manages the multiplex mode.
+   * It is currently under construction.
+   */
   public static class SendMultiplex {
     public MultiplexMode mode = MultiplexMode.None;
     public AudioSendHandler[] handlers;

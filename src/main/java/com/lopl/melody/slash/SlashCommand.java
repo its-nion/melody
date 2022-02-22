@@ -1,6 +1,7 @@
 package com.lopl.melody.slash;
 
 import com.jagrosh.jdautilities.command.Command.Category;
+import com.lopl.melody.Melody;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
@@ -20,9 +21,25 @@ import java.util.List;
  */
 public abstract class SlashCommand {
 
+  /**
+   * A name is required for every SlashCommand to being able to be executed via discord.
+   */
   protected String name;
+
+  /**
+   * The category will define in which Category the command is sorted.
+   */
   protected Category category;
+
+  /**
+   * The help String will get displayed when the user triggers the help Command with this specific command.
+   * For a simple implementation this String can be declared with triple quotes to keep line breaks easy.
+   */
   protected String help;
+
+  /**
+   * The description should give a short explanation of the command. There is a max character limit
+   */
   protected String description;
 
   /**
@@ -35,10 +52,17 @@ public abstract class SlashCommand {
     return cca;
   }
 
+  /**
+   * This will fire when the bot is started and the command is loaded.
+   * The JDA object at {@link Melody#manager} is not ready yet.
+   */
   protected void onBotStart() {
 
   }
 
+  /**
+   * This will fire when the JDA object at {@link Melody#manager} is ready.
+   */
   protected void onJDAReady(JDA jda) {
 
   }
@@ -73,11 +97,24 @@ public abstract class SlashCommand {
 
   }
 
+  /**
+   * Some Buttons and SelectionMenus allow to execute the specific action,
+   * even if the message is really old. To keep track of all the ids of the Components, that support this,
+   * a list of ids is created.
+   * Override this method to add ids to this List.
+   * @return a List with always working Component ids.
+   */
   @Nullable
   public List<String> allowAnonymousComponentCall() {
     return null;
   }
 
+  /**
+   * If a Command needs to subscribe to any event provided by the discord api,
+   * You can create a subclass in your Command, that extends the {@link ListenerAdapter}.
+   * Override this method and return an instance of this class here to register the listener.
+   * @return any instance of an ListenerAdapter.
+   */
   @Nullable
   public ListenerAdapter getCommandEventListener() {
     return null;
@@ -104,7 +141,6 @@ public abstract class SlashCommand {
   protected final void registerDropdown(SelectionMenu dropdown) {
     SlashCommandClient slashCommandClient = SlashCommandClient.getInstance();
     slashCommandClient.dropdownManager.cache(dropdown, this);
-//    Logging.debug(getClass(), null, null, "Registered new dropdown");
   }
 
   public String getName() {
