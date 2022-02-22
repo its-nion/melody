@@ -162,13 +162,13 @@ public class Join extends SlashCommand {
   private MessageEmbed getJoinMessageEmbed(@Nullable VoiceChannel oldChannel, @Nonnull VoiceChannel newChannel) {
     if (oldChannel == null) {
       return new EmbedBuilder()
-          .setColor(EmbedColor.GREEN)
+          .setColor(EmbedColor.JOIN)
           .setDescription("**Joined** in <#" + newChannel.getId() + ">")
           .build();
     }
     if (oldChannel.getIdLong() != newChannel.getIdLong())
       return new EmbedBuilder()
-          .setColor(EmbedColor.BLUE)
+          .setColor(EmbedColor.MOVE)
           .setDescription("**Moved** to <#" + newChannel.getId() + ">")
           .build();
     return null;
@@ -186,17 +186,17 @@ public class Join extends SlashCommand {
   private MessageEmbed createJoinMessageEmbed(@Nullable VoiceChannel oldChannel, @Nonnull VoiceChannel newChannel) {
     if (oldChannel == null) {
       return new EmbedBuilder()
-          .setColor(EmbedColor.GREEN)
+          .setColor(EmbedColor.JOIN)
           .setDescription("**Joined** in <#" + newChannel.getId() + ">")
           .build();
     }
     if (oldChannel.getIdLong() != newChannel.getIdLong())
       return new EmbedBuilder()
-          .setColor(EmbedColor.BLUE)
+          .setColor(EmbedColor.MOVE)
           .setDescription("**Moved** to <#" + newChannel.getId() + ">")
           .build();
     return new EmbedBuilder()
-        .setColor(EmbedColor.RED)
+        .setColor(EmbedColor.ERROR)
         .setDescription("**I'm already connected** to <#" + newChannel.getId() + ">")
         .build();
   }

@@ -16,13 +16,16 @@ import javax.security.auth.login.LoginException;
 public class Melody {
   public static JDA manager;
 
-  private Melody() throws LoginException, InterruptedException {
-    setup();
-    Logging.info(getClass(), null, null, "Loaded! Melody is now ready.");
+  public static void main(String[] args) throws InterruptedException {
+    new Melody();
   }
 
-  public static void main(String[] args) throws LoginException, InterruptedException {
-    new Melody();
+  private Melody() throws InterruptedException {
+    try {
+      setup();
+    } catch (LoginException e) {
+      Logging.error(Melody.class, null, null, "Bot not registered! Head to https://discord.com/developers/applications to register the bot. Open the properties.json to set the bots key afterwards.");
+    }
   }
 
   private void setup() throws LoginException, InterruptedException {
@@ -45,6 +48,7 @@ public class Melody {
     builder.addEventListeners(new BotRightsManager());
 
     Melody.manager = builder.build();
+    Logging.info(getClass(), null, null, "Loaded! Melody is now ready.");
     slashCommandClient.ready(Melody.manager);
     Melody.manager.awaitReady();
   }
