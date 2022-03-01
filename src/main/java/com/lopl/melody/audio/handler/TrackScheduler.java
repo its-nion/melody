@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.ArrayList;
 
 /**
- * This class schedules tracks for the audio player. It contains the queue of tracks.
+ * This class schedules tracks for the audio player.
  */
 public class TrackScheduler extends AudioEventAdapter {
   private final GuildAudioManager manager;
@@ -49,6 +49,11 @@ public class TrackScheduler extends AudioEventAdapter {
     }
   }
 
+  /**
+   * Start the previous track and stop the current one if it is playing, if the current track is young.
+   * If the current track is old, replay the current one.
+   * A track is old after {@value #REPLAY_POSITION} seconds.
+   */
   public boolean previousTrack(){
     AudioTrack current = player.getPlayingTrack();
     TrackHistory history = manager.history;
@@ -89,6 +94,9 @@ public class TrackScheduler extends AudioEventAdapter {
     }
   }
 
+  /**
+   * This interface provides access to 
+   */
   public interface OnTrackFinished {
 
     void trackSkipped(AudioTrack track, Guild guild);

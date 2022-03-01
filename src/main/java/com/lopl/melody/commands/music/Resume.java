@@ -124,7 +124,7 @@ public class Resume extends SlashCommand {
       new Pause().pause(guild);
       event.getMessage().editMessageEmbeds(new EmbedBuilder().setDescription("**Paused** the player").build()).queue();
     }
-    Button button = Button.secondary(RESUME, Emoji.fromMarkdown(paused ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME));
+    Button button = Button.secondary(RESUME, Emoji.fromMarkdown(paused ? ReactionEmoji.PAUSE : ReactionEmoji.PLAY));
     event.editComponents(ActionRow.of(button)).queue();
     registerButton(button);
   }

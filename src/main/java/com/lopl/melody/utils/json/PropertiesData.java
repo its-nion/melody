@@ -1,9 +1,11 @@
 package com.lopl.melody.utils.json;
 
+/**
+ * This is the data holder for the properties.json.
+ */
 public class PropertiesData {
 
   // Do not use primitive types!
-//  public Boolean eula;
   public String botKey;
   public String secretPropertiesLocation; // this is used for simple open source versioning.
   public Float[] colorError;
@@ -14,13 +16,21 @@ public class PropertiesData {
   public String spotifyClientRefreshToken;
 
 
+  /**
+   * This will automatically update all the values
+   * @return a updated version
+   */
   public static PropertiesData generateNew() {
     PropertiesData data = new PropertiesData();
     return generateNew(data);
   }
 
+  /**
+   * This will automatically update all the values
+   * @param preExisting a instance that is merged
+   * @return a updated version
+   */
   public static PropertiesData generateNew(PropertiesData preExisting) {
-//    if (preExisting.eula == null) preExisting.eula = false;
     if (preExisting.botKey == null) preExisting.botKey = "";
     if (preExisting.secretPropertiesLocation == null) preExisting.secretPropertiesLocation = "";
     if (preExisting.colorError == null) preExisting.colorError = new Float[]{248f, 78f, 106f, 255f};
@@ -32,6 +42,12 @@ public class PropertiesData {
     return preExisting;
   }
 
+  /**
+   * This will include data from a secret location to the object.
+   * @param preExisting a instance that is merged
+   * @param secret a secret not versioned instance
+   * @return a complete version
+   */
   public static PropertiesData addSecret(PropertiesData preExisting, PropertiesData secret) {
     if (!secret.botKey.isEmpty()) preExisting.botKey = secret.botKey;
     if (!secret.spotifyClientID.isEmpty()) preExisting.spotifyClientID = secret.spotifyClientID;
