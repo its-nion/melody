@@ -30,21 +30,21 @@ public class JsonPropertiesProvider {
    * @return a color instance that is stored in the json as a float array.
    */
   public Color getErrorColor(){
-    return new Color(data.colorError[0], data.colorError[1], data.colorError[2], data.colorError[3]);
+    return Color.decode(data.colorError);
   }
 
   /**
    * @return a color instance that is stored in the json as a float array.
    */
   public Color getJoinColor(){
-    return new Color(data.colorJoin[0], data.colorJoin[1], data.colorJoin[2], data.colorJoin[3]);
+    return Color.decode(data.colorJoin);
   }
 
   /**
    * @return a color instance that is stored in the json as a float array.
    */
   public Color getMoveColor(){
-    return new Color(data.colorMove[0], data.colorMove[1], data.colorMove[2], data.colorMove[3]);
+    return Color.decode(data.colorMove);
   }
 
   /**

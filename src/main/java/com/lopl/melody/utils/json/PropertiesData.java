@@ -8,9 +8,9 @@ public class PropertiesData {
   // Do not use primitive types!
   public String botKey;
   public String secretPropertiesLocation; // this is used for simple open source versioning.
-  public Float[] colorError;
-  public Float[] colorJoin;
-  public Float[] colorMove;
+  public String colorError;
+  public String colorJoin;
+  public String colorMove;
   public String spotifyClientID;
   public String spotifyClientSecret;
   public String spotifyClientRefreshToken;
@@ -33,9 +33,9 @@ public class PropertiesData {
   public static PropertiesData generateNew(PropertiesData preExisting) {
     if (preExisting.botKey == null) preExisting.botKey = "";
     if (preExisting.secretPropertiesLocation == null) preExisting.secretPropertiesLocation = "";
-    if (preExisting.colorError == null) preExisting.colorError = new Float[]{248f, 78f, 106f, 255f};
-    if (preExisting.colorJoin == null) preExisting.colorJoin = new Float[]{116f, 196f, 118f, 255f};
-    if (preExisting.colorMove == null) preExisting.colorMove = new Float[]{88f, 199f, 235f, 255f};
+    if (preExisting.colorError == null) preExisting.colorError = "#F84E6A";
+    if (preExisting.colorJoin == null) preExisting.colorJoin = "#74C476";
+    if (preExisting.colorMove == null) preExisting.colorMove = "#58C7Eb";
     if (preExisting.spotifyClientID == null) preExisting.spotifyClientID = "";
     if (preExisting.spotifyClientSecret == null) preExisting.spotifyClientSecret = "";
     if (preExisting.spotifyClientRefreshToken == null) preExisting.spotifyClientRefreshToken = "";
