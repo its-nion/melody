@@ -3,6 +3,8 @@ package com.lopl.melody;
 import com.lopl.melody.audio.util.BotRightsManager;
 import com.lopl.melody.slash.*;
 import com.lopl.melody.utils.Logging;
+import com.lopl.melody.utils.embed.EmojiGuild;
+import com.lopl.melody.utils.embed.EmojiGuildManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -51,5 +53,10 @@ public class Melody {
     Logging.info(getClass(), null, null, "Loaded! Melody is now ready.");
     slashCommandClient.ready(Melody.manager);
     Melody.manager.awaitReady();
+
+    EmojiGuildManager emojiGuildManager = new EmojiGuildManager().withGuild(new EmojiGuild(Melody.manager));
+    boolean isInEmoteServer = emojiGuildManager.isAvailable();
+    if (!isInEmoteServer) Melody.manager.shutdownNow();
+    emojiGuildManager.loadEmotes();
   }
 }

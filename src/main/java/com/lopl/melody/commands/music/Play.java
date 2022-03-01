@@ -150,9 +150,9 @@ public class Play extends SlashCommand {
       // SEARCH
       // create buttons
       Button[] buttons = new Button[]{
-          Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.LEFT)).asDisabled(),
+          Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.ARROW_LEFT)).asDisabled(),
           Button.secondary(PLAY, Emoji.fromMarkdown(ReactionEmoji.MUSIC)),
-          Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.RIGHT))
+          Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.ARROW_RIGHT))
       };
       for (Button component : buttons)
         registerButton(component);
@@ -203,9 +203,9 @@ public class Play extends SlashCommand {
 
         Button[] buttons = new Button[3];
         event.editComponents(ActionRow.of(
-            buttons[0] = Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.LEFT)).withDisabled(!spotifyMessage.hasPrevious()),
+            buttons[0] = Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.ARROW_LEFT)).withDisabled(!spotifyMessage.hasPrevious()),
             buttons[1] = Button.secondary(PLAY, Emoji.fromMarkdown(ReactionEmoji.MUSIC)),
-            buttons[2] = Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.RIGHT)).withDisabled(!spotifyMessage.hasNext())
+            buttons[2] = Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.ARROW_RIGHT)).withDisabled(!spotifyMessage.hasNext())
         )).queue();
         for (Button component : buttons)
           registerButton(component);
@@ -218,9 +218,9 @@ public class Play extends SlashCommand {
 
         Button[] buttons = new Button[3];
         event.editComponents(ActionRow.of(
-            buttons[0] = Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.LEFT)).withDisabled(!youtubeMessage.hasPrevious()),
+            buttons[0] = Button.secondary(PREVIOUS, Emoji.fromMarkdown(ReactionEmoji.ARROW_LEFT)).withDisabled(!youtubeMessage.hasPrevious()),
             buttons[1] = Button.secondary(PLAY, Emoji.fromMarkdown(ReactionEmoji.MUSIC)),
-            buttons[2] = Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.RIGHT)).withDisabled(!youtubeMessage.hasNext())
+            buttons[2] = Button.secondary(NEXT, Emoji.fromMarkdown(ReactionEmoji.ARROW_RIGHT)).withDisabled(!youtubeMessage.hasNext())
         )).queue();
         for (Button component : buttons)
           registerButton(component);

@@ -98,9 +98,9 @@ public class Player extends SlashCommand {
     boolean hasNextTrack = !queue.getQueue().isEmpty();
     boolean hasPrevTrack = !history.getHistory().isEmpty();
 
-    Button bPlayPause = Button.primary(PlayPause, Emoji.fromMarkdown(isPlaying ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME)).withDisabled(!hasTrack);
-    Button bSkip = Button.secondary(SkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
-    Button bPrevious = Button.secondary(SkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(!hasPrevTrack);
+    Button bPlayPause = Button.primary(PlayPause, Emoji.fromMarkdown(isPlaying ? ReactionEmoji.PAUSE : ReactionEmoji.PLAY)).withDisabled(!hasTrack);
+    Button bSkip = Button.secondary(SkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP_RIGHT)).withDisabled(!hasNextTrack);
+    Button bPrevious = Button.secondary(SkipBackwards, Emoji.fromMarkdown(ReactionEmoji.SKIP_LEFT)).withDisabled(!hasPrevTrack);
     Button bStop = Button.danger(Stop, Emoji.fromMarkdown(ReactionEmoji.STOP)).withDisabled(!hasTrack);
     Button bLoop = Button.secondary(Loop, Emoji.fromMarkdown(requeue.isActive() ? ReactionEmoji.REPEAT_ACTIVE : ReactionEmoji.REPEAT)).withDisabled(!hasTrack);
     Button bShuffle = Button.secondary(Shuffle, Emoji.fromMarkdown(shuffler.isActive() ? ReactionEmoji.SHUFFLE_ACTIVE : ReactionEmoji.SHUFFLE)).withDisabled(!hasTrack);

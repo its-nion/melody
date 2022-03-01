@@ -76,7 +76,7 @@ public class Pause extends SlashCommand {
     }
 
     pause(guild);
-    Button button = Button.secondary(PAUSE, Emoji.fromMarkdown(ReactionEmoji.RESUME));
+    Button button = Button.secondary(PAUSE, Emoji.fromMarkdown(ReactionEmoji.PLAY));
     event.replyEmbeds(new EmbedBuilder().setDescription("**Paused** the player").build())
         .addActionRow(button)
         .queue();
@@ -124,7 +124,7 @@ public class Pause extends SlashCommand {
       pause(guild);
       event.getMessage().editMessageEmbeds(new EmbedBuilder().setDescription("**Paused** the player").build()).queue();
     }
-    Button button = Button.secondary(PAUSE, Emoji.fromMarkdown(paused ? ReactionEmoji.PAUSE : ReactionEmoji.RESUME));
+    Button button = Button.secondary(PAUSE, Emoji.fromMarkdown(paused ? ReactionEmoji.PAUSE : ReactionEmoji.PLAY));
     event.editComponents(ActionRow.of(button)).queue();
     registerButton(button);
   }

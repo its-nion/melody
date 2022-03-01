@@ -90,8 +90,8 @@ public class Queue extends SlashCommand {
     ArrayList<AudioTrack> queue = guildAudioManager.queue.getQueue();
     List<AudioTrack> history = guildAudioManager.history.getHistory();
 
-    Button bPrevious = Button.secondary(QueueSkipBackwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(history.isEmpty());
-    Button bSkip = Button.secondary(QueueSkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(queue.isEmpty());
+    Button bPrevious = Button.secondary(QueueSkipBackwards, Emoji.fromMarkdown(ReactionEmoji.SKIP_LEFT)).withDisabled(history.isEmpty());
+    Button bSkip = Button.secondary(QueueSkipForward, Emoji.fromMarkdown(ReactionEmoji.SKIP_RIGHT)).withDisabled(queue.isEmpty());
     Button bShuffle = Button.secondary(Shuffle, Emoji.fromMarkdown(ReactionEmoji.SHUFFLE)).withDisabled(queue.isEmpty());
     Button bStop = Button.secondary(DeleteQueue, Emoji.fromMarkdown(ReactionEmoji.STOP)).withDisabled(queue.isEmpty());
 

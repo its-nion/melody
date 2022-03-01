@@ -149,8 +149,8 @@ public class Skip extends SlashCommand {
     boolean hasNextTrack = !queue.getQueue().isEmpty();
     boolean hasPrevTrack = !history.getHistory().isEmpty();
 
-    Button bPrevious = Button.secondary(Backwards, Emoji.fromMarkdown(ReactionEmoji.BACKWARDS)).withDisabled(!hasPrevTrack);
-    Button bSkip = Button.secondary(Forwards, Emoji.fromMarkdown(ReactionEmoji.SKIP)).withDisabled(!hasNextTrack);
+    Button bPrevious = Button.secondary(Backwards, Emoji.fromMarkdown(ReactionEmoji.SKIP_LEFT)).withDisabled(!hasPrevTrack);
+    Button bSkip = Button.secondary(Forwards, Emoji.fromMarkdown(ReactionEmoji.SKIP_RIGHT)).withDisabled(!hasNextTrack);
 
     return ActionRow.of(bPrevious, bSkip);
   }
