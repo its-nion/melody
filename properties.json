@@ -1,24 +1,9 @@
 {
   "botKey": "",
   "secretPropertiesLocation": "secret_properties.json",
-  "colorError": [
-    248.0,
-    78.0,
-    106.0,
-    255.0
-  ],
-  "colorJoin": [
-    116.0,
-    196.0,
-    118.0,
-    255.0
-  ],
-  "colorMove": [
-    88.0,
-    199.0,
-    235.0,
-    255.0
-  ],
+  "colorError": "#F84E6A",
+  "colorJoin": "#74C476",
+  "colorMove": "#58C7Eb",
   "spotifyClientID": "",
   "spotifyClientSecret": "",
   "spotifyClientRefreshToken": ""
