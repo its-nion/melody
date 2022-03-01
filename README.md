@@ -6,7 +6,7 @@
 ![Downloads](https://img.shields.io/github/downloads/necsii/melody/total.svg)
 ![Build Status](https://travis-ci.org/dwyl/esta.svg?branch=master)
 
-<img src="https://github.com/necsii/melody/blob/main/.websrc/Melody_Banner.png" />
+<img src="https://github.com/necsii/melody/blob/main/src/main/resources/bitmap/banner.png" />
 
 Melody is a visually pleasing and easy to use discord music bot. 
 Using slash commands, buttons and selection-menus, Melody offers playing and searching for song's and playlist's in youtube and spotify.
