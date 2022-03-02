@@ -2,10 +2,7 @@ package com.lopl.melody.utils.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.lopl.melody.utils.database.DataBase;
-import com.lopl.melody.utils.database.SQL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lopl.melody.utils.Logging;
 
 import java.io.File;
 import java.io.FileReader;
@@ -21,7 +18,6 @@ import java.io.IOException;
  */
 public class JsonProperties {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DataBase.class);
   private static PropertiesData data;
 
   /*
@@ -45,10 +41,10 @@ public class JsonProperties {
       final File settingsFile = new File("properties.json");
       if (!settingsFile.exists()) {
         if (settingsFile.createNewFile()) {
-          LOGGER.info("Created properties file");
+          Logging.info(JsonProperties.class, null, null, "Created properties file");
           PropertiesData data = PropertiesData.generateNew();
           storeSettingsFile(settingsFile, data);
-        } else LOGGER.info("Could not create properties file");
+        } else Logging.error(JsonProperties.class, null, null, "Could not create properties file");
       }
     } catch (IOException e) {
       e.printStackTrace();
