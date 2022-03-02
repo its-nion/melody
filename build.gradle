@@ -21,35 +21,41 @@ dependencies {
     implementation 'com.zaxxer:HikariCP:4.0.3'
     implementation 'org.xerial:sqlite-jdbc:3.14.2'
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:7.0.0'
-    implementation 'ch.qos.logback:logback-classic:1.2.8'
+    implementation 'ch.qos.logback:logback-classic:1.2.10'
+    implementation 'ch.qos.logback:logback-core:1.2.10'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'org.mockito:mockito-inline:4.3.1'
+    implementation 'com.google.code.gson:gson:2.9.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.3.1'
     implementation fileTree(include: ['*.jar'], dir: 'src/main/resources/libraries')
 }
 
-jar {
-    manifest {
-        attributes "Main-Class": "com.pl.donut.music.Main"
-    }
-}
-
 buildscript {
     repositories {
+        mavenLocal()
         mavenCentral()
+        maven { url 'https://m2.dv8tion.net/releases' }
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://repo.maven.apache.org/maven2/' }
     }
 }
 
-// If you want to run  from the command line
+jar {
+    manifest {
+        attributes(
+                'Class-Path': sourceSets.main.runtimeClasspath,
+                "Main-Class": "com.lopl.melody.Melody",
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+        )
+    }
+}
+
+// If you want to run from the command line gradle -q execute
 task execute(type: JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
-}
-
-//TODO: Not supported (not tested)
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
+    main = 'com.lopl.melody.Melody'
 }
