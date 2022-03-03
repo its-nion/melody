@@ -24,5 +24,14 @@ then
   sdk install gradle 7.4
 fi
 
-gradle -q upsertGlobal
+if [ "$1" == "upsertGlobal" ]
+then
+  gradle -q upsertGlobal
+fi
+
+if [ "$1" == "upsertLocal" ]
+then
+  gradle -q upsertLocal
+fi
+
 gradle -q execute
