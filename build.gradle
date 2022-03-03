@@ -60,3 +60,19 @@ task execute(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.lopl.melody.Melody'
 }
+
+// If you want to upsert Melody's commands globally (takes up to 24 hrs)
+task upsertGlobal(type: JavaExec) {
+    group = "Execution"
+    description = "Run the upsert global class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.lopl.melody.slash.SlashCommandUpsertGlobal'
+}
+
+// If you want to upsert Melody's commands only for all active guilds
+task upsertLocal(type: JavaExec) {
+    group = "Execution"
+    description = "Run the upsert local class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.lopl.melody.slash.SlashCommandUpsertLocal'
+}
