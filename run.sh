@@ -1,37 +1,81 @@
 #!/bin/bash
 
+while getopts a:f: flag
+do
+    case "${flag}" in
+        a) action=${OPTARG};;
+        f) file=${OPTARG};;
+        *)
+    esac
+done
+
 if ! command -v java &> /dev/null
 then
     echo "Installing java"
-    sudo apt install openjdk-17-jdk
+    sudo apt install openjdk-15-jdk
 fi
 
-if ! command -v gradle &> /dev/null
+if [ "$action" == "upsertGlobal" ]
 then
-  if ! command -v zip &> /dev/null
+  if [[ ! -n "$file" ]]
   then
-    echo "Installing zip"
-    sudo apt install zip
+    index=0
+    for file in ./build/libs/*.jar ; do
+	    f=$file
+	    if [ $index -ge 1 ]
+	    then
+	      break
+	    fi
+	    ((index=index+1))
+    done
+    fName=$(basename "$f")
+    fDir=$(dirname "$f")
+    file="$fDir/$fName"
+    echo "Assumed jar file at: $file"
   fi
-  if ! command -v unzip &> /dev/null
+  echo "Executing java -jar $file"
+  java -jar "$file"
+  exit
+fi
+
+if [ "$action" == "upsertLocal" ]
+then
+  if [[ ! -n "$file" ]]
   then
-    echo "Installing unzip"
-    sudo apt install unzip
+    index=0
+    for file in ./build/libs/*.jar ; do
+	    f=$file
+	    if [ $index -ge 2 ]
+	    then
+	      break
+	    fi
+	    ((index=index+1))
+    done
+    fName=$(basename "$f")
+    fDir=$(dirname "$f")
+    file="$fDir/$fName"
+    echo "Assumed jar file at: $file"
   fi
-  echo "Installing gradle"
-  sudo curl -s "https://get.sdkman.io" | bash
-  bash "$HOME/.sdkman/bin/sdkman-init.sh"
-  sdk install gradle 7.4
+  echo "Executing java -jar $file"
+  java -jar "$file"
+  exit
 fi
 
-if [ "$1" == "upsertGlobal" ]
+if [[ ! -n "$file" ]]
 then
-  gradle -q upsertGlobal
+  index=0
+  for file in ./build/libs/*.jar ; do
+    f=$file
+    if [ $index -ge 0 ]
+    then
+      break
+    fi
+    ((index=index+1))
+  done
+  fName=$(basename "$f")
+  fDir=$(dirname "$f")
+  file="$fDir/$fName"
+  echo "Assumed jar file at: $file"
 fi
-
-if [ "$1" == "upsertLocal" ]
-then
-  gradle -q upsertLocal
-fi
-
-gradle -q execute
+echo "Executing java -jar $file"
+java -jar "$file"
