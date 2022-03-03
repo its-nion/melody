@@ -1,5 +1,6 @@
 package com.lopl.melody.utils.embed;
 
+import com.jagrosh.jdautilities.oauth2.Scope;
 import com.lopl.melody.Melody;
 import com.lopl.melody.utils.Logging;
 import com.lopl.melody.utils.json.JsonProperties;
@@ -36,9 +37,9 @@ public class EmojiGuildManager {
       return true;
     }
     long clientId = jda.getSelfUser().getApplicationIdLong();
-    long scope = getPermissionValueEmoteServer();
+    long permissions = getPermissionValueEmoteServer();
     long guildId = emojiGuild.id;
-    String url = String.format("https://discord.com/api/oauth2/authorize?client_id=%d&scope=bot&permissions=%d&guild_id=%d&disable_guild_select=true", clientId, scope, guildId);
+    String url = String.format("https://discord.com/api/oauth2/authorize?client_id=%d&scope=applications.commands&20bot&permissions=%d&guild_id=%d&disable_guild_select=true", clientId, permissions, guildId).replaceAll("&", "%");
     Logging.error(Melody.class, null, null, "Please join the Emote server with the invite: https://discord.gg/h9g8Gezuet");
     Logging.error(Melody.class, null, null, "Head to the following url to register the bot for the required Emote-Server: " + url);
     return false;

@@ -56,6 +56,6 @@ public class Info extends SlashCommand {
         Permission.VOICE_DEAF_OTHERS,
         Permission.VOICE_MOVE_OTHERS,
         Permission.getPermissions(8589934592L).stream().findFirst().orElse(Permission.UNKNOWN) // manage Events
-    );
+    ).replaceAll("bot", "applications.commands%20bot");
   }
 }
