@@ -92,7 +92,7 @@ class SlashCommandClientTest {
     doNothing().when(commandCreateAction).queue();
     Guild[] guilds = List.of(guild).toArray(Guild[]::new);
     SlashCommand[] slashCommands = List.of(slashCommand).toArray(SlashCommand[]::new);
-    SlashCommandClient.upsertGuildRecursive(guilds, slashCommands, 0, null);
+    SlashCommandUpsertLocal.upsertGuildRecursive(guilds, slashCommands, 0, null);
 
     verify(guild).updateCommands();
     verify(updateAction).queue();
@@ -103,18 +103,18 @@ class SlashCommandClientTest {
   void mainUpsertTest(){
     MockedStatic<SlashCommandClient> util = mockStatic(SlashCommandClient.class);
     util.when(SlashCommandClient::getInstance).thenCallRealMethod();
-    util.when(() -> SlashCommandClient.main(any())).thenCallRealMethod();
-    util.when(() -> SlashCommandClient.upsertAllGuildsCommands(any())).thenCallRealMethod();
-    ArgumentCaptor<SlashCommandClient.Reload> intfa = ArgumentCaptor.forClass(SlashCommandClient.Reload.class);
-    util.when(() -> SlashCommandClient.upsertGuildRecursive(any(), any(), anyInt(), intfa.capture())).thenCallRealMethod();
-    ArgumentCaptor<SlashCommandClient.GuildReload> intfac = ArgumentCaptor.forClass(SlashCommandClient.GuildReload.class);
-    util.when(() -> SlashCommandClient.upsertCommandsRecursive(any(), any(), anyInt(), intfac.capture())).thenCallRealMethod();
-    ArgumentCaptor<SlashCommandClient.GuildCommandReload> intf = ArgumentCaptor.forClass(SlashCommandClient.GuildCommandReload.class);
-    util.when(() -> SlashCommandClient.upsertGuildCommand(any(), intf.capture())).then(i -> {
+    util.when(() -> SlashCommandUpsertLocal.main(any())).thenCallRealMethod();
+    util.when(() -> SlashCommandUpsertLocal.upsertAllGuildsCommands(any())).thenCallRealMethod();
+    ArgumentCaptor<SlashCommandUpsertLocal.Reload> intfa = ArgumentCaptor.forClass(SlashCommandUpsertLocal.Reload.class);
+    util.when(() -> SlashCommandUpsertLocal.upsertGuildRecursive(any(), any(), anyInt(), intfa.capture())).thenCallRealMethod();
+    ArgumentCaptor<SlashCommandUpsertLocal.GuildReload> intfac = ArgumentCaptor.forClass(SlashCommandUpsertLocal.GuildReload.class);
+    util.when(() -> SlashCommandUpsertLocal.upsertCommandsRecursive(any(), any(), anyInt(), intfac.capture())).thenCallRealMethod();
+    ArgumentCaptor<SlashCommandUpsertLocal.GuildCommandReload> intf = ArgumentCaptor.forClass(SlashCommandUpsertLocal.GuildCommandReload.class);
+    util.when(() -> SlashCommandUpsertLocal.upsertGuildCommand(any(), intf.capture())).then(i -> {
       intf.getValue().onFinish();
       return null;
     });
-    assertDoesNotThrow(() -> SlashCommandClient.main(new String[0]));
+    assertDoesNotThrow(() -> SlashCommandUpsertLocal.main(new String[0]));
 
   }
 
