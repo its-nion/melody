@@ -98,7 +98,116 @@ From SQLites Homepage:
 * [Lame](https://github.com/nwaldispuehl/java-lame) 3.98.4
    
 ## Installation
+#### Linux
+
+**1. Installation of Java:**
+
+You must have a valid installation of java on your system.
+The supported Java version is java-15 and above.
+The recent version of java can be installed with:
+> sudo apt install openjdk-15-jdk
+
+You can check for your java version with:
+> java --version
+
+**2. Installation of Gradle:**
+  
+Gradle is currently required to run Melody.
+Learn here how to [install gradle](https://gradle.org/install/).
+You can check for your gradle version with:
+> gradle version
+
+**3. Clone this repository:**
+
+Clone this repository to your desired location with https:
+> git clone https://github.com/its-nion/melody.git
+
+If you want to remove git from the clone, run:
+> rm .git -r
+
+**4. Create your discord bot:**
+
+Head over to the [Discord applications page](https://discord.com/developers/applications).
+You may have to log in with your discord account.
+Create a new application and activate the bot feature.
+Copy the bot key and paste it into the properties.json.
+
+**Optional: Generate Spotify api keys:**
+
 **TBA**
+
+**5. Add the bot to the emote server:**
+You can try to run the bot with:
+> sudo bash run.sh
+
+If everything is correct to this point there should appear something like following two messages:
+> Please join the Emote server with the invite: https://discord.gg/abcdefghij
+> Head to the following url to register the bot for the required Emote-Server: https://discord.com/api/oauth2/authorize?client_id=1234567890&scope=bot&permissions=8&guild_id=1234567890&disable_guild_select=true
+
+Copy the first link to the browser to join the emote guild.
+Afterwards copy the second link to the browser and connect your melody to the server.
+You can leave the server afterwards.
+
+**6. Execution:**
+
+To run Melody execute:
+> sudo bash run.sh
+
+To run Melody in the background execute:
+> sudo nohup bash run.sh
+
+#### Windows
+
+**1. Installation of Java:**
+
+You must have a valid installation of java on your system.
+The supported Java version is java-15 and above.
+Learn here how to [install java](https://www.oracle.com/java/technologies/downloads/).
+You can check for your java version with:
+> java --version
+
+**2. Installation of Gradle:**
+  
+Gradle is currently required to run Melody.
+Learn here how to [install gradle](https://gradle.org/install/).
+You can check for your gradle version with:
+> gradle version
+
+**3. Clone this repository:**
+
+Clone this repository to your desired location with https:
+> git clone https://github.com/its-nion/melody.git
+
+**4. Create your discord bot:**
+
+Head over to the [Discord applications page](https://discord.com/developers/applications).
+You may have to log in with your discord account.
+Create a new application and activate the bot feature.
+Copy the bot key and paste it into the properties.json.
+
+**Optional: Generate Spotify api keys:**
+
+**TBA**
+
+**5. Add the bot to the emote server:**
+You can try to run the bot with:
+> TBA
+
+If everything is correct to this point there should appear something like following two messages:
+> Please join the Emote server with the invite: https://discord.gg/abcdefghij
+> Head to the following url to register the bot for the required Emote-Server: https://discord.com/api/oauth2/authorize?client_id=1234567890&scope=bot&permissions=8&guild_id=1234567890&disable_guild_select=true
+
+Copy the first link to the browser to join the emote guild.
+Afterwards copy the second link to the browser and connect your melody to the server.
+You can leave the server afterwards.
+
+**6. Execution:**
+
+To run Melody execute:
+> TBA
+
+To run Melody in the background execute:
+> TBA
 
 ## Documentation
 **TBA**
