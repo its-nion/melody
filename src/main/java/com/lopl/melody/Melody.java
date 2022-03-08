@@ -13,87 +13,30 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-import javax.imageio.ImageIO;
 import javax.security.auth.login.LoginException;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 
 public class Melody {
   public static JDA manager;
+  public static OnReady onReady;
 
-  public static void main(String[] args) throws InterruptedException, AWTException, IOException {
+  public static void main(String[] args) {
     new Melody();
   }
 
-  private Melody() throws InterruptedException, AWTException, IOException {
-        createAndShowGUI();
+  public static void onReady(OnReady callback){
+    onReady = callback;
+  }
 
-    /*
+  private Melody() {
     try {
       setup();
     } catch (LoginException e) {
       Logging.error(Melody.class, null, null, "Bot not registered! Head to https://discord.com/developers/applications to register the bot. Open the properties.json to set the bots key afterwards.");
+    } catch (InterruptedException e){
+      Logging.error(Melody.class, null, null, "Error while starting the bot");
     }
-    */
   }
 
-    public void createAndShowGUI() throws AWTException, IOException {
-      String url = System.getProperty("user.dir") + "\\build\\resources\\main\\bitmap\\melody_transparent.png";
-      ImageIcon image = new ImageIcon(url);
-
-      // General Settings
-      final JFrame frame = new JFrame("Melody");
-      frame.setIconImage(image.getImage());
-      frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      frame.setResizable(false);
-      frame.setSize(640, 360);
-      frame.setLocationRelativeTo(null);
-
-      // If OS does support SystemTray
-      if (SystemTray.isSupported()) {
-        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        final SystemTray tray = SystemTray.getSystemTray();
-        final PopupMenu popup = new PopupMenu();
-        final TrayIcon icon   = new TrayIcon(image.getImage(), "Melody", popup);
-        icon.setImageAutoSize(true);
-        icon.addMouseListener(new MouseAdapter() {
-          @Override
-          public void mouseClicked(MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON1) {
-              frame.setVisible(true);
-            }
-          }
-        });
-
-        tray.add(icon);
-
-        MenuItem item1 = new MenuItem("Open Melody");
-        item1.addActionListener(new ActionListener() {
-          @Override public void actionPerformed(ActionEvent e) {
-            frame.setVisible(true);
-            frame.setLocationRelativeTo(null);
-          }
-        });
-        MenuItem item2 = new MenuItem("Quit");
-        item2.addActionListener(new ActionListener() {
-          @Override public void actionPerformed(ActionEvent e) {
-            tray.remove(icon);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.dispose();
-            //System.exit(0);
-          }
-        });
-        popup.add(item1);
-        popup.add(item2);
-      }
-
-      // Makes window visible
-      frame.setVisible(true);
-    }
 
   private void setup() throws LoginException, InterruptedException {
     JDABuilder builder = JDABuilder.createDefault(Token.BOT_TOKEN);
@@ -117,11 +60,17 @@ public class Melody {
     Melody.manager = builder.build();
     Logging.info(getClass(), null, null, "Loaded! Melody is now ready.");
     slashCommandClient.ready(Melody.manager);
+    if (onReady != null) onReady.ready(Melody.manager);
     Melody.manager.awaitReady();
+    Logging.info(getClass(), null, null, "Melody is now live.");
 
     EmojiGuildManager emojiGuildManager = new EmojiGuildManager().withGuild(new EmojiGuild(Melody.manager));
     boolean isInEmoteServer = emojiGuildManager.isAvailable();
     if (!isInEmoteServer) Melody.manager.shutdownNow();
     emojiGuildManager.loadEmotes();
+  }
+
+  public interface OnReady{
+    void ready(JDA jda);
   }
 }
