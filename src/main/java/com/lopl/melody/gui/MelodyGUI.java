@@ -26,6 +26,7 @@ public class MelodyGUI {
 
     // layout
     LoggerPanel loggerPanel = new LoggerPanel();
+    loggerPanel.startLogging();
     frame.add(loggerPanel, LoggerPanel.POSITION);
 
     BotStatus botStatus = new BotStatus();
