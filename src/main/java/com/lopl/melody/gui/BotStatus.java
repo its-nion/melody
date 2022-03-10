@@ -46,7 +46,6 @@ public class BotStatus extends JPanel {
     add(stopButton);
 //    setLayout(layout);
     setVisible(true);
-
   }
 
   private void onStartClicked(ActionEvent event){
@@ -59,7 +58,6 @@ public class BotStatus extends JPanel {
       }));
       Melody.main(new String[0]);
     }).start();
-
   }
 
   private void onStopClicked(ActionEvent event){

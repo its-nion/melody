@@ -1,5 +1,8 @@
 package com.lopl.melody.gui;
 
+import com.lopl.melody.gui.panes.LoggerPane;
+import com.lopl.melody.gui.panes.MainPane;
+
 import javax.swing.*;
 
 public class MelodyGUI {
@@ -16,21 +19,22 @@ public class MelodyGUI {
     String url = System.getProperty("user.dir") + "\\build\\resources\\main\\bitmap\\melody_transparent.png";
     ImageIcon image = new ImageIcon(url);
 
-    // General Settings
+    // General Window Settings
     final JFrame frame = new JFrame("Melody");
     frame.setIconImage(image.getImage());
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    frame.setResizable(true);
+    frame.setResizable(false);
     frame.setSize(640, 360);
     frame.setLocationRelativeTo(null);
 
-    // layout
-    LoggerPanel loggerPanel = new LoggerPanel();
-    loggerPanel.startLogging();
-    frame.add(loggerPanel, LoggerPanel.POSITION);
+    // Layout
+    LoggerPane loggerPane = new LoggerPane();
+    MainPane mainPane = new MainPane();
 
-    BotStatus botStatus = new BotStatus();
-    frame.add(botStatus);
+    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPane, loggerPane);
+    splitPane.setDividerLocation(250);
+
+    frame.add(splitPane);
 
     // If OS does support SystemTray
     SystemTrayManager systemTrayManager = new SystemTrayManager(frame);
