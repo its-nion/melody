@@ -4,6 +4,8 @@ import com.lopl.melody.gui.panes.LoggerPane;
 import com.lopl.melody.gui.panes.MainPane;
 
 import javax.swing.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class MelodyGUI {
 
@@ -23,7 +25,7 @@ public class MelodyGUI {
     final JFrame frame = new JFrame("Melody");
     frame.setIconImage(image.getImage());
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    frame.setResizable(false);
+    frame.setResizable(true);
     frame.setSize(640, 360);
     frame.setLocationRelativeTo(null);
 
@@ -32,7 +34,7 @@ public class MelodyGUI {
     MainPane mainPane = new MainPane();
 
     JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPane, loggerPane);
-    splitPane.setDividerLocation(250);
+    splitPane.setDividerLocation(.7);
 
     frame.add(splitPane);
 
