@@ -1,53 +1,27 @@
 package com.lopl.melody.utils.embed;
 
-import com.jagrosh.jdautilities.oauth2.Scope;
-import com.lopl.melody.Melody;
 import com.lopl.melody.utils.Logging;
-import com.lopl.melody.utils.json.JsonProperties;
-import net.dv8tion.jda.api.JDA;
+import com.lopl.melody.utils.annotation.CustomEmote;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ListedEmote;
-import net.dv8tion.jda.api.entities.Member;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
 public class EmojiGuildManager {
 
-  private EmojiGuild emojiGuild;
-
-  private static final List<String> emoteIDs = List.of(
-    "icon"
-  );
-
-  public EmojiGuildManager withGuild(EmojiGuild guild){
-    this.emojiGuild = guild;
-    return this;
+  public static void loadAllEmotes(List<Guild> guilds){
+    int loadCount = 0;
+    for (Guild guild : guilds)
+      loadCount += loadEmotes(guild);
+    Logging.debug(EmojiGuildManager.class, null, null, "Found " + loadCount + " custom emotes");
   }
 
-  public boolean isAvailable() {
-    JDA jda = emojiGuild.jda;
-    Guild guild = jda.getGuildById(emojiGuild.id);
-    if (guild != null){
-      //TODO check for permissions
-
-      return true;
-    }
-    long clientId = jda.getSelfUser().getApplicationIdLong();
-    long permissions = getPermissionValueEmoteServer();
-    long guildId = emojiGuild.id;
-    String url = String.format("https://discord.com/api/oauth2/authorize?client_id=%d&scope=applications.commands&20bot&permissions=%d&guild_id=%d&disable_guild_select=true", clientId, permissions, guildId).replaceAll("&", "%");
-    Logging.error(Melody.class, null, null, "Please join the Emote server with the invite: https://discord.gg/h9g8Gezuet");
-    Logging.error(Melody.class, null, null, "Head to the following url to register the bot for the required Emote-Server: " + url);
-    return false;
-  }
-
-  public void loadEmotes(){
-    Guild guild = emojiGuild.getGuild();
-    if (guild == null) return;
+  public static int loadEmotes(Guild guild){
+    int loadCount = 0;
+    if (guild == null) return 0;
     List<ListedEmote> emotes = guild.retrieveEmotes().complete();
     for (Emote emote : emotes){
       try {
@@ -55,23 +29,14 @@ public class EmojiGuildManager {
         String varName = emoteName.toUpperCase();
         String emoteMarkdown = emote.getAsMention();
         Field field = ReactionEmoji.class.getDeclaredField(varName);
+        if (!field.isAnnotationPresent(CustomEmote.class))
+          continue;
         field.set(ReactionEmoji.class, emoteMarkdown);
+        loadCount++;
       } catch (NoSuchFieldException | IllegalAccessException ignored) {
-        Logging.debug(getClass(), guild, null, "Failed to load emote: :" + emote.getName() + ":");
       }
     }
-
-  }
-
-  private long getPermissionValueEmoteServer(){
-    return Permission.getRaw(
-        Permission.MESSAGE_READ,
-        Permission.VIEW_CHANNEL,
-        Permission.MESSAGE_MANAGE,
-        Permission.MESSAGE_EXT_EMOJI,
-        Permission.MESSAGE_HISTORY,
-        Permission.MANAGE_EMOTES
-    );
+    return loadCount;
   }
 
 }
