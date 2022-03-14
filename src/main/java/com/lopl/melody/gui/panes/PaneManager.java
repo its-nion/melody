@@ -1,17 +1,15 @@
 package com.lopl.melody.gui.panes;
 
-import com.lopl.melody.gui.BotStatus;
-
 import javax.swing.*;
 import java.awt.*;
 
-public class MainPane extends JPanel {
+public class PaneManager extends JPanel {
 
     private final Dimension minimumWidth = new Dimension(250, 0);
 
     private JTabbedPane tabbedPane = new JTabbedPane();
 
-    public MainPane() {
+    public PaneManager() {
         super();
         setupLayout();
     }
@@ -22,7 +20,6 @@ public class MainPane extends JPanel {
         // Create all Child-Panes
         tabbedPane.add("General", new BotStatus());
         tabbedPane.add("Servers", new ServerPane());
-
         tabbedPane.setMinimumSize(minimumWidth);
 
         add(tabbedPane, BorderLayout.CENTER);

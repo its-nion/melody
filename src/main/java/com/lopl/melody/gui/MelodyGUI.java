@@ -1,11 +1,9 @@
 package com.lopl.melody.gui;
 
 import com.lopl.melody.gui.panes.LoggerPane;
-import com.lopl.melody.gui.panes.MainPane;
+import com.lopl.melody.gui.panes.PaneManager;
 
 import javax.swing.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 public class MelodyGUI {
 
@@ -31,9 +29,9 @@ public class MelodyGUI {
 
     // Layout
     LoggerPane loggerPane = new LoggerPane();
-    MainPane mainPane = new MainPane();
+    PaneManager paneManager = new PaneManager();
 
-    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPane, loggerPane);
+    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, paneManager, loggerPane);
     splitPane.setDividerLocation(.7);
 
     frame.add(splitPane);
