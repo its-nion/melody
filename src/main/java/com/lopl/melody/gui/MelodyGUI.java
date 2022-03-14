@@ -1,13 +1,19 @@
 package com.lopl.melody.gui;
 
+import com.lopl.melody.Melody;
 import com.lopl.melody.gui.panes.LoggerPane;
 import com.lopl.melody.gui.panes.PaneManager;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 public class MelodyGUI {
 
   public static void main(String[] args) {
+    if (Arrays.asList(args).contains("--no-gui")) {
+      Melody.main(args);
+      return;
+    }
     new MelodyGUI();
   }
 
