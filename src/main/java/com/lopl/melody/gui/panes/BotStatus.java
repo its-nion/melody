@@ -4,6 +4,7 @@ import com.lopl.melody.Melody;
 import com.lopl.melody.utils.Logging;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.StatusChangeEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,23 +15,22 @@ import java.awt.event.ActionEvent;
 public class BotStatus extends JPanel {
 
   private final DataHolder data;
-
-  private GridBagLayout layout;
-  private GridBagConstraints layoutConstraints;
+  private final PaneManager manager;
   private Button startButton;
   private Button stopButton;
   private Label statusLabel;
 
-  public BotStatus(){
+  public BotStatus(PaneManager manager){
     super();
     this.data = new DataHolder();
+    this.manager = manager;
     setupLayout();
     onRunningChanged();
   }
 
   private void setupLayout(){
-    layout = new GridBagLayout();
-    layoutConstraints = new GridBagConstraints();
+    GridBagLayout layout = new GridBagLayout();
+    GridBagConstraints layoutConstraints = new GridBagConstraints();
     layoutConstraints.fill = GridBagConstraints.HORIZONTAL;
     layoutConstraints.weightx = .5;
     layoutConstraints.weighty = 0;
@@ -79,6 +79,10 @@ public class BotStatus extends JPanel {
         public void onStatusChange(@NotNull StatusChangeEvent event) {
           updateData();
         }
+        @Override
+        public void onGuildJoin(@NotNull GuildJoinEvent event) {
+          manager.serverPane.reloadData();
+        }
       }));
       Melody.main(new String[0]);
     }).start();
@@ -96,6 +100,7 @@ public class BotStatus extends JPanel {
       startButton.setEnabled(false);
       stopButton.setEnabled(true);
       statusLabel.setBackground(Color.GREEN);
+      manager.serverPane.reloadData();
     }else if (data.isLoading()){
       startButton.setEnabled(false);
       stopButton.setEnabled(false);
