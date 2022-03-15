@@ -1,10 +1,10 @@
 {
-  "botKey": "ODQzMTA0NTkyNDE3MzkwNjEy.YJ_AVg.1wbdYbfhsTa6r4LcDPiW2U5YJTU",
+  "botKey": "",
   "secretPropertiesLocation": "secret_properties.json",
   "colorError": "#F84E6A",
   "colorJoin": "#74C476",
   "colorMove": "#58C7Eb",
-  "spotifyClientID": "fe905aafc8544b3a99e185621deb5c08",
-  "spotifyClientSecret": "a15fff057b6545c78e5eb3064e2628ba",
-  "spotifyClientRefreshToken": "AQBacLlvwGXFEnOGIrmYwEHxvFU-UdKExkkZsYsu5bcQvLfwB2hbrf3SHDxIsXhrJ3USQ-o0CPhQRZBkHVdYUF8mKdda3MWCWTk-tOEYpdfwYI09vtumTLhlSPyhlZkyZFE"
+  "spotifyClientID": "",
+  "spotifyClientSecret": "",
+  "spotifyClientRefreshToken": ""
 }
