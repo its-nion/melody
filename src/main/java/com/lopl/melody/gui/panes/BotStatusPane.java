@@ -101,14 +101,17 @@ public class BotStatusPane extends JPanel {
       stopButton.setEnabled(true);
       statusLabel.setBackground(Color.GREEN);
       manager.serverPane.reloadData();
+      manager.propertiesPane.deactivateFields();
     }else if (data.isLoading()){
       startButton.setEnabled(false);
       stopButton.setEnabled(false);
       statusLabel.setBackground(Color.YELLOW);
+      manager.propertiesPane.deactivateFields();
     }else{
       startButton.setEnabled(true);
       stopButton.setEnabled(false);
       statusLabel.setBackground(Color.RED);
+      manager.propertiesPane.activateFields();
     }
   }
 

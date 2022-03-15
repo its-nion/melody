@@ -15,9 +15,9 @@ public class PaneManager extends JPanel {
 
     public PaneManager() {
         super();
-        botStatus = new BotStatusPane(this);
         serverPane = new ServerPane(this);
         propertiesPane = new PropertiesPane(this);
+        botStatus = new BotStatusPane(this);
         setupLayout();
     }
 
