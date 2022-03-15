@@ -44,6 +44,7 @@ public class MelodyGUI {
 
     // If OS does support SystemTray
     SystemTrayManager systemTrayManager = new SystemTrayManager(frame);
+    ResizeManager resizeManager = new ResizeManager(frame, splitPane);
 
     // Makes window visible
     frame.setVisible(true);
