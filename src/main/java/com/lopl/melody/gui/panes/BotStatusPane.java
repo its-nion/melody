@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class BotStatus extends JPanel {
+public class BotStatusPane extends JPanel {
 
   private final DataHolder data;
   private final PaneManager manager;
@@ -20,7 +20,7 @@ public class BotStatus extends JPanel {
   private Button stopButton;
   private Label statusLabel;
 
-  public BotStatus(PaneManager manager){
+  public BotStatusPane(PaneManager manager){
     super();
     this.data = new DataHolder();
     this.manager = manager;

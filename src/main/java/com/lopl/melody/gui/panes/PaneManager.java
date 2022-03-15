@@ -6,15 +6,18 @@ import java.awt.*;
 public class PaneManager extends JPanel {
 
     private final Dimension minimumWidth = new Dimension(250, 0);
-    public final BotStatus botStatus;
-    public final ServerPane serverPane;
+    private final JTabbedPane tabbedPane = new JTabbedPane();
 
-    private JTabbedPane tabbedPane = new JTabbedPane();
+    public final BotStatusPane botStatus;
+    public final ServerPane serverPane;
+    public final PropertiesPane propertiesPane;
+
 
     public PaneManager() {
         super();
-        botStatus = new BotStatus(this);
+        botStatus = new BotStatusPane(this);
         serverPane = new ServerPane(this);
+        propertiesPane = new PropertiesPane(this);
         setupLayout();
     }
 
@@ -24,6 +27,7 @@ public class PaneManager extends JPanel {
         // Create all Child-Panes
         tabbedPane.add("General", botStatus);
         tabbedPane.add("Servers", serverPane);
+        tabbedPane.add("Properties", propertiesPane);
         tabbedPane.setMinimumSize(minimumWidth);
 
         add(tabbedPane, BorderLayout.CENTER);
