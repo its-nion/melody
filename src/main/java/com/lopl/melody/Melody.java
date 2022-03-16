@@ -59,9 +59,9 @@ public class Melody {
 
     Melody.manager = builder.build();
     Logging.info(getClass(), null, null, "Loaded! Melody is now ready.");
-    slashCommandClient.ready(Melody.manager);
     if (onReady != null) onReady.ready(Melody.manager);
     Melody.manager.awaitReady();
+    slashCommandClient.ready(Melody.manager);
     Logging.info(getClass(), null, null, "Melody is now live.");
 
     EmojiGuildManager emojiGuildManager = new EmojiGuildManager().withGuild(new EmojiGuild(Melody.manager));
