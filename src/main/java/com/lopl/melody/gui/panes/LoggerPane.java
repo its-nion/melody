@@ -4,7 +4,9 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.read.ListAppender;
+import ch.qos.logback.core.spi.FilterReply;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -107,7 +109,7 @@ public class LoggerPane extends JPanel implements HyperlinkListener {
     });
 
     Logger logger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-    logger.setLevel(Level.INFO);
+//    logger.setLevel(Level.INFO);
     logger.addAppender(logHistory);
   }
 
@@ -129,6 +131,12 @@ public class LoggerPane extends JPanel implements HyperlinkListener {
 
     public LogHistory() {
       super();
+      addFilter(new Filter<>() {
+        @Override
+        public FilterReply decide(ILoggingEvent event) {
+          return event.getLevel().isGreaterOrEqual(Level.INFO) ? FilterReply.ACCEPT : FilterReply.DENY;
+        }
+      });
     }
 
     public void setOnLogListener(OnLog onLogCallback) {
