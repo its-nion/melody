@@ -3,17 +3,18 @@ package com.lopl.melody;
 import com.lopl.melody.audio.util.BotRightsManager;
 import com.lopl.melody.slash.*;
 import com.lopl.melody.utils.Logging;
-import com.lopl.melody.utils.embed.EmojiGuild;
 import com.lopl.melody.utils.embed.EmojiGuildManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
+import java.util.List;
 
 public class Melody {
   public static JDA manager;
@@ -53,10 +54,7 @@ public class Melody {
     Logging.info(getClass(), null, null, "Loaded! Melody is now ready.");
     slashCommandClient.ready(Melody.manager);
     Melody.manager.awaitReady();
-
-    EmojiGuildManager emojiGuildManager = new EmojiGuildManager().withGuild(new EmojiGuild(Melody.manager));
-    boolean isInEmoteServer = emojiGuildManager.isAvailable();
-    if (!isInEmoteServer) Melody.manager.shutdownNow();
-    emojiGuildManager.loadEmotes();
+    List<Guild> guilds = Melody.manager.getGuilds();
+    EmojiGuildManager.loadAllEmotes(guilds);
   }
 }
