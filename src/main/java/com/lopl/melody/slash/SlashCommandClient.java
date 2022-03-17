@@ -32,6 +32,7 @@ public class SlashCommandClient extends ListenerAdapter {
   public final ButtonManager buttonManager;
   public final DropdownManager dropdownManager;
   public final AnonymousComponentManager anonymousComponentManager;
+  public final AutomaticCommandUpsert automaticCommandUpsert;
 
   /**
    * package-private constructor for the {@link SlashCommandClientBuilder}.
@@ -42,6 +43,7 @@ public class SlashCommandClient extends ListenerAdapter {
     this.buttonManager = new ButtonManager();
     this.dropdownManager = new DropdownManager();
     this.anonymousComponentManager = new AnonymousComponentManager();
+    this.automaticCommandUpsert = new AutomaticCommandUpsert();
     INSTANCE = this;
   }
 
@@ -67,6 +69,8 @@ public class SlashCommandClient extends ListenerAdapter {
   public void ready(JDA jda) {
     Arrays.stream(slashCommands).forEach(sc -> sc.onJDAReady(jda));
     anonymousComponentManager.cache(Arrays.asList(slashCommands));
+    automaticCommandUpsert.upsert(jda.getGuilds(), Arrays.asList(slashCommands));
+    jda.addEventListener(automaticCommandUpsert);
   }
 
   /**
