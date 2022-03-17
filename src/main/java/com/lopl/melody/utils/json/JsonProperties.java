@@ -54,6 +54,7 @@ public class JsonProperties {
   /**
    * This will generate the json from the passed PropertiesData.
    * The json is then written to the File
+   *
    * @param file a existing file
    * @param data the object to create json for the file
    * @throws IOException if the file can not be written
@@ -155,9 +156,19 @@ public class JsonProperties {
    * <pre>
    * String botKey = JsonProperties.getProperties().getBotKey();
    * </pre>
+   *
    * @return a handler object to access al the properties data
    */
-  public static JsonPropertiesProvider getProperties(){
+  public static JsonPropertiesProvider getProperties() {
     return new JsonPropertiesProvider(data);
+  }
+
+  public static class Writer {
+
+    public void updateData(PropertiesData data) throws IOException {
+      final File settingsFile = new File("properties.json");
+      JsonProperties.storeSettingsFile(settingsFile, data);
+    }
+
   }
 }

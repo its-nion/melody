@@ -18,18 +18,26 @@ import java.util.List;
 
 public class Melody {
   public static JDA manager;
+  public static OnReady onReady;
 
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     new Melody();
   }
 
-  private Melody() throws InterruptedException {
+  public static void onReady(OnReady callback){
+    onReady = callback;
+  }
+
+  private Melody() {
     try {
       setup();
     } catch (LoginException e) {
       Logging.error(Melody.class, null, null, "Bot not registered! Head to https://discord.com/developers/applications to register the bot. Open the properties.json to set the bots key afterwards.");
+    } catch (InterruptedException e){
+      Logging.error(Melody.class, null, null, "Error while starting the bot");
     }
   }
+
 
   private void setup() throws LoginException, InterruptedException {
     JDABuilder builder = JDABuilder.createDefault(Token.BOT_TOKEN);
@@ -53,8 +61,14 @@ public class Melody {
     Melody.manager = builder.build();
     Logging.info(getClass(), null, null, "Loaded! Melody is now ready.");
     slashCommandClient.ready(Melody.manager);
+    if (onReady != null) onReady.ready(Melody.manager);
     Melody.manager.awaitReady();
+    Logging.info(getClass(), null, null, "Melody is now live.");
     List<Guild> guilds = Melody.manager.getGuilds();
     EmojiGuildManager.loadAllEmotes(guilds);
+  }
+
+  public interface OnReady{
+    void ready(JDA jda);
   }
 }
