@@ -8,6 +8,7 @@ import com.lopl.melody.utils.annotation.CustomEmote;
  */
 public class ReactionEmoji {
 
+  @CustomEmote
   public static String ICON = "U+1F3B5"; // "<:icon:12345678901234567890>";
 
   @CustomEmote
