@@ -105,7 +105,7 @@ public class Player extends SlashCommand {
     Button bLoop = Button.secondary(Loop, Emoji.fromMarkdown(requeue.isActive() ? ReactionEmoji.REPEAT_ACTIVE : ReactionEmoji.REPEAT)).withDisabled(!hasTrack);
     Button bShuffle = Button.secondary(Shuffle, Emoji.fromMarkdown(shuffler.isActive() ? ReactionEmoji.SHUFFLE_ACTIVE : ReactionEmoji.SHUFFLE)).withDisabled(!hasTrack);
 
-    return ActionRow.of(bShuffle, bPrevious, bPlayPause, bSkip, bLoop, bStop);
+    return ActionRow.of(bShuffle, bPrevious, bPlayPause, bSkip, bLoop/*, bStop*/);
   }
 
   private MessageEmbed getSongEmbed(AudioTrack audioTrack) {
