@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 buildscript {
     repositories {
         mavenLocal()
@@ -12,6 +14,7 @@ buildscript {
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "java"
+    id 'application'
     id "maven-publish"
 }
 
@@ -19,13 +22,14 @@ ext {
 // Change these:
     applicationName = 'Melody'
     applicationVersion = '1.0'
-    applicationVersionDetail = 'pre02'
+    applicationVersionDetail = 'pre03'
 }
 
 // Do not change these:
 group = 'com.lopl.melody'
 version = applicationVersion + applicationVersionDetail
 description = name
+mainClassName = "com.lopl.melody.gui.MelodyGUI"
 java.sourceCompatibility = JavaVersion.VERSION_15
 
 repositories {
@@ -35,6 +39,11 @@ repositories {
     maven { url 'https://m2.dv8tion.net/releases' }
     maven { url 'https://jitpack.io' }
     maven { url 'https://repo.maven.apache.org/maven2/' }
+}
+
+configurations {
+    provided
+    compile.extendsFrom(provided)
 }
 
 dependencies {
@@ -54,8 +63,28 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'src/main/resources/libraries')
 }
 
-// Shadowing Test Sources and Dependencies
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+application {
+    // Define the main class for the application.
+    mainClassName = "com.lopl.melody.gui.MelodyGUI"
+}
+
+test {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+}
+
+
+jar {
+    exclude 'META-INF/*.DSA'
+    manifest {
+        attributes "Main-Class": mainClassName
+    }
+    zip64 = true
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 
 // create Melody jar
 task melodyJar(type: ShadowJar) {
@@ -63,46 +92,23 @@ task melodyJar(type: ShadowJar) {
     manifest {
         attributes(
                 'Class-Path': sourceSets.main.runtimeClasspath,
-                "Main-Class": "com.lopl.melody.Melody",
+                'Main-Class': mainClassName,
                 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
         )
     }
+    exclude 'META-INF/*.RSA'
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
 }
 
-// create upsertCommandsGlobal jar
-task melodyCommandsGlobalJar(type: ShadowJar) {
-    destinationDirectory.set(file("$projectDir/builds"))
-    manifest {
-        attributes(
-                'Class-Path': sourceSets.main.runtimeClasspath,
-                "Main-Class": "com.lopl.melody.slash.SlashCommandUpsertGlobal",
-                'Implementation-Title': project.name + "GlobalCommands",
-                'Implementation-Version': project.version
-        )
-    }
-    archiveBaseName.set(applicationName + "GlobalCommands")
-}
-
-// create upsertCommandsLocal jar
-task melodyCommandsLocalJar(type: ShadowJar) {
-    destinationDirectory.set(file("$projectDir/builds"))
-    manifest {
-        attributes(
-                'Class-Path': sourceSets.main.runtimeClasspath,
-                "Main-Class": "com.lopl.melody.slash.SlashCommandUpsertLocal",
-                'Implementation-Title': project.name + "LocalCommands",
-                'Implementation-Version': project.version
-        )
-    }
-    archiveBaseName.set(applicationName + "LocalCommands")
-}
 
 shadowJar {
     archiveBaseName.set(applicationName)
     archiveVersion.set(applicationVersion)
     archiveClassifier.set(applicationVersionDetail)
     destinationDirectory.set(file("$projectDir/builds"))
+    zip64 = true
 }
 
 // If you want to run from the command line gradle -q execute
@@ -113,18 +119,4 @@ task execute(type: JavaExec) {
     main = 'com.lopl.melody.Melody'
 }
 
-// If you want to upsert Melody's commands globally (takes up to 24 hrs)
-task upsertGlobal(type: JavaExec) {
-    group = "Execution"
-    description = "Run the upsert global class with JavaExecTask"
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'com.lopl.melody.slash.SlashCommandUpsertGlobal'
-}
 
-// If you want to upsert Melody's commands only for all active guilds
-task upsertLocal(type: JavaExec) {
-    group = "Execution"
-    description = "Run the upsert local class with JavaExecTask"
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'com.lopl.melody.slash.SlashCommandUpsertLocal'
-}
