@@ -1,37 +1,33 @@
 #!/bin/bash
 
+# checking for file argument
+while getopts f: flag
+do
+    case "${flag}" in
+        f) file=${OPTARG};;
+        *)
+    esac
+done
+
+# checking for java installation and installing if not present
 if ! command -v java &> /dev/null
 then
     echo "Installing java"
-    sudo apt install openjdk-17-jdk
+    sudo apt install openjdk-15-jdk
 fi
 
-if ! command -v gradle &> /dev/null
+# finding jar file
+if [[ ! -n "$file" ]]
 then
-  if ! command -v zip &> /dev/null
-  then
-    echo "Installing zip"
-    sudo apt install zip
-  fi
-  if ! command -v unzip &> /dev/null
-  then
-    echo "Installing unzip"
-    sudo apt install unzip
-  fi
-  echo "Installing gradle"
-  sudo curl -s "https://get.sdkman.io" | bash
-  bash "$HOME/.sdkman/bin/sdkman-init.sh"
-  sdk install gradle 7.4
+  for file in ./builds/*.jar ; do
+    f=$file
+  done
+  fName=$(basename "$f")
+  fDir=$(dirname "$f")
+  file="$fDir/$fName"
+  echo "Assumed jar file at: $file"
 fi
 
-if [ "$1" == "upsertGlobal" ]
-then
-  gradle -q upsertGlobal
-fi
-
-if [ "$1" == "upsertLocal" ]
-then
-  gradle -q upsertLocal
-fi
-
-gradle -q execute
+# starting melody
+echo "Executing java -jar $file"
+java -jar "$file" --no-gui
